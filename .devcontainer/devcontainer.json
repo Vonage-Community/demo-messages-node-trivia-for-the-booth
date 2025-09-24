@@ -1,0 +1,18 @@
+{
+  "name": "Trivia Game",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite",
+      "onAutoForward": "openBrowser"
+    },
+    "3000": {
+      "label": "API"
+    }
+  },
+  "postCreateCommand": "cd web && npm ci"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@vonage/demo-messages-node-trivia-for-the-booth",
+  "version": "1.0.0",
+  "description": "A simple trivia game to be run at Vonages booth ",
+  "license": "Apache-2.0",
+  "author": "",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev:web": "vite",
+    "dev:api": "node --watch server/index.js",
+    "dev": "npm run dev:web | npm run dev:api",
+    "build": "vite build",
+    "preview": "vite preview --host --port 5173",
+    "eslint": "eslint",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.36.0",
+    "@stylistic/eslint-plugin": "5.4.0",
+    "concurrently": "9.2.1",
+    "eslint-plugin-n": "17.23.1",
+    "vite": "7.1.7"
+  },
+  "dependencies": {
+    "@vonage/vivid": "5.1.0",
+    "better-sqlite3": "12.3.0",
+    "jayson": "4.2.0",
+    "uuid": "13.0.0"
+  }
+}
