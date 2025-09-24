@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ensureSchema } from './schemas/index.js';
 
 console.debug('Initlizing Database');
 const __filename = fileURLToPath(import.meta.url);
@@ -21,3 +22,6 @@ db.pragma('foreign_keys = ON');
 console.debug('Datbase initlized');
 
 export default db;
+
+ensureSchema();
+
