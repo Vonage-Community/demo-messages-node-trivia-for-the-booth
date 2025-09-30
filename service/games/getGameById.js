@@ -2,6 +2,7 @@ import db from '../../db/index.js';
 import {
   requireUuid,
 } from '../helpersAndGuards.js';
+import { gameFromRow } from './fromRow.js';
 
 export const selectGameById = db.prepare(`
   SELECT id, title, active
@@ -22,5 +23,5 @@ export const getGameById = (id) => {
     };
   }
 
-  return fromRow(game);
+  return gameFromRow(game);
 };

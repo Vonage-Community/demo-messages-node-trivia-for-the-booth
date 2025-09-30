@@ -15,8 +15,8 @@ export const updateGameById = db.prepare(`
 
 export const updateGame = (id, patch = {}) => {
   console.info(`Updating game ${id}`, patch);
-  const existing = getGameById(id);
-  const update = { ...existing };
+  getGameById(id);
+  const update = { };
 
   if ('title' in patch) {
     update.title = requireNonEmptyString('title', patch.title);

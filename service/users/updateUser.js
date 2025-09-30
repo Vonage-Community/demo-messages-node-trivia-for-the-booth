@@ -24,7 +24,7 @@ export const updateUser = (id, patch = {}) => {
     };
   }
 
-  const update = { ...existing };
+  const update = { };
   if ('name' in patch) {
     update.name = requireNonEmptyString('name', patch.name);
   }
