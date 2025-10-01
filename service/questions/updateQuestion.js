@@ -1,6 +1,5 @@
 import db from '../../db/index.js';
 import {
-  requireUuid,
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
 import { getQuestionById } from './getQuestionById.js';
@@ -9,8 +8,7 @@ import debug from './log.js';
 
 const log = debug.extend('update');
 
-
-export const udpateQuestion = db.prepare(`
+export const updateQuestionStmt = db.prepare(`
   UPDATE questions
   SET
     question = COALESCE(@question, question),
@@ -23,10 +21,9 @@ export const udpateQuestion = db.prepare(`
 `);
 
 export const updateQuestion = (id, patch) => {
-  log(`Updating question ${id}`);
-  requireUuid('id', id);
+  log(`Updating question ${id}`, patch);
   getQuestionById(id);
-  const update = {};
+  const update = { id: id };
 
   if ('question' in patch) {
     update.question = requireNonEmptyString('question', patch.question);
@@ -49,13 +46,11 @@ export const updateQuestion = (id, patch) => {
   }
 
   if ('correctChoice' in patch) {
-    update.correct_choice = requireNonEmptyString('correctChoice', patch.correctChoice) & checkCorrectChoice(patch.correct_choice);
+    update.correct_choice = checkCorrectChoice(patch.correctChoice);
   }
 
-  updateQuestion.run({
-    id: id,
-    ...update,
-  });
+  log(`Question ${id} updates`, update);
+  updateQuestionStmt.run(update);
 
   log(`Question ${id} updated`);
   return getQuestionById(id);

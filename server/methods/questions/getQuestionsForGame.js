@@ -3,7 +3,7 @@ import debug from './log.js';
 
 const log = debug.extend('fetch_questions');
 
-export const getQuestionsForGameMethod = async ({ gameId }) => {
+export const getQuestionsForGameMethod = async ({ gameId } = {}) => {
   log(`Fetching questions for game ${gameId}`);
   return getQuestionsForGame(gameId);
 };

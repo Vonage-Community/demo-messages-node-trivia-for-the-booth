@@ -1,5 +1,4 @@
 import db from '../../db/index.js';
-import { v7 as uuidv7 } from 'uuid';
 import {
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
@@ -14,46 +13,32 @@ export const checkCorrectChoice = (correct) => {
   }
   throw {
     code: -32602,
-    message: `${correct} is not a correct value`,
+    message: `${correct} is not a correct choice`,
   };
 };
 
 export const insertQuestion = db.prepare(`
-  INSERT INTO questions (id, game_id, question, choice_a, choice_b, choice_c, choice_d, correct_choice)
-  VALUES (@id, @gameId, @question, @choiceA, @choiceB, @choiceC, @choiceD, @correctChoice)
+  INSERT INTO questions (game_id, question, choice_a, choice_b, choice_c, choice_d, correct_choice)
+  VALUES (@gameId, @question, @choiceA, @choiceB, @choiceC, @choiceD, @correctChoice)
 `);
 
-export const createQuestion = (args) => {
+export const createQuestion = (args = {}) => {
   log('Creating question', args);
 
-  const {
-    gameId,
-    question,
-    choiceA,
-    choiceB,
-    choiceD,
-    choiceC,
-    correctChoice,
-  } = args;
-
-  getGameById(gameId);
-
-  const id = uuidv7();
-  const questionToCreate = {
-    id,
-    gameId,
-    choiceA: requireNonEmptyString('coiceA', choiceA),
-    choiceB: requireNonEmptyString('coiceB', choiceB),
-    choiceC: requireNonEmptyString('coiceC', choiceC),
-    choiceD: requireNonEmptyString('coiceD', choiceD),
-    correctChoice: requireNonEmptyString('correctChoice', correctChoice) & checkCorrectChoice(correctChoice),
+  getGameById(args.gameId);
+  const question = {
+    gameId: args.gameId,
+    question: requireNonEmptyString('question', args.question),
+    choiceA: requireNonEmptyString('coiceA', args.choiceA),
+    choiceB: requireNonEmptyString('coiceB', args.choiceB),
+    choiceC: requireNonEmptyString('coiceC', args.choiceC),
+    choiceD: requireNonEmptyString('coiceD', args.choiceD),
+    correctChoice: checkCorrectChoice(args.correctChoice),
   };
-  insertQuestion.run({
-    id: id,
-    ...question,
-  });
+
+  const info = insertQuestion.run(question);
+  question.id = info.lastInsertRowid;
 
   log('Question created');
-
   return question;
 };

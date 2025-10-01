@@ -1,7 +1,8 @@
 import db from '../../db/index.js';
 import {
-  requireUuid,
+  requireUInt,
 } from '../helpersAndGuards.js';
+import { fromQuestionRow } from './fromQuestionRow.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch');
@@ -14,7 +15,6 @@ export const selectQuestionById = db.prepare(`
 
 export const getQuestionById = (id) => {
   log(`Getting question ${id}`);
-  requireUuid('id', id);
   const question = selectQuestionById.get(id) || null;
 
   if (!question) {
@@ -25,7 +25,5 @@ export const getQuestionById = (id) => {
     };
   }
 
-  return question;
-
-
+  return fromQuestionRow(question);
 };

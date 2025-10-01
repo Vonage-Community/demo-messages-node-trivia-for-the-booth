@@ -15,7 +15,6 @@ export const selectGameById = db.prepare(`
 
 export const getGameById = (id) => {
   log(`Fetching ${id}`);
-  requireUInt('id', id);
   const game = selectGameById.get(id) || null;
 
   if (!game) {

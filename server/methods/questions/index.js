@@ -1,11 +1,13 @@
-import { fetchQuestionMethod } from './fetchQuestion.js';
+import { createQuestionMethod } from './createQuestion.js';
 import { deleteQuestionMethod } from './deleteQuestion.js';
-import { updateQuestionMethod } from './updateQuestion.js';
+import { fetchQuestionMethod } from './fetchQuestion.js';
 import { getQuestionsForGameMethod } from './getQuestionsForGame.js';
+import { updateQuestionMethod } from './updateQuestion.js';
 
 export const questions = {
-  fetch: fetchQuestionMethod,
+  create: createQuestionMethod,
   delete: deleteQuestionMethod,
-  update: updateQuestionMethod,
+  fetch: fetchQuestionMethod,
   for_game: getQuestionsForGameMethod,
+  update: updateQuestionMethod,
 };

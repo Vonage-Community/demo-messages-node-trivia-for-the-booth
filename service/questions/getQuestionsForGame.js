@@ -1,7 +1,8 @@
 import db from '../../db/index.js';
 import {
-  requireUuid,
+  requireUInt,
 } from '../helpersAndGuards.js';
+import { fromQuestionRow } from './fromQuestionRow.js';
 import debug from './log.js';
 
 const log = debug.extend('list');
@@ -13,7 +14,7 @@ const listGamesStmt = db.prepare(`
 `);
 
 export const getQuestionsForGame = (gameId) => {
-  log(`Listing questions for game ${gameId}`);
-  requireUuid('gameId', gameId);
-  return listGamesStmt.all(gameId);
+  log(`Fetching questions for game ${gameId}`);
+  requireUInt('gameId', gameId);
+  return listGamesStmt.all(gameId).map(fromQuestionRow);
 };

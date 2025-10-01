@@ -2,6 +2,7 @@ import * as userMethods from './users/index.js';
 import * as gameMethods from './games/index.js';
 import * as questionMethods from './questions/index.js';
 import log from './log.js';
+import { catchError } from './catchError.js';
 
 const methods = {
   ...userMethods,
@@ -14,7 +15,7 @@ const collapse = (stem, sep, obj) => (map, key) => {
   const value = obj[key];
 
   if (typeof value === 'function') {
-    map[prop] = value;
+    map[prop] = catchError(value);
     return map;
   }
 
