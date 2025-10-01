@@ -7,7 +7,7 @@ export function createGamesTable() {
   log('Creating games table');
   db.exec(`
     CREATE TABLE IF NOT EXISTS games (
-      id                  TEXT PRIMARY KEY,
+      id                  INTEGER PRIMARY KEY AUTOINCREMENT,
       title               TEXT NOT NULL,
       active              INTEGER NOT NULL DEFAULT 0
     );

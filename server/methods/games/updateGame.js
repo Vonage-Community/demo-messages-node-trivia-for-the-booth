@@ -3,8 +3,8 @@ import debug from './log.js';
 
 const log = debug.extend('update');
 
-export const updateGameMethod = async ({ id, ...args }) => {
-  log(`Updating game ${id}`);
-  return updateGame(id, args);
+export const updateGameMethod = async ({ active, ...args }) => {
+  log(`Updating game ${args.id}`);
+  return updateGame(args.id, args);
 };
 

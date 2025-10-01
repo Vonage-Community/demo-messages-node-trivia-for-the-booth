@@ -1,7 +1,7 @@
 import db from '../../db/index.js';
 import { getGameById } from './getGameById.js';
 import {
-  requireUuid,
+  requireUInt,
 } from '../helpersAndGuards.js';
 import { getActiveGame } from './getActiveGame.js';
 import debug from './log.js';
@@ -17,15 +17,19 @@ const setOnlyActiveTx = db.transaction((id) => {
 
   const info = activateOne.run(id);
   if (info.changes === 0) {
-    throw { code: -32004, message: 'Game not found' };
+    throw {
+      code: -32004,
+      message: 'Failed to activate game',
+    };
   }
 });
 
 export const setActiveGame = (id) => {
   log(`Activating ${id}`);
-  requireUuid('id', id);
+  requireUInt('id', id);
 
   let current;
+  getGameById(id);
 
   try {
     current = getActiveGame();
@@ -38,5 +42,5 @@ export const setActiveGame = (id) => {
 
   setOnlyActiveTx(id);
   log(`${id} active`);
-  return getGameById(id);
+  return getActiveGame();
 };

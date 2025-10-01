@@ -1,6 +1,6 @@
 import db from '../../db/index.js';
 import {
-  requireUuid,
+  requireUInt,
 } from '../helpersAndGuards.js';
 import { gameFromRow } from './gameFromRow.js';
 import debug from './log.js';
@@ -15,7 +15,7 @@ export const selectGameById = db.prepare(`
 
 export const getGameById = (id) => {
   log(`Fetching ${id}`);
-  requireUuid('id', id);
+  requireUInt('id', id);
   const game = selectGameById.get(id) || null;
 
   if (!game) {

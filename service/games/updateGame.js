@@ -18,8 +18,8 @@ export const updateGameById = db.prepare(`
 
 export const updateGame = (id, patch = {}) => {
   log(`Updating ${id}`);
-  getGameById(id);
-  const update = {};
+  const existing = getGameById(id);
+  const update = { ...existing };
 
   if ('title' in patch) {
     log('Updating title');
@@ -27,7 +27,6 @@ export const updateGame = (id, patch = {}) => {
   }
 
   update.active = toRowBoolean(update.active);
-
   updateGameById.run(update);
   log(`${id} updated`);
   return getGameById(update.id);

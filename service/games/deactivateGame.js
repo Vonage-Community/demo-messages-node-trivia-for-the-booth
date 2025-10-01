@@ -9,20 +9,14 @@ export const deactivateGameById = db.prepare(`
   UPDATE games
   SET
     active = 0
-  WHERE id = @id
+  WHERE id = ?
 `);
 
 export const deactivateGame = () => {
   const game = getActiveGame();
-  log('Deactivating');
-
-  if (!game.active) {
-    log('Already deactivated');
-    return game;
-  }
-
+  log(`Deactivating game ${game?.id}`);
   game.active = 0;
-  deactivateGameById.run(game);
+  deactivateGameById.run(game.id);
   log(`Deactivated ${game.id}`);
   return gameFromRow(game);
 };

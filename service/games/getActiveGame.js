@@ -2,7 +2,7 @@ import db from '../../db/index.js';
 import { gameFromRow } from './gameFromRow.js';
 import debug from './log.js';
 
-const log = debug.extend('users');
+const log = debug.extend('active');
 
 export const selectActive = db.prepare(`
     SELECT id, title, active
