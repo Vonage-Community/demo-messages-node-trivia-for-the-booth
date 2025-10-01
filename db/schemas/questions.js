@@ -1,7 +1,10 @@
 import db from '../index.js';
+import debug from './log.js';
+
+const log = debug.extend('questions');
 
 export function createQuestionsTable() {
-  console.debug('Creating questions table');
+  log('Creating questions table');
   db.exec(`
     CREATE TABLE IF NOT EXISTS questions (
       id       TEXT PRIMARY KEY,
@@ -17,5 +20,5 @@ export function createQuestionsTable() {
 
     CREATE INDEX IF NOT EXISTS idx_questions_game_id ON questions(game_id);
   `);
-  console.debug('Created questions table');
+  log('Created questions table');
 }

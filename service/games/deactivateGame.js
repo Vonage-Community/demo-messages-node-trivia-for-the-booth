@@ -1,12 +1,28 @@
+import db from '../../db/index.js';
+import { getActiveGame } from './getActiveGame.js';
+import { gameFromRow } from './gameFromRow.js';
+import debug from './log.js';
+
+const log = debug.extend('deactivate');
+
+export const deactivateGameById = db.prepare(`
+  UPDATE games
+  SET
+    active = 0
+  WHERE id = @id
+`);
 
 export const deactivateGame = () => {
   const game = getActiveGame();
+  log('Deactivating');
 
   if (!game.active) {
+    log('Already deactivated');
     return game;
   }
 
   game.active = 0;
-  updateGameById.run(game);
-  return fromRow(game);
+  deactivateGameById.run(game);
+  log(`Deactivated ${game.id}`);
+  return gameFromRow(game);
 };

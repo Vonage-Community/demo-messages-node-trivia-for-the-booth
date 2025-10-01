@@ -1,4 +1,7 @@
 import db from '../../db/index.js';
+import debug from './log.js';
+
+const log = debug.extend('list');
 
 export const listUsersStmt = db.prepare(`
   SELECT id, name, email, phone
@@ -13,8 +16,9 @@ export const countUsersStmt = db.prepare(`
 `);
 
 export const listUsers = ({ limit = 50, offset = 0 } = {}) => {
-  console.info('List users');
+  log(`Listing ${limit} users starting from ${offset}`);
   const users = listUsersStmt.all({ limit, offset });
   const { total } = countUsersStmt.get();
+  log(`Found ${total} users`);
   return { users, total: total, limit, offset };
 };

@@ -2,7 +2,10 @@ import db from '../../db/index.js';
 import {
   requireUuid,
 } from '../helpersAndGuards.js';
-import { gameFromRow } from './fromRow.js';
+import { gameFromRow } from './gameFromRow.js';
+import debug from './log.js';
+
+const log = debug.extend('fetch_id');
 
 export const selectGameById = db.prepare(`
   SELECT id, title, active
@@ -11,17 +14,18 @@ export const selectGameById = db.prepare(`
 `);
 
 export const getGameById = (id) => {
+  log(`Fetching ${id}`);
   requireUuid('id', id);
   const game = selectGameById.get(id) || null;
 
-  console.debug('Game', game);
-
   if (!game) {
+    log(`${id} not found`);
     throw {
       code: -32004,
       message: 'Game not found',
     };
   }
 
+  log(`Fetched ${id}`);
   return gameFromRow(game);
 };

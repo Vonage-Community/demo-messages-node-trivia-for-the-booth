@@ -3,25 +3,38 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ensureSchema } from './schemas/index.js';
+import log from './log.js';
 
-console.debug('Initlizing Database');
+log('Initlizing Database');
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dataDir = path.join(__dirname, '..', 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+const resolvedDbPath = (() => {
+  if (process.env.SQLITE_DB) {
+    return process.env.SQLITE_DB;
+  }
+
+  const dataDir = path.join(__dirname, '..', 'data');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+
+  return path.join(dataDir, 'trivia.sqlite');
+})();
+
+const db = new Database(resolvedDbPath);
+
+if (resolvedDbPath !== ':memory:' && process.env.SQLITE_DISABLE_WAL !== '1') {
+  db.pragma('journal_mode = WAL');
 }
 
-const dbPath = path.join(dataDir, 'trivia.sqlite');
-const db = new Database(dbPath);
-
-db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
-console.debug('Datbase initlized');
+log('SQLite initialized');
 
 export default db;
 
-ensureSchema();
-
+if (process.env.SKIP_MIGRATIONS !== '1') {
+  ensureSchema();
+}

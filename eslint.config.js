@@ -5,7 +5,7 @@ import stylisticJs from '@stylistic/eslint-plugin';
 import nodePlugin from 'eslint-plugin-n';
 
 export default defineConfig([
-  globalIgnores(['eslint.config.js', 'vite.config.js']),
+  globalIgnores(['eslint.config.js', 'vite.config.js', '__tests__/**']),
   eslint.configs.recommended,
   stylisticJs.configs['disable-legacy'],
   nodePlugin.configs['flat/recommended'],

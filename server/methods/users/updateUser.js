@@ -1,3 +1,9 @@
 import { updateUser } from '../../../service/users.js';
+import debug from './log.js';
 
-export const updateUserMethod = async ({ id, ...args }) => await updateUser(id, args);
+const log = debug.extend('update');
+
+export const updateUserMethod = async ({ id, ...args }) => {
+  log('Updating user');
+  return updateUser(id, args);
+};

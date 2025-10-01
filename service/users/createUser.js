@@ -2,6 +2,9 @@ import db from '../../db/index.js';
 import { v7 as uuidv7 } from 'uuid';
 import { requireNonEmptyString } from '../helpersAndGuards.js';
 import { getUserByEmail } from './getUserByEmail.js';
+import debug from './log.js';
+
+const log = debug.extend('create');
 
 export const insertUser = db.prepare(`
   INSERT INTO users (id, name, email, phone)
@@ -9,6 +12,7 @@ export const insertUser = db.prepare(`
 `);
 
 export const createUser = (args) => {
+  log('Creating user');
   const { name, email, phone } = args;
 
   let existing;
@@ -19,6 +23,7 @@ export const createUser = (args) => {
   }
 
   if (existing) {
+    log('A user with that email exists');
     throw {
       code: -32010,
       message: 'Email already registered',
@@ -34,6 +39,7 @@ export const createUser = (args) => {
   };
 
   insertUser.run(user);
+  log('User created');
   return user;
 };
 

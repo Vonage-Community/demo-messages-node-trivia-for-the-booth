@@ -1,9 +1,12 @@
 import { createUsersTable } from './users.js';
 import { createGamesTable } from './games.js';
 import { createQuestionsTable } from './questions.js';
+import debug from './log.js';
+
+const log = debug.extend('migration');
 
 export const ensureSchema = () => {
-  console.info('Ensure Schema');
+  log('Ensure Schema');
   createUsersTable();
   createGamesTable();
   createQuestionsTable();

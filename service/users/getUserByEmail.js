@@ -1,4 +1,8 @@
 import db from '../../db/index.js';
+import { requireNonEmptyString } from '../helpersAndGuards.js';
+import debug from './log.js';
+
+const log = debug.extend('fetch_email');
 
 export const selectUserByEmail = db.prepare(`
   SELECT id, name, email, phone
@@ -7,18 +11,12 @@ export const selectUserByEmail = db.prepare(`
 `);
 
 export const getUserByEmail = (email) => {
-  console.info('Get user by Email');
-  if (!email) {
-    throw {
-      code: -32602,
-      message: 'email is required',
-    };
-  }
-
+  log('Fetching user by Email');
+  requireNonEmptyString('email', email);
   const user = selectUserByEmail.get(email) || null;
 
   if (!user) {
-    console.debug('No user with that email');
+    log('No user with that email');
     throw {
       code: -32004,
       message: 'User not found',

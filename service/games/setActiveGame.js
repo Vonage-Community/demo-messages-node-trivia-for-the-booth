@@ -4,6 +4,9 @@ import {
   requireUuid,
 } from '../helpersAndGuards.js';
 import { getActiveGame } from './getActiveGame.js';
+import debug from './log.js';
+
+const log = debug.extend('activate');
 
 const deactivateAllActive = db.prepare('UPDATE games SET active = 0 WHERE active = 1');
 
@@ -19,6 +22,7 @@ const setOnlyActiveTx = db.transaction((id) => {
 });
 
 export const setActiveGame = (id) => {
+  log(`Activating ${id}`);
   requireUuid('id', id);
 
   let current;
@@ -33,5 +37,6 @@ export const setActiveGame = (id) => {
   }
 
   setOnlyActiveTx(id);
+  log(`${id} active`);
   return getGameById(id);
 };

@@ -1,3 +1,9 @@
 import { deactivateGame } from '../../../service/games.js';
+import debug from './log.js';
 
-export const deactivateGameMethod = async ({ id }) => deactivateGame(id);
+const log = debug.extend('deactivate');
+
+export const deactivateGameMethod = async ({ id }) => {
+  log(`Deactivating game ${id}`);
+  return deactivateGame(id);
+};

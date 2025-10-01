@@ -4,6 +4,9 @@ import {
   toRowBoolean,
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
+import debug from './log.js';
+
+const log = debug.extend('create');
 
 export const insertGame = db.prepare(`
   INSERT INTO games (id, title, active)
@@ -11,14 +14,12 @@ export const insertGame = db.prepare(`
 `);
 
 export const createGame = (args) => {
-  console.info('Creating game', args);
+  log('Creating', args);
 
   const {
     title,
     active = false,
   } = args;
-
-  requireNonEmptyString('title', title);
 
   const id = uuidv7();
   const game = {
@@ -27,9 +28,8 @@ export const createGame = (args) => {
     active: toRowBoolean(active),
   };
 
-  console.debug('Game to create', game);
-
   insertGame.run(game);
+  log(`"${game.title}" created with id ${game.id}`);
 
   return game;
 };

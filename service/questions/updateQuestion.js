@@ -4,8 +4,11 @@ import {
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
 import { getQuestionById } from './getQuestionById.js';
-
 import { checkCorrectChoice } from './createQuestion.js';
+import debug from './log.js';
+
+const log = debug.extend('update');
+
 
 export const udpateQuestion = db.prepare(`
   UPDATE questions
@@ -20,7 +23,7 @@ export const udpateQuestion = db.prepare(`
 `);
 
 export const updateQuestion = (id, patch) => {
-  console.info(`Updating question ${id}`);
+  log(`Updating question ${id}`);
   requireUuid('id', id);
   getQuestionById(id);
   const update = {};
@@ -54,5 +57,6 @@ export const updateQuestion = (id, patch) => {
     ...update,
   });
 
+  log(`Question ${id} updated`);
   return getQuestionById(id);
 };

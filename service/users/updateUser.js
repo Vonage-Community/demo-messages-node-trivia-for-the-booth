@@ -4,11 +4,13 @@ import { getUserById } from './getUserById.js';
 import { insertUser } from './createUser.js';
 import { deleteUser } from './deleteUser.js';
 import { getUserByEmail } from './getUserByEmail.js';
+import debug from './log.js';
+
+const log = debug.extend('update');
 
 export const updateUser = (id, patch = {}) => {
-  console.info(`Update user ${id}`, patch);
-  const existing = getUserById(id);
-  console.debug('Existing user', existing);
+  log(`Update user ${id}`, patch);
+  getUserById(id);
 
   let check;
   try {
@@ -18,13 +20,14 @@ export const updateUser = (id, patch = {}) => {
   }
 
   if (check && check.id !== id) {
+    log('Other user has email');
     throw {
       code: -32010,
       message: 'Cannot update your email. Another user with that email is registered',
     };
   }
 
-  const update = { };
+  const update = {};
   if ('name' in patch) {
     update.name = requireNonEmptyString('name', patch.name);
   }

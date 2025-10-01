@@ -1,8 +1,10 @@
 import { createUser } from '../../../service/users.js';
+import debug from './log.js';
+
+const log = debug.extend('register');
 
 export const registerUserMethod = async (args = {}) => {
-  console.debug('Method: Register User', args);
+  log('Register User', args);
 
-  const user = createUser(args);
-  return user;
+  return createUser(args);
 };

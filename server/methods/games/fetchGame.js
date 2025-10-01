@@ -1,4 +1,10 @@
 import { getGameById } from '../../../service/games.js';
+import debug from './log.js';
 
-export const fetchGameMethod = async ({ id }) => getGameById(id);
+const log = debug.extend('fetch');
+
+export const fetchGameMethod = async ({ id }) => {
+  log(`Fetching game ${id}`);
+  return getGameById(id);
+};
 

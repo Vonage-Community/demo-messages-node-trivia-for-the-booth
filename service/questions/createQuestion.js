@@ -4,6 +4,9 @@ import {
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
 import { getGameById } from '../games.js';
+import debug from './log.js';
+
+const log = debug.extend('create');
 
 export const checkCorrectChoice = (correct) => {
   if (['A', 'B', 'C', 'D'].includes(String(correct).toUpperCase())) {
@@ -21,15 +24,15 @@ export const insertQuestion = db.prepare(`
 `);
 
 export const createQuestion = (args) => {
-  console.info('Creating question', args);
+  log('Creating question', args);
 
   const {
     gameId,
     question,
     choiceA,
     choiceB,
-    choiceC,
     choiceD,
+    choiceC,
     correctChoice,
   } = args;
 
@@ -45,13 +48,12 @@ export const createQuestion = (args) => {
     choiceD: requireNonEmptyString('coiceD', choiceD),
     correctChoice: requireNonEmptyString('correctChoice', correctChoice) & checkCorrectChoice(correctChoice),
   };
-
-  console.debug('Question to create', questionToCreate);
-
   insertQuestion.run({
     id: id,
     ...question,
   });
+
+  log('Question created');
 
   return question;
 };

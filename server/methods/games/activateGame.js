@@ -1,3 +1,9 @@
 import { setActiveGame } from '../../../service/games.js';
+import debug from './log.js';
 
-export const activateGameMethod = async ({ id }) => setActiveGame(id);
+const log = debug.extend('activate');
+
+export const activateGameMethod = async ({ id }) => {
+  log(`Activating game ${id}`);
+  return setActiveGame(id);
+};

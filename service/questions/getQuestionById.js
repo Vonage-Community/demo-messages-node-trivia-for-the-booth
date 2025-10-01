@@ -2,6 +2,9 @@ import db from '../../db/index.js';
 import {
   requireUuid,
 } from '../helpersAndGuards.js';
+import debug from './log.js';
+
+const log = debug.extend('fetch');
 
 export const selectQuestionById = db.prepare(`
   SELECT id, game_id, question, choice_a, choice_b, choice_c, choice_d, correct_choice
@@ -10,18 +13,19 @@ export const selectQuestionById = db.prepare(`
 `);
 
 export const getQuestionById = (id) => {
-  console.info(`Getting question ${id}`);
+  log(`Getting question ${id}`);
   requireUuid('id', id);
-  const game = selectQuestionById.get(id) || null;
+  const question = selectQuestionById.get(id) || null;
 
-  if (!game) {
+  if (!question) {
+    log(`Question ${id} not found`);
     throw {
       code: -32004,
-      message: 'Game not found',
+      message: 'Question not found',
     };
   }
 
-  return game;
+  return question;
 
 
 };

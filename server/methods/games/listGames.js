@@ -1,3 +1,9 @@
 import { listGames } from '../../../service/games.js';
+import debug from './log.js';
 
-export const listGamesMethod = async (args) => listGames(args);
+const log = debug.extend('list');
+
+export const listGamesMethod = async (args) => {
+  log('Listing games');
+  return listGames(args);
+};

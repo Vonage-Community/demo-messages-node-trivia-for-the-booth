@@ -1,3 +1,9 @@
 import { getQuestionsForGame } from '../../../service/questions.js';
+import debug from './log.js';
 
-export const getQuestionsForGameMethod = async ({ gameId }) => getQuestionsForGame(gameId);
+const log = debug.extend('fetch_questions');
+
+export const getQuestionsForGameMethod = async ({ gameId }) => {
+  log(`Fetching questions for game ${gameId}`);
+  return getQuestionsForGame(gameId);
+};

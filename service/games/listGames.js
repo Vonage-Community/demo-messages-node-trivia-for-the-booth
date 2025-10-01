@@ -1,5 +1,8 @@
 import db from '../../db/index.js';
 import { gameFromRow } from './gameFromRow.js';
+import debug from './log.js';
+
+const log = debug.extend('list');
 
 const listGamesStmt = db.prepare(`
   SELECT id, title, active
@@ -9,6 +12,7 @@ const listGamesStmt = db.prepare(`
 `);
 
 export const listGames = ({ limit = 50, offset = 0 } = {}) => {
+  log(`Listing ${limit} starting from ${offset}`);
   limit = Number.isFinite(limit) ? Number(limit) : 50;
   offset = Number.isFinite(offset) ? Number(offset) : 0;
 
