@@ -7,8 +7,8 @@ import debug from './log.js';
 const log = debug.extend('create');
 
 export const insertUser = db.prepare(`
-  INSERT INTO users (id, name, email, phone)
-  VALUES (@id, @name, @email, @phone)
+  INSERT INTO users (name, email, phone)
+  VALUES (@name, @email, @phone)
 `);
 
 export const createUser = (args) => {
@@ -30,15 +30,14 @@ export const createUser = (args) => {
     };
   }
 
-  const id = uuidv7();
   const user = {
-    id: id,
     name: requireNonEmptyString('name', name),
     email: requireNonEmptyString('email', email),
     phone: requireNonEmptyString('phone', phone),
   };
 
-  insertUser.run(user);
+  const info = insertUser.run(user);
+  user.id = info.lastInsertRowid;
   log('User created');
   return user;
 };

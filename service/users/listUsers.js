@@ -15,7 +15,13 @@ export const countUsersStmt = db.prepare(`
   FROM users
 `);
 
-export const listUsers = ({ limit = 50, offset = 0 } = {}) => {
+export const listUsers = (args) => {
+  const { limit, offset } = {
+    limit: 50,
+    offset: 0,
+    ...args,
+  };
+
   log(`Listing ${limit} users starting from ${offset}`);
   const users = listUsersStmt.all({ limit, offset });
   const { total } = countUsersStmt.get();

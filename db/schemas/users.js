@@ -7,9 +7,9 @@ export const createUsersTable = () => {
   log('Creating users table');
   db.exec(`
     CREATE TABLE IF NOT EXISTS users(
-      id          TEXT    PRIMARY KEY,
-      name        TEXT    NOT NULL,
-      email       TEXT    NOT NULL UNIQUE,
+      id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      name        TEXT NOT NULL,
+      email       TEXT NOT NULL UNIQUE,
       phone       TEXT
     );
   

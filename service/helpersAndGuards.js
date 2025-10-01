@@ -19,7 +19,7 @@ export const requireNonEmptyString = (name, value) => {
   if (typeof value !== 'string' || value.trim() === '') {
     throw {
       code: -32602,
-      message: `${name} must be a non-empty string`,
+      message: `${name} is required`,
     };
   }
 
@@ -54,7 +54,7 @@ export const requireInt = (name, value) => {
    * @returns {string} the value, if valid
    */
 export const requireUInt = (name, value) => {
-  const num = requireInt(value);
+  const num = requireInt(name, value);
 
   if (num < 0) {
     throw {

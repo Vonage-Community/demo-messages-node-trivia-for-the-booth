@@ -6,7 +6,5 @@ const log = debug.extend('delete');
 export const deleteUserMethod = async ({ id }) => {
   log('Deleting user', id);
 
-  return {
-    user: deleteUser(id),
-  };
+  return deleteUser(id);
 };

@@ -1,3 +1,3 @@
-import debug from 'debug';
+import debug from '../log.js';
 
-export default debug('methods');
+export default debug.extend('methods');

@@ -3,12 +3,15 @@ import eslint from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import stylisticJs from '@stylistic/eslint-plugin';
 import nodePlugin from 'eslint-plugin-n';
+import jest from 'eslint-plugin-jest';
 
 export default defineConfig([
-  globalIgnores(['eslint.config.js', 'vite.config.js', '__tests__/**']),
+  globalIgnores(['eslint.config.js', 'vite.config.js']),
   eslint.configs.recommended,
   stylisticJs.configs['disable-legacy'],
   nodePlugin.configs['flat/recommended'],
+  jest.configs['flat/recommended'],
+  jest.configs['flat/style'],
   {
     languageOptions: {
       ecmaVersion: 2022,

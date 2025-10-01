@@ -3,14 +3,15 @@ import debug from './log.js';
 
 const log = debug.extend('fetch');
 
-export const fetchUserMethod = async ({ id, email }) => {
+export const fetchUserMethod = async ({ id, email } = {}) => {
   log('Fetching user');
+
   if (id) {
     log(`Fetching user using id ${id}`);
     return getUserById(id);
   }
 
-  if (!email) {
+  if (email) {
     log('Fetching user by email');
     return getUserByEmail(email);
   }

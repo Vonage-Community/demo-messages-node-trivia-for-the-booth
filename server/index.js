@@ -1,8 +1,7 @@
 import jayson from 'jayson/promise/index.js';
 import methods from './methods/index.js';
-import debug from 'debug';
+import log from './log.js';
 
-const log = debug('rpc');
 const server = new jayson.Server(methods);
 
 server.http().listen(3000, () => {

@@ -20,9 +20,11 @@
     "test:watch": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--experimental-vm-modules\" jest --watch"
   },
   "dependencies": {
+    "@faker-js/faker": "10.0.0",
     "@vonage/vivid": "5.1.0",
     "better-sqlite3": "12.3.0",
     "debug": "4.4.3",
+    "eslint-plugin-jest": "29.0.1",
     "jayson": "4.2.0",
     "uuid": "13.0.0"
   },

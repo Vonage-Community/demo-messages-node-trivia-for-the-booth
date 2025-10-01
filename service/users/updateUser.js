@@ -1,14 +1,21 @@
 import db from '../../db/index.js';
 import { requireNonEmptyString } from '../helpersAndGuards.js';
 import { getUserById } from './getUserById.js';
-import { insertUser } from './createUser.js';
-import { deleteUser } from './deleteUser.js';
 import { getUserByEmail } from './getUserByEmail.js';
 import debug from './log.js';
 
 const log = debug.extend('update');
 
-export const updateUser = (id, patch = {}) => {
+export const updateUserSmt = db.prepare(`
+  UPDATE users
+  SET
+    name = COALESCE(@name, name),
+    email = COALESCE(@email, email),
+    phone = COALESCE(@phone, phone)
+  WHERE id = @id
+`);
+
+export const updateUser = (id, patch) => {
   log(`Update user ${id}`, patch);
   getUserById(id);
 
@@ -27,7 +34,7 @@ export const updateUser = (id, patch = {}) => {
     };
   }
 
-  const update = {};
+  const update = { id: id };
   if ('name' in patch) {
     update.name = requireNonEmptyString('name', patch.name);
   }
@@ -40,11 +47,7 @@ export const updateUser = (id, patch = {}) => {
     update.phone = requireNonEmptyString('phone', patch.phone);
   }
 
-  db.transaction((update) => {
-    deleteUser.run(update.id);
-    insertUser.run(update);
-    return true;
-  })(update);
-
+  updateUserSmt.run(update);
+  log(`User ${id} updated`);
   return update;
 };

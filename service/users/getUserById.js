@@ -1,5 +1,5 @@
 import db from '../../db/index.js';
-import { requireUuid } from '../helpersAndGuards.js';
+import { requireUInt } from '../helpersAndGuards.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch_id');
@@ -12,7 +12,7 @@ export const selectUserById = db.prepare(`
 
 export const getUserById = (id) => {
   log(`Fetching user By ID ${id}`);
-  requireUuid('id', id);
+  requireUInt('id', id);
   const user = selectUserById.get(id) || null;
 
   if (!user) {
