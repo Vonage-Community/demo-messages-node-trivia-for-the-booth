@@ -4,7 +4,6 @@ import { createGame, deleteGame } from '../../../service/games.js';
 
 describe('Question RPC calls', () => {
   let question;
-  let otherQuestion;
   const game = createGame({
     title: faker.person.firstName(),
   });

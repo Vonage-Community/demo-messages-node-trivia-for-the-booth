@@ -1,5 +1,4 @@
 import db from '../../db/index.js';
-import { v7 as uuidv7 } from 'uuid';
 import { requireNonEmptyString } from '../helpersAndGuards.js';
 import { getUserByEmail } from './getUserByEmail.js';
 import debug from './log.js';

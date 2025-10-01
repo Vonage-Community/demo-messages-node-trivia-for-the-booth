@@ -25,8 +25,7 @@
     "better-sqlite3": "12.3.0",
     "debug": "4.4.3",
     "eslint-plugin-jest": "29.0.1",
-    "jayson": "4.2.0",
-    "uuid": "13.0.0"
+    "jayson": "4.2.0"
   },
   "devDependencies": {
     "@eslint/js": "9.36.0",

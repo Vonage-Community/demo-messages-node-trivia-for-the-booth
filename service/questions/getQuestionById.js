@@ -1,7 +1,4 @@
 import db from '../../db/index.js';
-import {
-  requireUInt,
-} from '../helpersAndGuards.js';
 import { fromQuestionRow } from './fromQuestionRow.js';
 import debug from './log.js';
 
