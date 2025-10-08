@@ -1,0 +1,52 @@
+{{> header title="Register" }}
+
+<div class="d-flex align-items-center justify-content-between">
+  <h1 class="mb-0">Register</h1>
+</div>
+
+<form action="#" onsubmit="handleSubmit(event)" class="needs-validation" novalidate>
+  <trivia-form-input name="name" icon="person" help="The name you want to display in leader boards">
+    Display Name
+  </trivia-form-input>
+
+  <trivia-form-input-email name="email" required>
+    Email
+  </trivia-form-input-email>
+
+  <trivia-form-input name="password" type="password" icon="key" required>
+    Password
+  </trivia-form-input>
+
+  <trivia-form-input-phone name="phone" required>
+    Phone Number
+  </trivia-form-input-phone>
+
+  <button type="submit" class="btn btn-primary mb-3">Register</button>
+</form>
+
+<script>
+function handleSubmit(event) {
+  console.log('Submit');
+  event.preventDefault();
+
+  const form = event.target;
+  console.log(form.checkValidity() ? 'Valid' : 'Invalid')
+
+//  const formData = new FormData(event.target);
+//
+//  const data = [...formData.entries()].map(([name, value]) => {
+//    const el = form[name];
+//
+//    return {
+//      name,
+//      value,
+//      valid: (el.internals ?? el).validity.valid,
+//      error: (el.internals ?? el).validationMessage
+//    }
+//  })
+//
+//  console.log(data);
+}
+
+</script>
+{{> footer }}

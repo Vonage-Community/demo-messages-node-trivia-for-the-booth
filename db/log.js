@@ -1,3 +1,3 @@
-import debug from 'debug';
+import debug from '../server/log.js';
 
-export default debug('db');
+export default debug.extend('db');

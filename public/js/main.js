@@ -1,7 +1,6 @@
-import '@vonage/vivid/button';
+import '../css/app.scss';
+import 'bootstrap';
+import './components/index.js';
+import './rpc.js';
+import './form.js';
 
-const startBtn = document.getElementById('startBtn');
-startBtn?.addEventListener('click', () => {
-  const app = document.getElementById('app');
-  app.innerHTML = '<p>Game booting…</p>';
-});

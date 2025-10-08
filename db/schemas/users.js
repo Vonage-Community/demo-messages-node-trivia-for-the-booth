@@ -9,10 +9,11 @@ export const createUsersTable = () => {
     CREATE TABLE IF NOT EXISTS users(
       id          INTEGER PRIMARY KEY AUTOINCREMENT,
       name        TEXT NOT NULL,
+      password    TEXT NOT NULL,
       email       TEXT NOT NULL UNIQUE,
       phone       TEXT
     );
-  
+
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,
   );
   log('Users table created');

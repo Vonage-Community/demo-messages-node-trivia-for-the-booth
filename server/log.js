@@ -1,3 +1,3 @@
 import debug from 'debug';
 
-export default debug('rpc');
+export default debug('trivia');

@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite';
+import handlebars from 'vite-plugin-handlebars';
+import path from 'node:path';
 
 export default defineConfig({
   root: 'public',
@@ -18,5 +20,15 @@ export default defineConfig({
     outDir: '../dist',
     emptyOutDir: true,
     target: 'esnext'
-  }
+  },
+  plugins: [
+    handlebars({
+      // Make partials available like {{> header}} / {{> footer}}
+      partialDirectory: path.resolve(__dirname, 'public/partials'),
+      // Optional global data available as {{title}}, etc.
+      context: {
+        siteName: 'Trivia Game',
+      },
+    }),
+  ],
 });

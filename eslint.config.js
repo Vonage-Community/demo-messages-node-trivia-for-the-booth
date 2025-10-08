@@ -4,6 +4,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import stylisticJs from '@stylistic/eslint-plugin';
 import nodePlugin from 'eslint-plugin-n';
 import jest from 'eslint-plugin-jest';
+import html from 'eslint-plugin-html';
 
 export default defineConfig([
   globalIgnores(['eslint.config.js', 'vite.config.js']),
@@ -35,16 +36,30 @@ export default defineConfig([
     },
   },
   {
-    files: ['packages/*/src/**/*.{js}'],
+    files: ['public/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+    },
+    rules: {
+      'n/no-unsupported-features/node-builtins': ['off']
+    }
+  },
+  {
+    files: ['public/**/*.html'],
+    plugins: { html },
+    languageOptions: {
+      globals: { ...globals.browser },
+    },
   },
   {
     settings: {
       node: {
-        version: '>=18.0.0',
+        version: '>=20.0.0',
       },
     },
     rules: {
-      // Leave this off. This rule cannot handle monorepos
       'n/no-missing-import': ['off'],
       'n/no-unsupported-features/es-builtins': [
         'error', {

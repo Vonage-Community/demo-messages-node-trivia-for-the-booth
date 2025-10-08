@@ -1,0 +1,19 @@
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+:root {
+  --page-padding: 24px;
+}
+
+body {
+  height: 100vh;
+}
+
+#logo {
+  height: 75px;
+}
+
+nav {
+  padding: 0px;
+  margin: 0px;
+}
