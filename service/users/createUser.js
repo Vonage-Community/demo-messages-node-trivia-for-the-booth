@@ -24,9 +24,13 @@ export const createUser = (args) => {
 
   if (existing) {
     log('A user with that email exists');
+    const message = 'Email already registered';
     throw {
       code: -32010,
-      message: 'Email already registered',
+      message: message,
+      data: {
+        email: message,
+      },
     };
   }
 

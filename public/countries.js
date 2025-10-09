@@ -1567,7 +1567,7 @@ export const getCountryDialCodes = countryCodes.reduce(
  * @param { string } countryCode - The ISO 3166-1 alpha-2 country code.
  * @returns { string } - A string combining flag and country name.
  */
-export const buildCountryString = (countryCode = region) =>`${getCountryFlag(countryCode)}${getCountryName(countryCode)}`;
+export const buildCountryString = (countryCode = region) => `${getCountryFlag(countryCode)}${getCountryName(countryCode)}`;
 
 /**
  * Returns the flag flag for the given country.

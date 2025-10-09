@@ -1,52 +1,44 @@
 {{> header title="Register" }}
 
-<div class="d-flex align-items-center justify-content-between">
-  <h1 class="mb-0">Register</h1>
-</div>
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-4 border rounded-3 shadow-sm">
 
-<form action="#" onsubmit="handleSubmit(event)" class="needs-validation" novalidate>
-  <trivia-form-input name="name" icon="person" help="The name you want to display in leader boards">
-    Display Name
-  </trivia-form-input>
+      <div class="mb-2 gap-0 d-flex align-items-center justify-content-between border-bottom">
+        <h1>Register</h1>
+      </div>
 
-  <trivia-form-input-email name="email" required>
-    Email
-  </trivia-form-input-email>
+      <form action="#" id="registration-form" data-rpc-method="users.register" class="needs-validation" novalidate>
+        <trivia-form-input
+          name="name"
+          icon="person"
+          help="The name you want to display in leader boards"
+          label="Display Name"
+          required>
+        </trivia-form-input>
 
-  <trivia-form-input name="password" type="password" icon="key" required>
-    Password
-  </trivia-form-input>
+        <trivia-form-input-email
+          name="email"
+          required
+          label="Email">
+        </trivia-form-input-email>
 
-  <trivia-form-input-phone name="phone" required>
-    Phone Number
-  </trivia-form-input-phone>
+        <trivia-form-input
+          name="password"
+          type="password"
+          icon="key"
+          required
+          label="Password">
+        </trivia-form-input>
 
-  <button type="submit" class="btn btn-primary mb-3">Register</button>
-</form>
+        <trivia-form-input-phone
+          name="phone"
+          required
+          label="Phone Number">
+        </trivia-form-input-phone>
 
-<script>
-function handleSubmit(event) {
-  console.log('Submit');
-  event.preventDefault();
+        <button type="submit" class="btn btn-primary mb-3">Register</button>
+      </form>
+    </div>
+  </div>
 
-  const form = event.target;
-  console.log(form.checkValidity() ? 'Valid' : 'Invalid')
-
-//  const formData = new FormData(event.target);
-//
-//  const data = [...formData.entries()].map(([name, value]) => {
-//    const el = form[name];
-//
-//    return {
-//      name,
-//      value,
-//      valid: (el.internals ?? el).validity.valid,
-//      error: (el.internals ?? el).validationMessage
-//    }
-//  })
-//
-//  console.log(data);
-}
-
-</script>
 {{> footer }}

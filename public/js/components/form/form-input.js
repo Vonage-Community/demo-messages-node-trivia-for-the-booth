@@ -1,14 +1,12 @@
 const inputTemplate = document.createElement('template');
 inputTemplate.innerHTML = `
-<style>@import 'css/app.scss'</style>
 <div class="mb-3 input">
-  <label class="form-label">
-    <slot></slot>
-    <div class="input-group">
-      <span class="input-group-text flex-nowrap prefix"></span>
-      <input class="form-control"></input>
-    </div>
-  </label>
+  <label class="form-label"></label>
+  <div class="input-group">
+    <span class="input-group-text flex-nowrap prefix"></span>
+    <input class="form-control"></input>
+  </div>
+  <div class="invalid-feedback"></div>
   <div class="form-text help-text"></div>
 </div>
 `;
@@ -26,15 +24,22 @@ export class FormInput extends HTMLElement {
 
   constructor() {
     super();
-    this.internals = this.attachInternals();
 
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.shadow.append(inputTemplate.content.cloneNode(true));
-    this.divElement = this.shadow.querySelector('div.input');
-    this.inputElement = this.shadow.querySelector('input');
-    this.labelElement = this.shadow.querySelector('label');
-    this.helpElement = this.shadow.querySelector('div.form-text');
-    this.prefixElement = this.shadow.querySelector('span.prefix');
+    this.internals = this.attachInternals();
+    this.append(inputTemplate.content.cloneNode(true));
+
+    this.divElement = this.querySelector('div.input');
+    this.inputElement = this.querySelector('input');
+    this.labelElement = this.querySelector('label');
+    this.helpElement = this.querySelector('div.form-text');
+    this.prefixElement = this.querySelector('span.prefix');
+    this.invalidFeedbackElement = this.querySelector('div.invalid-feedback');
+  }
+
+  reportValidity() {
+    const valid = this.inputElement.reportValidity();
+    this.updateValidity();
+    return valid;
   }
 
   get value() {
@@ -42,12 +47,8 @@ export class FormInput extends HTMLElement {
   }
 
   set value(value) {
-    this._value = value;
     this.internals.setFormValue(value);
-  }
-
-  get form() {
-    return this.internals.form;
+    this._value = value;
   }
 
   get name() {
@@ -70,20 +71,27 @@ export class FormInput extends HTMLElement {
     return this.getAttribute('help');
   }
 
+  get willValidate() {
+    return this.inputElement.willValidate;
+  }
+
   get validity() {
-    return this.internals.validity;
+    return this.inputElement.validity;
   }
 
   get validationMessage() {
-    return this.internals.validationMessage;
-  }
-
-  get willValidate() {
-    return this.internals.willValidate;
+    return this.inputElement.validationMessage;
   }
 
   connectedCallback() {
     this.baseId = this.getAttribute('id') || `${this.name}Input`;
+    const initial = this.getAttribute('value') ?? '';
+    this.value = initial;
+    this.internals.setValidity(
+      this.inputElement.checkValidity() ? {} : this.inputElement.validity,
+      this.inputElement.validationMessage,
+      this.inputElement,
+    );
     this.build();
   }
 
@@ -92,6 +100,11 @@ export class FormInput extends HTMLElement {
     this.buildInput();
     this.buildHelp();
     this.buildPrefix();
+    this.buildInvalidFeedback();
+  }
+
+  buildInvalidFeedback() {
+    this.invalidFeedbackElement.setAttribute('id', `${this.baseId}Invalid`);
   }
 
   buildPrefix() {
@@ -99,6 +112,7 @@ export class FormInput extends HTMLElement {
   }
 
   buildLabel() {
+    this.labelElement.textContent = this.getAttribute('label') || '';
     this.labelElement.setAttribute('for', this.baseId);
   }
 
@@ -117,7 +131,7 @@ export class FormInput extends HTMLElement {
       const attrValue = this.getAttribute(attr);
 
       if (attr !== 'required' && attrValue !== null) {
-        this.inputElement[attr] = attrValue;
+        this.inputElement.setAttribute(attr, attrValue);
         return;
       }
 
@@ -130,22 +144,22 @@ export class FormInput extends HTMLElement {
     });
 
     this.inputElement.name = this.name;
-
-    this.inputElement.addEventListener('change', (event) => {
-      const clone = new event.constructor(event.type, event);
-
-      this.dispatchEvent(clone);
-
-      this.value = this.inputElement.value;
-    });
-
-    this.validateInput();
+    this.inputElement.setAttribute('id', this.baseId);
+    this.inputElement.setAttribute('aria-describedby', `${this.baseId}Help`);
+    this.inputElement.addEventListener('input', () => this.updateValidationFeedBack());
+    this.inputElement.addEventListener('blur', () => this.updateValidationFeedBack());
+    this.inputElement.addEventListener(
+      'invalid',
+      (event) => {
+        event.preventDefault();
+        this.updateValidationFeedBack();
+      },
+    );
   }
 
   focus() {
     this.inputElement.focus();
   }
-
 
   buildHelp() {
     this.helpElement.setAttribute('id', `${this.baseId}Help`);
@@ -170,57 +184,65 @@ export class FormInput extends HTMLElement {
     this.prefixElement.remove();
   }
 
-  updateValidity() {
-    if (!this.inputElement) {
-      return;
-    };
+  setValidity(flags, message) {
+    this.internals.setValidity(
+      flags,
+      message,
+      this.inputElement,
+    );
 
-    this.inputElement.classList.remove('is-valid', 'is-invalid');
-    this.inputElement.classList.add(this.inputElement.checkValidity() ? 'is-valid' : 'is-invalid');
+    if (message) {
+      this.inputElement.setCustomValidity(message);
+    }
+
+    if (flags) {
+      this.internals.states.add('invalid');
+    }
+
+    this.updateValidationFeedBack();
+  }
+
+  updateValidity(flags, message) {
+    const valid = this.internals.checkValidity();
+
+    this.internals.setValidity(
+      valid ? {} : flags ?? this.inputElement.validity,
+      message ?? this.inputElement.validationMessage,
+      this.inputElement,
+    );
+
+    this.inputElement.classList.toggle('is-invalid', !valid);
+    this.inputElement.classList.toggle('is-valid', valid);
+    this.updateValidationFeedBack();
+  }
+
+  updateValidationFeedBack() {
+    const message = this.internals.validationMessage ||
+      this.inputElement.validationMessage;
+    const valid = !message;
+
+    if (valid) {
+      this.inputElement.setAttribute('aria-describedby', `${this.baseId}Help`);
+      this.invalidFeedbackElement.classList.toggle('d-none', !valid);
+      this.invalidFeedbackElement.classList.toggle('d-block', valid);
+      this.invalidFeedbackElement.textContent = '';
+      return;
+    }
+
+    this.inputElement.setAttribute('aria-describedby', `${this.baseId}Help ${this.baseId}Invalid`);
+    this.invalidFeedbackElement.textContent = message;
+    this.invalidFeedbackElement.classList.toggle('d-none', valid);
+    this.invalidFeedbackElement.classList.toggle('d-block', !valid);
   }
 
   resetValidation() {
     this.inputElement.classList.remove('is-valid', 'is-invalid');
   }
 
-
-  checkValidity() {
-    return this.internals.checkValidity();
-  }
-
-  reportValidity() {
-    return this.internals.reportValidity();
-  }
-
-  validateInput() {
-    const validState = this.inputElement.validity;
-    if (validState.valid) {
-      this.internals.setValidity({}, '', this.inputElement);
-      return;
-    }
-
-    for (let state in validState) {
-      const attr = `data-${state.toString()}`;
-
-      if (validState[state]) {
-        this.validationError = state.toString();
-
-        const errorMessage = this.hasAttribute(attr) ?
-          this.getAttribute(attr) : this.inputElement.validationMessage;
-
-        this.internals.setValidity(
-          { [this.validationError]: true },
-          errorMessage,
-          this.inputElement,
-        );
-      }
-    }
-  }
-
   attributeChangedCallback(name) {
     switch (name) {
       case 'disabled':
-        this.updateDisabled();
+        this.updateDisabled(this.getAttribute('disabled'));
         break;
       case 'help':
         this.updateHelp();
@@ -233,10 +255,6 @@ export class FormInput extends HTMLElement {
 
   updateDisabled(value) {
     this.inputElement.disabled = value !== null && value !== 'false';
-  }
-
-  render() {
-    this.innerHTML = this.divElement;
   }
 }
 

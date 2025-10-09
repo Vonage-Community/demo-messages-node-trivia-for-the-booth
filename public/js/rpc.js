@@ -1,3 +1,5 @@
+import { dispatchEvent } from './events';
+
 export const rpc = async (method, params, requestId = '1') => {
   console.log(`Making ${method} RPC call`);
   const res = await fetch('http://localhost:3000/rpc', {
@@ -14,18 +16,17 @@ export const rpc = async (method, params, requestId = '1') => {
   });
 
   if (!res.ok) {
+    dispatchEvent('rpc:error', { id, method, params });
     throw new Error(`RPC call for ${method} failed`);
   }
 
-  try {
-    const { id, error, result } = await res.json();
+  const { id, error, result } = await res.json();
 
-    if (error) {
-      throw new Error(error.message);
-    }
-
-    return [id, result];
-  } catch {
-    throw new Error(`RPC call for ${method} did not return a body!`);
+  if (error) {
+    dispatchEvent('rpc:fault', { error, id, method, params });
+    throw error;
   }
+
+  dispatchEvent('rpc:success', { id, method, params });
+  return [id, result];
 };

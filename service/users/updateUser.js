@@ -28,9 +28,13 @@ export const updateUser = (id, patch) => {
 
   if (check && check.id !== id) {
     log('Other user has email');
+    const message = 'Cannot update your email. Another user with that email is registered';
     throw {
       code: -32010,
-      message: 'Cannot update your email. Another user with that email is registered',
+      message: message,
+      data: {
+        email: message,
+      },
     };
   }
 
