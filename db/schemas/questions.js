@@ -3,7 +3,7 @@ import debug from './log.js';
 
 const log = debug.extend('questions');
 
-export function createQuestionsTable() {
+export const createQuestionsTable = () => {
   log('Creating questions table');
   db.exec(`
     CREATE TABLE IF NOT EXISTS questions (
@@ -20,5 +20,6 @@ export function createQuestionsTable() {
 
     CREATE INDEX IF NOT EXISTS idx_questions_game_id ON questions(game_id);
   `);
+
   log('Created questions table');
-}
+};

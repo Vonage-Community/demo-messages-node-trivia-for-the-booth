@@ -1,6 +1,12 @@
 import { createUsersTable } from './users.js';
 import { createGamesTable } from './games.js';
 import { createQuestionsTable } from './questions.js';
+import { createPlayersTable } from './players.js';
+import { createGamesView } from './gamesView.js';
+import { createAnswersTable } from './answers.js';
+import { createGameDetailView } from './gameDetailView.js';
+
+
 import debug from './log.js';
 
 const log = debug.extend('migration');
@@ -10,4 +16,9 @@ export const ensureSchema = () => {
   createUsersTable();
   createGamesTable();
   createQuestionsTable();
+  createPlayersTable();
+  createAnswersTable();
+
+  createGamesView();
+  createGameDetailView();
 };

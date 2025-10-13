@@ -5,8 +5,14 @@ import debug from './log.js';
 const log = debug.extend('list');
 
 const listGamesStmt = db.prepare(`
-  SELECT id, title, active
-  FROM games
+  SELECT
+    id,
+    title,
+    active,
+    short_code,
+    question_count,
+    player_count
+  FROM games_with_counts
   ORDER BY id ASC
   LIMIT @limit OFFSET @offset
 `);

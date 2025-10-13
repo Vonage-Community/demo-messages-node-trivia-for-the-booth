@@ -7,9 +7,19 @@ import debug from './log.js';
 
 const log = debug.extend('create');
 
+const generateShortCode = () => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  return code;
+};
+
+
 export const insertGame = db.prepare(`
-  INSERT INTO games (title, active)
-  VALUES (@title, @active)
+  INSERT INTO games (title, active, short_code)
+  VALUES (@title, @active, @shortCode)
 `);
 
 export const createGame = (args = {}) => {
@@ -21,6 +31,7 @@ export const createGame = (args = {}) => {
 
   const game = {
     title: requireNonEmptyString('title', title),
+    shortCode: generateShortCode(),
     active: 0,
   };
 
