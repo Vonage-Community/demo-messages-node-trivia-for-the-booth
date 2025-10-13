@@ -1,44 +1,42 @@
 {{> header title="Register" }}
 
-  <div class="row justify-content-md-center">
-    <div class="col col-lg-4 border rounded-3 shadow-sm">
+<div class="row justify-content-md-center">
+  <div class="col col-lg-4 border rounded-3 shadow-sm">
 
-      <div class="mb-2 gap-0 d-flex align-items-center justify-content-between border-bottom">
-        <h1>Register</h1>
-      </div>
-
-      <form action="#" id="registration-form" data-rpc-method="users.register" class="needs-validation" novalidate>
-        <trivia-form-input
-          name="name"
-          icon="person"
-          help="The name you want to display in leader boards"
-          label="Display Name"
-          required>
-        </trivia-form-input>
-
-        <trivia-form-input-email
-          name="email"
-          required
-          label="Email">
-        </trivia-form-input-email>
-
-        <trivia-form-input
-          name="password"
-          type="password"
-          icon="key"
-          required
-          label="Password">
-        </trivia-form-input>
-
-        <trivia-form-input-phone
-          name="phone"
-          required
-          label="Phone Number">
-        </trivia-form-input-phone>
-
-        <button type="submit" class="btn btn-primary mb-3">Register</button>
-      </form>
+    <div class="mb-2 gap-0 d-flex align-items-center justify-content-between border-bottom">
+      <h1>Register</h1>
     </div>
+
+    <form action="#" id="registration-form" data-rpc-method="users.register" class="needs-validation" novalidate>
+      <trivia-form-input
+        name="name"
+        icon="person"
+        help="The name you want to display in leader boards"
+        label="Display Name"
+        required>
+      </trivia-form-input>
+
+      <trivia-form-input-email
+        name="email"
+        required
+        label="Email">
+      </trivia-form-input-email>
+
+      <trivia-form-input-password
+        name="password"
+        required
+        label="Password">
+      </trivia-form-input-password>
+
+      <trivia-form-input-phone
+        name="phone"
+        required
+        label="Phone Number">
+      </trivia-form-input-phone>
+
+      <button type="submit" class="btn btn-primary mb-3">Register</button>
+    </form>
   </div>
+</div>
 
 {{> footer }}

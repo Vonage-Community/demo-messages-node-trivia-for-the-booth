@@ -1,6 +1,11 @@
 import { rpc } from '../rpc.js';
-import { dispatchEvent as emitEvent } from '../events.js';
+import { emitEvent } from '../events.js';
 
+/**
+ * Custom element that can make RPC calls when connected to the DOM
+ *
+ * @abstract
+ */
 export class RPCElement extends HTMLElement {
   static observedAttributes = ['data-rpc-id', 'data-rpc-method'];
 

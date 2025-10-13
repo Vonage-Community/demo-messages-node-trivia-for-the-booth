@@ -1,0 +1,30 @@
+{{> header title="Login" }}
+
+  <div class="row justify-content-md-center">
+    <div class="col col-lg-4 border rounded-3 shadow-sm">
+
+      <div class="mb-2 gap-0 d-flex align-items-center justify-content-between border-bottom">
+        <h1>Login</h1>
+      </div>
+
+      <form id="login-form" data-rpc-method="login" class="needs-validation" novalidate>
+        <trivia-form-input-email
+          name="email"
+          required
+          label="Email">
+        </trivia-form-input-email>
+
+        <trivia-form-input
+          name="password"
+          type="password"
+          icon="key"
+          required
+          label="Password">
+        </trivia-form-input>
+
+        <button type="submit" class="btn btn-primary mb-3">Login</button>
+      </form>
+    </div>
+  </div>
+
+{{> footer }}

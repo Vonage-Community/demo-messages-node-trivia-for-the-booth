@@ -1,6 +1,7 @@
 import * as userMethods from './users/index.js';
 import * as gameMethods from './games/index.js';
 import * as questionMethods from './questions/index.js';
+import { loginMethod } from './login.js';
 import log from './log.js';
 import { catchError } from './catchError.js';
 
@@ -8,6 +9,7 @@ const methods = {
   ...userMethods,
   ...gameMethods,
   ...questionMethods,
+  login: loginMethod,
 };
 
 const collapse = (stem, sep, obj) => (map, key) => {

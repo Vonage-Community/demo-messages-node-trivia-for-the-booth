@@ -1,11 +1,12 @@
-import { dispatchEvent } from './events';
+import { emitEvent } from './events';
 
 export const rpc = async (method, params, requestId = '1') => {
-  console.log(`Making ${method} RPC call`);
+  const token = sessionStorage.getItem('auth_token');
   const res = await fetch('http://localhost:3000/rpc', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
+      ...(token ? { 'authorization': `Bearer ${token}` } : {}),
     },
     body: JSON.stringify({
       jsonrpc: '2.0',
@@ -15,18 +16,28 @@ export const rpc = async (method, params, requestId = '1') => {
     }),
   });
 
-  if (!res.ok) {
-    dispatchEvent('rpc:error', { id, method, params });
-    throw new Error(`RPC call for ${method} failed`);
-  }
 
   const { id, error, result } = await res.json();
 
+  if (!res.ok) {
+    const errorData = {
+      id: id,
+      method: method,
+      params: params,
+      error: error,
+    };
+    emitEvent('rpc:error', errorData);
+    throw {
+      message: `RPC call for ${method} failed`,
+      data: errorData,
+    };
+  }
+
   if (error) {
-    dispatchEvent('rpc:fault', { error, id, method, params });
+    emitEvent('rpc:fault', { error, id, method, params });
     throw error;
   }
 
-  dispatchEvent('rpc:success', { id, method, params });
+  emitEvent('rpc:success', { id, method, params });
   return [id, result];
 };

@@ -1,5 +1,5 @@
 import { rpc } from './rpc.js';
-import { dispatchEvent } from './events.js';
+import { emitEvent } from './events.js';
 
 const spinnerTemplate = document.createElement('template');
 spinnerTemplate.innerHTML = '<div class="ms-2 spinner-grow spinner-grow-sm" role="status"></div>';
@@ -23,8 +23,17 @@ const toggleForm = (form, which) => {
 const updateInvalidFields = (form, errorData = {}) => {
   const errorFields = Object.entries(errorData);
   errorFields.forEach(([field, message]) => {
-    const inputFieldElement = form.querySelector(`[name=${field}`);
-    inputFieldElement.setValidity({ customError: true }, message);
+    const inputFieldElement = form.querySelector(`[name="${field}"]`);
+
+    // Custom elements
+    if (typeof inputFieldElement.setCustomValidity === 'function') {
+      inputFieldElement.setCustomValidity(message);
+      return;
+    }
+
+    // fallback for plain <input> elements
+    inputFieldElement.setCustomValidity(message);
+    inputFieldElement.reportValidity();
   });
 };
 
@@ -33,7 +42,7 @@ export const submitRPCForm = (form) => async (event) => {
   event.stopPropagation();
 
   if (!form.checkValidity()) {
-    dispatchEvent('form:invald', { form: form });
+    emitEvent('form:invald', { form: form });
     form.classList.add('was-validated');
     return;
   }
@@ -49,13 +58,18 @@ export const submitRPCForm = (form) => async (event) => {
   };
 
   try {
-    const result = await rpc(method, data);
-    dispatchEvent('form:submitted', { form: form, result, method, data });
+    const [rpcId, rpcResult] = await rpc(method, data);
+    emitEvent('form:submitted', {
+      form: form,
+      rpcMethod: method,
+      rpcData: data,
+      rpcId: rpcId,
+      data: rpcResult,
+    });
   } catch (error) {
-    console.error('RPC error', error);
-    updateInvalidFields(form, error.data);
+    updateInvalidFields(form, error.data.error.data);
 
-    dispatchEvent('form:error', { form: form, error, method, data });
+    emitEvent('form:error', { form: form, error, method, data });
   } finally {
     toggleForm(form, false);
   }

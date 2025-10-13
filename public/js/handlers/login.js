@@ -4,11 +4,12 @@ import { registerEvent } from '../events.js';
 registerEvent(
   'form:submitted',
   (event) => {
-    if (event.detail.form.id !== 'registration-form') {
+    if (event.detail.form.id !== 'login-form') {
       return;
     };
 
-    storeMessage('You have been registered');
+    storeMessage('Login in successful');
+    window.sessionStorage.setItem('auth_token', event.detail.data.token);
     window.location.href = '/';
   },
 );

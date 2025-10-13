@@ -11,7 +11,8 @@ export const createUsersTable = () => {
       name     TEXT NOT NULL,
       password TEXT NOT NULL,
       email    TEXT NOT NULL UNIQUE,
-      phone    TEXT
+      phone    TEXT,
+      role     TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin'))
     );
 
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,

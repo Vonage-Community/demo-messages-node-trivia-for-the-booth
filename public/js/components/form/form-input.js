@@ -1,5 +1,4 @@
-const inputTemplate = document.createElement('template');
-inputTemplate.innerHTML = `
+const inputTemplate = document.createElement('template'); inputTemplate.innerHTML = `
 <div class="mb-3 input">
   <label class="form-label"></label>
   <div class="input-group">
@@ -34,12 +33,6 @@ export class FormInput extends HTMLElement {
     this.helpElement = this.querySelector('div.form-text');
     this.prefixElement = this.querySelector('span.prefix');
     this.invalidFeedbackElement = this.querySelector('div.invalid-feedback');
-  }
-
-  reportValidity() {
-    const valid = this.inputElement.reportValidity();
-    this.updateValidity();
-    return valid;
   }
 
   get value() {
@@ -87,36 +80,39 @@ export class FormInput extends HTMLElement {
     this.baseId = this.getAttribute('id') || `${this.name}Input`;
     const initial = this.getAttribute('value') ?? '';
     this.value = initial;
-    this.internals.setValidity(
-      this.inputElement.checkValidity() ? {} : this.inputElement.validity,
-      this.inputElement.validationMessage,
-      this.inputElement,
-    );
-    this.build();
+    this.render();
+
+    this.addEventListener('input', this.resetValidity);
+
+    this.addEventListener('blur', this.resetValidity);
+
+    this.addEventListener('change', (event) => {
+      this.value = event.target.value;
+    });
   }
 
-  build() {
-    this.buildLabel();
-    this.buildInput();
-    this.buildHelp();
-    this.buildPrefix();
-    this.buildInvalidFeedback();
+  render() {
+    this.renderLabel();
+    this.renderInput();
+    this.renderHelp();
+    this.renderPrefix();
+    this.renderInvalidFeedback();
   }
 
-  buildInvalidFeedback() {
+  renderInvalidFeedback() {
     this.invalidFeedbackElement.setAttribute('id', `${this.baseId}Invalid`);
   }
 
-  buildPrefix() {
+  renderPrefix() {
     this.updatePrefix();
   }
 
-  buildLabel() {
+  renderLabel() {
     this.labelElement.textContent = this.getAttribute('label') || '';
     this.labelElement.setAttribute('for', this.baseId);
   }
 
-  buildInput() {
+  renderInput() {
     [
       'type',
       'value',
@@ -161,7 +157,7 @@ export class FormInput extends HTMLElement {
     this.inputElement.focus();
   }
 
-  buildHelp() {
+  renderHelp() {
     this.helpElement.setAttribute('id', `${this.baseId}Help`);
     this.updateHelp();
   }
@@ -184,48 +180,46 @@ export class FormInput extends HTMLElement {
     this.prefixElement.remove();
   }
 
-  setValidity(flags, message) {
+  checkValidity() {
+    this.inputElement.checkValidity();
+    this.updateValidationFeedBack();
+  }
+
+  setCustomValidity(message) {
+    this.inputElement.setCustomValidity(message);
     this.internals.setValidity(
-      flags,
+      { customError: true },
       message,
       this.inputElement,
     );
 
-    if (message) {
-      this.inputElement.setCustomValidity(message);
-    }
-
-    if (flags) {
-      this.internals.states.add('invalid');
-    }
-
     this.updateValidationFeedBack();
   }
 
-  updateValidity(flags, message) {
-    const valid = this.internals.checkValidity();
+  reportValidity() {
+    const valid = this.inputElement.checkValidity();
 
-    this.internals.setValidity(
-      valid ? {} : flags ?? this.inputElement.validity,
-      message ?? this.inputElement.validationMessage,
-      this.inputElement,
-    );
-
-    this.inputElement.classList.toggle('is-invalid', !valid);
-    this.inputElement.classList.toggle('is-valid', valid);
     this.updateValidationFeedBack();
+    return valid;
+  }
+
+  resetValidity() {
+    this.inputElement.setCustomValidity('');
+    this.internals.setValidity({});
+    this.checkValidity();
   }
 
   updateValidationFeedBack() {
-    const message = this.internals.validationMessage ||
-      this.inputElement.validationMessage;
+    const message = this.inputElement.validationMessage || this.internals.validationMessage;
     const valid = !message;
 
     if (valid) {
       this.inputElement.setAttribute('aria-describedby', `${this.baseId}Help`);
+      this.invalidFeedbackElement.textContent = '';
       this.invalidFeedbackElement.classList.toggle('d-none', !valid);
       this.invalidFeedbackElement.classList.toggle('d-block', valid);
-      this.invalidFeedbackElement.textContent = '';
+      this.inputElement.classList.toggle('is-invalid', !valid);
+      this.inputElement.classList.toggle('is-valid', valid);
       return;
     }
 
@@ -233,10 +227,8 @@ export class FormInput extends HTMLElement {
     this.invalidFeedbackElement.textContent = message;
     this.invalidFeedbackElement.classList.toggle('d-none', valid);
     this.invalidFeedbackElement.classList.toggle('d-block', !valid);
-  }
-
-  resetValidation() {
-    this.inputElement.classList.remove('is-valid', 'is-invalid');
+    this.inputElement.classList.toggle('is-invalid', !valid);
+    this.inputElement.classList.toggle('is-valid', valid);
   }
 
   attributeChangedCallback(name) {
