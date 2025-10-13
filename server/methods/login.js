@@ -12,8 +12,7 @@ export const loginMethod = async ({ email, password }) => {
   let user;
   try {
     user = fetchForLogin(email);
-  } catch (error) {
-
+  } catch {
     log('Email not found');
     throw {
       code: 400,

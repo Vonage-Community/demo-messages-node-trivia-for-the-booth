@@ -13,7 +13,7 @@ const listGamesStmt = db.prepare(`
     question_count,
     player_count
   FROM games_with_counts
-  ORDER BY id ASC
+  ORDER BY active DESC, id ASC
   LIMIT @limit OFFSET @offset
 `);
 

@@ -1,3 +1,4 @@
+import { requireLogin } from '../../auth.js';
 import { createQuestionMethod } from './createQuestion.js';
 import { deleteQuestionMethod } from './deleteQuestion.js';
 import { fetchQuestionMethod } from './fetchQuestion.js';
@@ -5,9 +6,9 @@ import { getQuestionsForGameMethod } from './getQuestionsForGame.js';
 import { updateQuestionMethod } from './updateQuestion.js';
 
 export const questions = {
-  create: createQuestionMethod,
-  delete: deleteQuestionMethod,
-  fetch: fetchQuestionMethod,
-  for_game: getQuestionsForGameMethod,
-  update: updateQuestionMethod,
+  create: requireLogin(createQuestionMethod, 'admin'),
+  delete: requireLogin(deleteQuestionMethod, 'admin'),
+  fetch: requireLogin(fetchQuestionMethod, 'admin'),
+  for_game: requireLogin(getQuestionsForGameMethod),
+  update: requireLogin(updateQuestionMethod, 'admin'),
 };
