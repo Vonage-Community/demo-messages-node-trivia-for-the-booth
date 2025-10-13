@@ -1,5 +1,9 @@
 import db from '../../db/index.js';
 import debug from './log.js';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const log = debug.extend('users');
 
@@ -18,4 +22,30 @@ export const createUsersTable = () => {
     CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);`,
   );
   log('Users table created');
+
+  if (!process.env.TRIVIA_ADMIN_EMAIL || !process.env.TRIVIA_ADMIN_PASSWORD) {
+    log('Not creating admin user. Check the .env');
+    return;
+
+  }
+
+  log('Creating admin user');
+  const insertUser = db.prepare(`
+    REPLACE INTO users (name, password, email, role)
+    VALUES (@name, @password, @email, 'admin')
+  `);
+
+  const salt = bcrypt.genSaltSync(10);
+
+  const user = {
+    name: process.env.TRIVIA_ADMIN_EMAIL,
+    email: process.env.TRIVIA_ADMIN_EMAIL,
+    password: bcrypt.hashSync(
+      process.env.TRIVIA_ADMIN_PASSWORD,
+      salt,
+    ),
+  };
+
+  insertUser.run(user);
+  log('Admin user created');
 };
