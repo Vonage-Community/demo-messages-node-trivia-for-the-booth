@@ -11,7 +11,9 @@ const listGamesStmt = db.prepare(`
     active,
     short_code,
     question_count,
-    player_count
+    player_count,
+    total_correct_answers,
+    total_incorrect_answers
   FROM games_with_counts
   ORDER BY active DESC, id ASC
   LIMIT @limit OFFSET @offset

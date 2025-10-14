@@ -76,7 +76,8 @@ app.post('/rpc', (req, res, next) => {
       return;
     }
 
-    log('NO content');
+    // this should never happen but we will guard for it
+    log('No content');
 
     res.status(204);
     res.send('');

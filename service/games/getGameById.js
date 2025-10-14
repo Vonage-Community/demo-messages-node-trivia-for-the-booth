@@ -52,6 +52,7 @@ export const getGameDetail = (id) => {
   log(`Fetching game detail for ${id}`);
 
   const rows = selectGameDetailById.all(id);
+  log('Detail rows', rows);
   if (!rows || rows.length === 0) {
     log(`${id} not found`);
     throw {
@@ -60,29 +61,36 @@ export const getGameDetail = (id) => {
     };
   }
 
-  // Aggregate into game structure
   const first = rows[0];
+  const questions = rows.map((row) => {
+    if (!row.question) {
+      return;
+    }
+
+    return {
+      question: row.question,
+      questionId: row.questionId,
+      choiceA: row.choiceA,
+      choiceB: row.choiceB,
+      choiceC: row.choiceC,
+      choiceD: row.choiceD,
+      correctChoice: row.correctChoice,
+      countChoiceA: row.countChoiceA,
+      countChoiceB: row.countChoiceB,
+      countChoiceC: row.countChoiceC,
+      countChoiceD: row.countChoiceD,
+      answeredCorrect: row.answeredCorrect,
+      answeredIncorrectly: row.answeredIncorrectly,
+    };
+  }).filter((row) => row);
+
   const game = {
     id: first.id,
     title: first.title,
     active: Boolean(first.active),
-    questionCount: rows.length,
+    questionCount: questions.length,
     playerCount: first.playerCount ?? 0,
-    questions: rows.map((r) => ({
-      question: r.question,
-      questionId: r.questionId,
-      choiceA: r.choiceA,
-      choiceB: r.choiceB,
-      choiceC: r.choiceC,
-      choiceD: r.choiceD,
-      correctChoice: r.correctChoice,
-      countChoiceA: r.countChoiceA,
-      countChoiceB: r.countChoiceB,
-      countChoiceC: r.countChoiceC,
-      countChoiceD: r.countChoiceD,
-      answeredCorrect: r.answeredCorrect,
-      answeredIncorrectly: r.answeredIncorrectly,
-    })),
+    questions: questions,
   };
 
   log(`Fetched game detail for ${id}`);

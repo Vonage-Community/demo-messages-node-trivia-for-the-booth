@@ -5,5 +5,5 @@ const log = debug.extend('fetch_questions');
 
 export const getQuestionsForGameMethod = async ({ gameId } = {}) => {
   log(`Fetching questions for game ${gameId}`);
-  return getQuestionsForGame(gameId);
+  return getQuestionsForGame(Number(gameId));
 };

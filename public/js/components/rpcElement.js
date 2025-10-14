@@ -1,3 +1,4 @@
+import { BootstrapElement } from './bootstrap.js';
 import { rpc } from '../rpc.js';
 import { emitEvent } from '../events.js';
 
@@ -6,7 +7,7 @@ import { emitEvent } from '../events.js';
  *
  * @abstract
  */
-export class RPCElement extends HTMLElement {
+export class RPCElement extends BootstrapElement {
   static observedAttributes = ['data-rpc-id', 'data-rpc-method'];
 
   constructor() {
@@ -14,9 +15,6 @@ export class RPCElement extends HTMLElement {
     if (new.target === RPCElement) {
       throw new TypeError('Cannot instantiate RPCElement directly');
     }
-
-    this.hasConnected = false;
-    this.shadow = this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
@@ -30,8 +28,6 @@ export class RPCElement extends HTMLElement {
       this.loadData();
       return;
     }
-
-    this.render();
   }
 
   get rpcMethod() {
@@ -47,13 +43,11 @@ export class RPCElement extends HTMLElement {
   }
 
   get rpcParams() {
-    return {
-      id: this.idValue,
-    };
+    return {};
   }
 
   async loadData() {
-    const eventParams = {
+    const eventData = {
       id: this.rpcId,
       method: this.rpcMethod,
       params: this.rpcParams,
@@ -63,7 +57,7 @@ export class RPCElement extends HTMLElement {
     try {
       emitEvent(
         'element:loading',
-        eventParams,
+        eventData,
       );
 
       console.debug('RPC Element making RPC call', this.rpcMethod, this.rpcParams);
@@ -77,7 +71,7 @@ export class RPCElement extends HTMLElement {
       emitEvent(
         'element:loaded',
         {
-          ...eventParams,
+          ...eventData,
           id,
           result,
         },
@@ -88,7 +82,7 @@ export class RPCElement extends HTMLElement {
       emitEvent(
         'element:error',
         {
-          ...eventParams,
+          ...eventData,
           error: err,
         },
       );
@@ -99,10 +93,6 @@ export class RPCElement extends HTMLElement {
     if (name === 'data-rpc-id' && newValue && newValue !== oldValue && this.rpcMethod) {
       this.loadData();
     }
-  }
-
-  render() {
-    throw new Error('RPCElement must implement render');
   }
 
   onDataLoaded() { }

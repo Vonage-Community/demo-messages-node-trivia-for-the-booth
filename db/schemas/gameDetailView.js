@@ -53,7 +53,7 @@ export const createGameDetailView = () => {
         WHERE a.question_id = q.id
           AND a.answered_correctly = 0) AS incorrect_answer_count
     FROM games g
-    JOIN questions q ON q.game_id = g.id;
+    LEFT JOIN questions q ON q.game_id = g.id;
   `);
 
   log('Created game_detail_view');

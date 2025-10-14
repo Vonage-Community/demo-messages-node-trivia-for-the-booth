@@ -1,18 +1,17 @@
 import './choice.js';
-import bootstrap from 'bootstrap/dist/css/bootstrap.min.css?inline';
 import { RPCElement } from '../rpcElement.js';
-
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(bootstrap);
 
 const questionTemplate = document.createElement('template');
 questionTemplate.innerHTML = `
-<div class="question card">
-  <div class="card-body">
-    <h5 class="card-title question-text"></h5>
-    <div class="choices card-group"></div>
-  </div>
-</div>
+<article class="question card p-3" role="group" aria-labelledby="question-text">
+  <header>
+    <h4 class="card-title question-text" id="question-text"></h4>
+  </header>
+
+  <section class="card-body">
+    <div class="row row-cols-2 g-3 choices" role="list"></div>
+  </section>
+</article>
 `;
 
 export class QuestionElement extends RPCElement {
@@ -24,23 +23,14 @@ export class QuestionElement extends RPCElement {
     'data-choice-b',
     'data-choice-c',
     'data-choice-c',
-    'data-count-choice-a',
-    'data-count-choice-b',
-    'data-count-choice-c',
-    'data-count-choice-d',
-    'data-count-answer-correct',
-    'data-count-answer-incorrect',
   ];
 
   constructor() {
     super();
-    this.shadow.adoptedStyleSheets = [sheet];
     this.shadow.append(questionTemplate.content.cloneNode(true));
 
-    this.container = this.shadow.querySelector('.question');
     this.questionTextElement = this.shadow.querySelector('.question-text');
     this.choicesContainer = this.shadow.querySelector('.choices');
-    console.log(this.container);
   }
 
   get questionId() {
@@ -71,30 +61,6 @@ export class QuestionElement extends RPCElement {
     return this.getAttribute('data-choice-d');
   }
 
-  get countChoiceA() {
-    return this.getAttribute('data-count-choice-a');
-  }
-
-  get countChoiceB() {
-    return this.getAttribute('data-count-choice-b');
-  }
-
-  get countChoiceC() {
-    return this.getAttribute('data-count-choice-c');
-  }
-
-  get countChoiceD() {
-    return this.getAttribute('data-count-choice-d');
-  }
-
-  get answeredCorrect() {
-    return this.getAttribute('data-count-answer-correct');
-  }
-
-  get answeredIncorrect() {
-    return this.getAttribute('data-count-answer-incorrect');
-  }
-
   get rpcMethod() {
     return 'questions.fetch';
   }
@@ -105,42 +71,45 @@ export class QuestionElement extends RPCElement {
     };
   }
 
-  render() {
-    console.log('render');
-    this.questionTextElement.textContent = this.question;
-    this.choicesContainer.innerHTML = '';
+  connectedCallback() {
+    if (this.question) {
+      this.updateQuestion();
+      return;
+    }
 
+    super.connectedCallback();
+    this.updateQuestion();
+  }
+
+  updateQuestion() {
+    this.setAttribute('aria-label', this.shadow.querySelector('h4').textContent);
     const choices = [
       {
         letter: 'A',
         text: this.choiceA || '',
-        count: this.countChoiceA,
       },
       {
         letter: 'B',
         text: this.choiceB || '',
-        count: this.countChoiceB,
       },
       {
         letter: 'C',
         text: this.choiceC || '',
-        count: this.countChoiceC,
       },
       {
         letter: 'D',
         text: this.choiceD || '',
-        count: this.countChoiceD,
       },
     ];
 
-    for (const { letter, text, count } of choices) {
+    for (const { letter, text } of choices) {
       const choice = document.createElement('trivia-choice');
       choice.setAttribute('data-choice-letter', letter);
       choice.setAttribute('data-title', text);
-      choice.setAttribute('data-answer-count', count);
-      choice.classList.add('w-50', 'mb-3', 'p-3');
       this.choicesContainer.append(choice);
     }
+
+    this.questionTextElement.textContent = this.question;
   }
 
   onDataLoaded(result) {
@@ -150,7 +119,7 @@ export class QuestionElement extends RPCElement {
     this.setAttribute('data-choice-b', result.choiceB || '');
     this.setAttribute('data-choice-c', result.choiceC || '');
     this.setAttribute('data-choice-d', result.choiceD || '');
-    this.render();
+    this.updateQuestion();
   }
 }
 
