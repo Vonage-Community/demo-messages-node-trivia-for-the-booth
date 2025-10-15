@@ -5,5 +5,5 @@ const log = debug.extend('update');
 
 export const updateQuestionMethod = async ({ id, ...args }) => {
   log(`Updating question ${id}`);
-  return updateQuestion(id, args);
+  return updateQuestion(Number(id), args);
 };

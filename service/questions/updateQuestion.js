@@ -53,5 +53,5 @@ export const updateQuestion = (id, patch) => {
   updateQuestionStmt.run(update);
 
   log(`Question ${id} updated`);
-  return getQuestionById(id);
+  return getQuestionById(id, true);
 };

@@ -10,7 +10,7 @@ export const selectQuestionById = db.prepare(`
   WHERE id = ?
 `);
 
-export const getQuestionById = (id) => {
+export const getQuestionById = (id, detailed) => {
   log(`Getting question ${id}`);
   const question = selectQuestionById.get(id) || null;
 
@@ -22,5 +22,5 @@ export const getQuestionById = (id) => {
     };
   }
 
-  return fromQuestionRow(question);
+  return fromQuestionRow(question, detailed);
 };

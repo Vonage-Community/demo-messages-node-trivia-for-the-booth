@@ -3,7 +3,7 @@ import '../questions/questionList.js';
 
 const gameListTemplate = document.createElement('template');
 gameListTemplate.innerHTML = `
-<section class="card mb-3 w-100" aria-labelledby="game-title" role="region">
+<section class="card mb-3 w-100" aria-labelledby="game-title">
   <header class="card-header">
     <h3 id="game-title">Title</h3>
   </header>
@@ -11,15 +11,14 @@ gameListTemplate.innerHTML = `
   <ul class="list-inline m-3 mb-0">
     <li class="list-inline-item">Questions: <span data-field="questions" aria-live="polite">0</span></li>
     <li class="list-inline-item">Players: <span data-field="players" aria-live="polite">0</span></li>
-    <li class="list-inline-item">Correct Answers: <span data-field="correct" aria-live="polite">0%</span></li>
-    <li class="list-inline-item">Incorrect Answers: <span data-field="incorrect" aria-live="polite">0%</span></li>
+    <li class="list-inline-item">Correct: <span data-field="correct" aria-live="polite">0%</span></li>
+    <li class="list-inline-item">Incorrect: <span data-field="incorrect" aria-live="polite">0%</span></li>
   </ul>
 
-  <section id="questions-section" class="collapse p-1"></section>
+  <trivia-questions-list class="game-questions"></trivia-questions-list>
 
-  <footer class="card-body">
-    <button class="btn btn-primary" id="activate" aria-label="Activate this game">Activate</button>
-    <button class="btn btn-primary" id="show-questions" aria-label="Show or hide questions for this game">Questions</button>
+  <footer class="card-body d-flex gap-2">
+    <button class="btn btn-primary" id="activate" type="button">Activate</button>
   </footer>
 </section>
 `;
@@ -39,19 +38,16 @@ export class GamesSummaryElement extends BootstrapElement {
 
     this.shadow.append(gameListTemplate.content.cloneNode(true));
     this.titleElement = this.shadow.querySelector('#game-title');
+
+    this.summaryListElement = this.shadow.querySelector('ul');
     this.questionsElement = this.shadow.querySelector('[data-field="questions"]');
     this.playersElement = this.shadow.querySelector('[data-field="players"]');
     this.correctElement = this.shadow.querySelector('[data-field="correct"]');
     this.incorrectElement = this.shadow.querySelector('[data-field="incorrect"]');
+
+    this.questionsListElement = this.shadow.querySelector('.game-questions');
+
     this.activateElement = this.shadow.querySelector('#activate');
-
-    this.showQuestionsElement = this.shadow.querySelector('#show-questions');
-    this.showQuestionsElement.setAttribute('aria-expanded', 'false');
-    this.showQuestionsElement.setAttribute('aria-controls', 'questions-section');
-
-    this.questionsSectionElement = this.shadow.querySelector('#questions-section');
-    this.questionsListElement = document.createElement('trivia-questions-list');
-    this.questionsSectionElement.append(this.questionsListElement);
   }
 
   get gameId() {
@@ -102,24 +98,12 @@ export class GamesSummaryElement extends BootstrapElement {
     this.setAttribute('data-game-incorrect-count', value);
   }
 
-  connectedCallback() {
-    this.boundShowQuestions = this.showQuestions.bind(this);
-    this.boundActivate = this.activate.bind(this);
-    this.showQuestionsElement.addEventListener('click', this.boundShowQuestions);
-    this.activateElement.addEventListener('click', this.boundActivate);
+  get gameShortCode() {
+    return this.getAttribute('data-game-short-code');
   }
 
-  disconnectedCallback() {
-    this.showQuestionsElement.removeEventListener('click', this.boundShowQuestions);
-    this.activateElement.removeEventListener('click', this.boundActivate);
-  }
-
-  showQuestions() {
-    this.questionsSectionElement.classList.toggle('collapse.show');
-    this.questionsSectionElement.classList.toggle('collapse');
-    this.questionsListElement.setAttribute('data-game-id', this.gameId);
-    const expanded = this.showQuestionsElement.getAttribute('aria-expanded') === 'true';
-    this.showQuestionsElement.setAttribute('aria-expanded', String(!expanded));
+  set gameShortCode(value) {
+    this.setAttribute('data-game-short-code');
   }
 
   activate() {
@@ -127,31 +111,28 @@ export class GamesSummaryElement extends BootstrapElement {
   }
 
   updateSummary() {
-    const title = this.dataset.gameTitle ?? 'Untitled Game';
+    const title = `${this.dataset.gameTitle ?? 'Untitled Game'} - ${this.dataset.gameShortCode}`;
     const totalQuestions = Number(this.dataset.gameQuestionCount ?? 0);
     const correct = Number(this.dataset.gameCorrectCount ?? 0);
     const incorrect = Number(this.dataset.gameIncorrectCount ?? 0);
 
-    const correctPct = totalQuestions
+    const correctPercent = totalQuestions
       ? Math.round((correct / totalQuestions) * 100)
       : 0;
 
-    const incorrectPct = totalQuestions
+    const incorrectPercent = totalQuestions
       ? Math.round((incorrect / totalQuestions) * 100)
       : 0;
 
     this.titleElement.textContent = title;
     this.questionsElement.textContent = totalQuestions;
-    this.correctElement.textContent = `${correct} (${correctPct}%)`;
-    this.incorrectElement.textContent = `${incorrect} (${incorrectPct}%)`;
+    this.correctElement.textContent = `${correct} (${correctPercent}%)`;
+    this.incorrectElement.textContent = `${incorrect} (${incorrectPercent}%)`;
+    this.questionsListElement.setAttribute('data-game-id', this.gameId);
   }
 
   attributeChangedCallback() {
     this.updateSummary();
-  }
-
-  render() {
-    console.log('Rendering game summary');
   }
 
 }

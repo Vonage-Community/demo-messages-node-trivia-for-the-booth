@@ -17,25 +17,12 @@ export class RPCElement extends BootstrapElement {
     }
   }
 
-  connectedCallback() {
-    if (this.hasConnected) {
-      return;
-    }
-
-    this.hasConnected = true;
-
-    if (this.rpcMethod) {
-      this.loadData();
-      return;
-    }
-  }
-
   get rpcMethod() {
     return this.getAttribute('data-rpc-method');
   }
 
   get rpcId() {
-    return this.getAttribute('data-rpc-id');
+    return this.getAttribute('data-rpc-id') || undefined;
   }
 
   get rpcError() {
@@ -46,11 +33,15 @@ export class RPCElement extends BootstrapElement {
     return {};
   }
 
-  async loadData() {
+  async makeRPCCall(rpcMethod, rpcParams, rpcId) {
+    rpcMethod = rpcMethod ?? this.rpcMethod;
+    rpcParams = rpcParams ?? this.rpcParams;
+    rpcId = rpcId ?? this.rpcId;
+
     const eventData = {
-      id: this.rpcId,
-      method: this.rpcMethod,
-      params: this.rpcParams,
+      id: rpcId,
+      method: rpcMethod,
+      params: rpcParams,
       element: this,
     };
 
@@ -60,11 +51,12 @@ export class RPCElement extends BootstrapElement {
         eventData,
       );
 
-      console.debug('RPC Element making RPC call', this.rpcMethod, this.rpcParams);
+      console.debug(`RPC Element making RPC call from ${this.tagName}`, rpcMethod, rpcParams);
 
       const [id, result] = await rpc(
-        this.rpcMethod,
-        this.rpcParams,
+        rpcMethod,
+        rpcParams,
+        rpcId,
       );
 
       this.onDataLoaded(result);
@@ -76,8 +68,9 @@ export class RPCElement extends BootstrapElement {
           result,
         },
       );
+      return result;
     } catch (err) {
-      console.error(`RPC load failed for ${this.rpcMethod}`, err);
+      console.error(`RPC load failed for ${rpcMethod}`, err);
       this.onDataError(err);
       emitEvent(
         'element:error',
@@ -86,12 +79,6 @@ export class RPCElement extends BootstrapElement {
           error: err,
         },
       );
-    }
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'data-rpc-id' && newValue && newValue !== oldValue && this.rpcMethod) {
-      this.loadData();
     }
   }
 

@@ -1,11 +1,12 @@
 import './choice.js';
+import '../form/form-input.js';
 import { RPCElement } from '../rpcElement.js';
 
 const questionTemplate = document.createElement('template');
 questionTemplate.innerHTML = `
-<article class="question card p-3" role="group" aria-labelledby="question-text">
-  <header>
-    <h4 class="card-title question-text" id="question-text"></h4>
+<article class="question card border-0" role="group" aria-labelledby="question-text">
+  <header class="ms-3 mt-3">
+    <h4 class="card-title question-text"></h4>
   </header>
 
   <section class="card-body">
@@ -23,12 +24,14 @@ export class QuestionElement extends RPCElement {
     'data-choice-b',
     'data-choice-c',
     'data-choice-c',
+    'data-correct-choice',
   ];
 
   constructor() {
     super();
     this.shadow.append(questionTemplate.content.cloneNode(true));
 
+    this.questionCardElement = this.shadow.querySelector('article');
     this.questionTextElement = this.shadow.querySelector('.question-text');
     this.choicesContainer = this.shadow.querySelector('.choices');
   }
@@ -61,6 +64,10 @@ export class QuestionElement extends RPCElement {
     return this.getAttribute('data-choice-d');
   }
 
+  get correctChoice() {
+    return this.getAttribute('data-correct-choice');
+  }
+
   get rpcMethod() {
     return 'questions.fetch';
   }
@@ -72,17 +79,11 @@ export class QuestionElement extends RPCElement {
   }
 
   connectedCallback() {
-    if (this.question) {
-      this.updateQuestion();
-      return;
-    }
-
-    super.connectedCallback();
     this.updateQuestion();
   }
 
   updateQuestion() {
-    this.setAttribute('aria-label', this.shadow.querySelector('h4').textContent);
+    this.choicesContainer.innerHTML = '';
     const choices = [
       {
         letter: 'A',
@@ -113,12 +114,12 @@ export class QuestionElement extends RPCElement {
   }
 
   onDataLoaded(result) {
-    console.log('Question Loaded', result);
     this.setAttribute('data-question', result.question || '');
     this.setAttribute('data-choice-a', result.choiceA || '');
     this.setAttribute('data-choice-b', result.choiceB || '');
     this.setAttribute('data-choice-c', result.choiceC || '');
     this.setAttribute('data-choice-d', result.choiceD || '');
+    this.setAttribute('data-correct-choice', result.correctChoice || '');
     this.updateQuestion();
   }
 }

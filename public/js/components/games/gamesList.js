@@ -53,11 +53,16 @@ export class GamesListElement extends RPCElement {
     };
   }
 
+  connectedCallback() {
+    this.makeRPCCall();
+  }
+
   render() {
     this.games.forEach((game) => {
       const gameSummaryElement = document.createElement('trivia-game-summary');
       gameSummaryElement.dataset.gameId = game.id;
       gameSummaryElement.dataset.gameTitle = game.title;
+      gameSummaryElement.dataset.gameShortCode = game.shortCode;
       gameSummaryElement.dataset.gameAction = game.active;
       gameSummaryElement.dataset.gameQuestionCount = game.questionCount;
       gameSummaryElement.dataset.gamePlayerCount = game.playerCount;

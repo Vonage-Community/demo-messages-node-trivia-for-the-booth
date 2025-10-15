@@ -9,6 +9,7 @@ const inputTemplate = document.createElement('template'); inputTemplate.innerHTM
   <div class="form-text help-text"></div>
 </div>
 `;
+
 export class FormInput extends HTMLElement {
   static observedAttributes = [
     'prefix',
@@ -41,6 +42,7 @@ export class FormInput extends HTMLElement {
 
   set value(value) {
     this.internals.setFormValue(value);
+    this.inputElement.value = value;
     this._value = value;
   }
 

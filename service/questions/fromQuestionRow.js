@@ -1,4 +1,4 @@
-export const fromQuestionRow = (question) => question
+export const fromQuestionRow = (question, detailed) => question
   ? {
     id: question.id,
     gameId: Number(question.game_id),
@@ -7,7 +7,10 @@ export const fromQuestionRow = (question) => question
     choiceB: question.choice_b,
     choiceC: question.choice_c,
     choiceD: question.choice_d,
-    correctChoice: question.correct_choice,
+    ...(detailed
+      ? { correctChoice: question.correct_choice }
+      : {}
+    ),
   }
   : null;
 

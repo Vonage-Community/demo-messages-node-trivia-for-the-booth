@@ -2,13 +2,10 @@ import { BootstrapElement } from '../bootstrap.js';
 
 const choiceTemplate = document.createElement('template');
 choiceTemplate.innerHTML = `
-<article class="card choice" role="listitem">
-  <span class="visually-hidden">Choice</span>
-
-<p class="card-text ps-3">
-  <strong class="choice-letter"></strong>: <span class="choice-text"></span>
-</p>
-
+<article class="card choice p-3" role="listitem">
+  <h6 class="m-0 p-0">
+    <strong class="choice-letter"></strong>: <span class="choice-text"></span>
+  </h6>
 </article>
 `;
 
@@ -24,12 +21,9 @@ export class ChoiceElement extends BootstrapElement {
     super();
     this.shadow.append(choiceTemplate.content.cloneNode(true));
 
-    this.card = this.shadow.querySelector('.card');
-    this.button = this.shadow.querySelector('button');
     this.letterElement = this.shadow.querySelector('.choice-letter');
     this.textElement = this.shadow.querySelector('.choice-text');
-    this.resultFooter = this.shadow.querySelector('.card-footer');
-    this.resultText = this.shadow.querySelector('.result-text');
+    this.choiceElement = this.shadow.querySelector('.choice');
   }
 
   connectedCallback() {

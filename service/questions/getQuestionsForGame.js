@@ -8,13 +8,21 @@ import debug from './log.js';
 const log = debug.extend('list');
 
 const listGamesStmt = db.prepare(`
-  SELECT id, game_id, question, choice_a, choice_b, choice_c, choice_d
+  SELECT
+    id,
+    game_id,
+    question,
+    choice_a,
+    choice_b,
+    choice_c,
+    choice_d,
+    correct_choice
   FROM questions
   WHERE game_id = ?
 `);
 
-export const getQuestionsForGame = (gameId) => {
+export const getQuestionsForGame = (gameId, detailed) => {
   log(`Fetching questions for game ${gameId}`);
   requireUInt('gameId', gameId);
-  return listGamesStmt.all(gameId).map(fromQuestionRow);
+  return listGamesStmt.all(gameId).map((row) => fromQuestionRow(row, detailed));
 };
