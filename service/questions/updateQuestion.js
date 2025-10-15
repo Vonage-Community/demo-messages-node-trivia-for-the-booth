@@ -22,8 +22,8 @@ export const updateQuestionStmt = db.prepare(`
 
 export const updateQuestion = (id, patch) => {
   log(`Updating question ${id}`, patch);
-  getQuestionById(id);
-  const update = { id: id };
+  const question = getQuestionById(id);
+  const update = { id: question.id };
 
   if ('question' in patch) {
     update.question = requireNonEmptyString('question', patch.question);

@@ -1,4 +1,5 @@
 import { QuestionElement } from './question.js';
+import './questionForm.js';
 
 const questionControlTemplate = document.createElement('template');
 questionControlTemplate.innerHTML = `
@@ -19,7 +20,31 @@ export class QuestionSummaryElement extends QuestionElement {
   }
 
   toggleForm() {
-    console.log('Toggle Form');
+    const questionElement = document.createElement('trivia-question-form');
+    this.questionCardElement.append(questionElement);
+
+    questionElement.setAttribute('data-question', this.question || '');
+    questionElement.setAttribute('data-choice-a', this.choiceA || '');
+    questionElement.setAttribute('data-choice-b', this.choiceB || '');
+    questionElement.setAttribute('data-choice-c', this.choiceC || '');
+    questionElement.setAttribute('data-choice-d', this.choiceD || '');
+    questionElement.setAttribute('data-correct-choice', this.correctChoice || '');
+    questionElement.setAttribute('data-game-id', this.gameId || '');
+    questionElement.setAttribute('data-question-id', this.questionId || '');
+
+    questionElement.toggleModal();
+
+    questionElement.modal.addEventListener('hidden.bs.modal', () => {
+      questionElement.remove();
+    });
+  }
+
+  updateQuestion() {
+    super.updateQuestion();
+    if (this.correctChoice) {
+      const correctChoiceElement = this.shadow.querySelector(`trivia-choice[data-choice-letter="${this.correctChoice}"]`);
+      correctChoiceElement.choiceElement.classList.toggle('border-success');
+    }
   }
 
   connectedCallback() {

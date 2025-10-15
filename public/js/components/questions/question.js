@@ -23,7 +23,7 @@ export class QuestionElement extends RPCElement {
     'data-choice-a',
     'data-choice-b',
     'data-choice-c',
-    'data-choice-c',
+    'data-choice-d',
     'data-correct-choice',
   ];
 

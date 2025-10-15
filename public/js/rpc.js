@@ -2,6 +2,8 @@ import { emitEvent } from './events';
 
 export const rpc = async (method, params, requestId = '1') => {
   const token = sessionStorage.getItem('auth_token');
+  console.log(`RPC Call to ${method} id: ${requestId}`, params);
+
   const res = await fetch('http://localhost:3000/rpc', {
     method: 'POST',
     headers: {

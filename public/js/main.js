@@ -11,14 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Loop over them and prevent submission
   Array.from(bootstrapForms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
+    form.addEventListener(
+      'submit',
+      (event) => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
 
-      form.classList.add('was-validated');
-    }, false);
+        form.classList.add('was-validated');
+      },
+      false,
+    );
   });
 
   // Register rpc forms

@@ -35,7 +35,7 @@ export const selectGameDetailById = db.prepare(`
 
 export const getGameById = (id) => {
   log(`Fetching ${id}`);
-  const game = selectGameById.get(id) || null;
+  const game = selectGameById.get(Number(id)) || null;
 
   if (!game) {
     throw {

@@ -25,9 +25,9 @@ export const insertQuestion = db.prepare(`
 export const createQuestion = (args = {}) => {
   log('Creating question', args);
 
-  getGameById(args.gameId);
+  const game = getGameById(args.gameId);
   const question = {
-    gameId: args.gameId,
+    gameId: game.id,
     question: requireNonEmptyString('question', args.question),
     choiceA: requireNonEmptyString('coiceA', args.choiceA),
     choiceB: requireNonEmptyString('coiceB', args.choiceB),

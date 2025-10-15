@@ -3,7 +3,7 @@ import debug from './log.js';
 
 const log = debug.extend('update');
 
-export const updateQuestionMethod = async ({ id, ...args }) => {
-  log(`Updating question ${id}`);
-  return updateQuestion(Number(id), args);
+export const updateQuestionMethod = async ({ questionId, ...args }) => {
+  log(`Updating question ${questionId}`);
+  return updateQuestion(questionId, args);
 };

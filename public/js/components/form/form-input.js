@@ -6,7 +6,7 @@ const inputTemplate = document.createElement('template'); inputTemplate.innerHTM
     <input class="form-control"></input>
   </div>
   <div class="invalid-feedback"></div>
-  <div class="form-text help-text"></div>
+  <div class="form-text help-text d-none"></div>
 </div>
 `;
 
@@ -165,6 +165,11 @@ export class FormInput extends HTMLElement {
   }
 
   updateHelp() {
+    if (!this.help) {
+      this.helpElement.classList.add('d-none');
+      return;
+    }
+    this.helpElement.classList.remove('d-none');
     this.helpElement.innerHTML = this.help;
   }
 

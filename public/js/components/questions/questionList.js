@@ -1,5 +1,6 @@
 import { RPCElement } from '../rpcElement.js';
 import './questionSummary.js';
+import './questionForm.js';
 import Collapse from 'bootstrap/js/dist/collapse';
 
 const questionListTemplate = document.createElement('template');
@@ -16,7 +17,7 @@ questionListTemplate.innerHTML = `
         </h3>
       </button>
 
-      <button class="btn btn-success add-question d-none" aria-label="Add a new question">Add</button>
+      <button class="btn btn-success add-question" aria-label="Add a new question">Add</button>
     </header>
 
     <section class="accordion-body accordion-collapse collapse"
@@ -41,18 +42,16 @@ export class QuestionListElement extends RPCElement {
     this.expanded = false;
   }
 
-  async addQuestion() {
-    const questionElement = document.createElement('trivia-question-summary');
 
-    questionElement.setAttribute('data-game-id', this.gameId);
-    questionElement.setAttribute('data-question', '');
-    questionElement.setAttribute('data-choice-a', '');
-    questionElement.setAttribute('data-choice-b', '');
-    questionElement.setAttribute('data-choice-c', '');
-    questionElement.setAttribute('data-choice-d', '');
-    questionElement.setAttribute('data-correct-choice', '');
-    this.accordionElement.append(questionElement);
-    questionElement.toggleFormOn();
+  addQuestion() {
+    const questionFormElement = document.createElement('trivia-question-form');
+    this.accordionElement.append(questionFormElement);
+    questionFormElement.setAttribute('data-game-id', this.gameId);
+    questionFormElement.toggleModal();
+
+    questionFormElement.modal.addEventListener('hidden.bs.modal', () => {
+      questionFormElement.remove();
+    });
   }
 
   toggleList() {
@@ -68,8 +67,6 @@ export class QuestionListElement extends RPCElement {
     if (this.expanded && this.hasAttribute('data-game-id')) {
       this.makeRPCCall();
     }
-
-    this.addButtomElement.classList.toggle('d-none');
   }
 
   connectedCallback() {

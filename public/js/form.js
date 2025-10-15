@@ -37,12 +37,13 @@ const updateInvalidFields = (form, errorData = {}) => {
   });
 };
 
-export const submitRPCForm = (form) => async (event) => {
-  event.preventDefault();
-  event.stopPropagation();
+export const submitRPCForm = (form) => async (event, data) => {
+  event?.preventDefault();
+  event?.stopPropagation();
 
   if (!form.checkValidity()) {
     emitEvent('form:invald', { form: form });
+    console.log('Invalid form');
     form.classList.add('was-validated');
     return;
   }
@@ -50,12 +51,18 @@ export const submitRPCForm = (form) => async (event) => {
   toggleForm(form, true);
 
   const method = form.dataset.rpcMethod;
-  const formData = new FormData(form);
 
-  const data = {};
-  for (const [name, value] of formData.entries()) {
-    data[name] = value;
-  };
+  if (!data) {
+    const formData = new FormData(form);
+    data = formData.entries.reduce(
+      (data, [name, value]) => {
+        data[name] = value;
+        return data;
+      },
+      {},
+    );
+  }
+
 
   try {
     const [rpcId, rpcResult] = await rpc(method, data);

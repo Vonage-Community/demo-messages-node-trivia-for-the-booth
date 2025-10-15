@@ -21,6 +21,7 @@ export class ChoiceElement extends BootstrapElement {
     super();
     this.shadow.append(choiceTemplate.content.cloneNode(true));
 
+    this.choiceElement = this.shadow.querySelector('article');
     this.letterElement = this.shadow.querySelector('.choice-letter');
     this.textElement = this.shadow.querySelector('.choice-text');
     this.choiceElement = this.shadow.querySelector('.choice');

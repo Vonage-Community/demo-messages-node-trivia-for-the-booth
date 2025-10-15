@@ -22,7 +22,7 @@ const listGamesStmt = db.prepare(`
 `);
 
 export const getQuestionsForGame = (gameId, detailed) => {
-  log(`Fetching questions for game ${gameId}`);
+  log(`Fetching questions for game ${Number(gameId)}`);
   requireUInt('gameId', gameId);
-  return listGamesStmt.all(gameId).map((row) => fromQuestionRow(row, detailed));
+  return listGamesStmt.all(Number(gameId)).map((row) => fromQuestionRow(row, detailed));
 };
