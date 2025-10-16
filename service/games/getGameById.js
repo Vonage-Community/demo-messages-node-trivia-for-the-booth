@@ -1,6 +1,7 @@
 import db from '../../db/index.js';
 import { gameFromRow } from './gameFromRow.js';
 import debug from './log.js';
+import { fromQuestionRow } from '../questions/fromQuestionRow.js';
 
 const log = debug.extend('fetch_id');
 
@@ -12,47 +13,31 @@ export const selectGameById = db.prepare(`
 
 export const selectGameDetailById = db.prepare(`
   SELECT
-    game_id AS id,
+    game_id,
     game_title,
     active,
-    player_count AS playerCount,
     question_text AS question,
     question_id AS questionId,
-    choice_a AS choiceA,
-    choice_b AS choiceB,
-    choice_c AS choiceC,
-    choice_d AS choiceD,
-    correct_choice AS correctChoice,
-    count_choice_a AS countChoiceA,
-    count_choice_b AS countChoiceB,
-    count_choice_c AS countChoiceC,
-    count_choice_d AS countChoiceD,
-    correct_answer_count AS answeredCorrect,
-    incorrect_answer_count AS answeredIncorrectly
+    choice_a,
+    choice_b,
+    choice_c,
+    choice_d,
+    player_count,
+    correct_choice,
+    count_choice_a,
+    count_choice_b,
+    count_choice_c,
+    count_choice_d,
+    correct_answer_count,
+    incorrect_answer_count
   FROM game_detail_view
   WHERE game_id = ?
 `);
 
-export const getGameById = (id) => {
-  log(`Fetching ${id}`);
-  const game = selectGameById.get(Number(id)) || null;
-
-  if (!game) {
-    throw {
-      code: -32004,
-      message: 'Game not found',
-    };
-  }
-
-  log(`Fetched ${id}`);
-  return gameFromRow(game);
-};
-
-export const getGameDetail = (id) => {
+export const getGameById = (id, detailed = false) => {
   log(`Fetching game detail for ${id}`);
 
-  const rows = selectGameDetailById.all(id);
-  log('Detail rows', rows);
+  const rows = selectGameDetailById.all(Number(id));
   if (!rows || rows.length === 0) {
     log(`${id} not found`);
     throw {
@@ -63,35 +48,18 @@ export const getGameDetail = (id) => {
 
   const first = rows[0];
   const questions = rows.map((row) => {
+    log('question data', row);
     if (!row.question) {
       return;
     }
 
-    return {
-      question: row.question,
-      questionId: row.questionId,
-      choiceA: row.choiceA,
-      choiceB: row.choiceB,
-      choiceC: row.choiceC,
-      choiceD: row.choiceD,
-      correctChoice: row.correctChoice,
-      countChoiceA: row.countChoiceA,
-      countChoiceB: row.countChoiceB,
-      countChoiceC: row.countChoiceC,
-      countChoiceD: row.countChoiceD,
-      answeredCorrect: row.answeredCorrect,
-      answeredIncorrectly: row.answeredIncorrectly,
-    };
+    return fromQuestionRow(row, detailed);
   }).filter((row) => row);
 
-  const game = {
-    id: first.id,
-    title: first.title,
-    active: Boolean(first.active),
-    questionCount: questions.length,
-    playerCount: first.playerCount ?? 0,
-    questions: questions,
-  };
+  const game = gameFromRow(first, detailed);
+
+  game.questions = questions;
+
 
   log(`Fetched game detail for ${id}`);
   return game;

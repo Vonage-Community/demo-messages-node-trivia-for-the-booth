@@ -1,36 +1,55 @@
-import { BootstrapElement } from '../bootstrap.js';
+import Collapse from 'bootstrap/js/dist/collapse';
 import '../questions/questionList.js';
+import { RPCElement } from '../rpcElement.js';
 
 const gameListTemplate = document.createElement('template');
 gameListTemplate.innerHTML = `
-<section class="card mb-3 w-100" aria-labelledby="game-title">
-  <header class="card-header">
-    <h3 id="game-title">Title</h3>
+<section class="card mb-3 w-100 accordion-item"
+role="region"
+aria-describedby="game-title"
+aria-labelledby="game-title">
+  <header class="card-header border-0 d-flex align-items-center gap-2">
+    <button class="accordion-button bg-transparent collapsed expand-game"
+      type="button"
+      aria-controls="game-data-1"
+      aria-expanded="false">
+      <h3 id="game-title">Title</h3>
+    </button>
+
+    <button class="btn btn-primary activate-game" type="button" aria-label="Activate Game">Activate</button>
+    <button class="btn btn-primary deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
   </header>
 
-  <ul class="list-inline m-3 mb-0">
-    <li class="list-inline-item">Questions: <span data-field="questions" aria-live="polite">0</span></li>
-    <li class="list-inline-item">Players: <span data-field="players" aria-live="polite">0</span></li>
-    <li class="list-inline-item">Correct: <span data-field="correct" aria-live="polite">0%</span></li>
-    <li class="list-inline-item">Incorrect: <span data-field="incorrect" aria-live="polite">0%</span></li>
-  </ul>
+  <div class="accordion-body accordion-collapse collapse game-data" id="game-stats"
+  role="region"
+  aria-label="Game details">
+    <dl class="row" id="game-stats">
+      <dt class="col-sm-1" aria-label="Total Questions">Questions</dt>
+      <dd class="col-sm-1" data-field="questions"></dd>
 
-  <trivia-questions-list class="game-questions"></trivia-questions-list>
+      <dt class="col-sm-1" aria-label="Total Players">Players</dt>
+      <dd class="col-sm-1" data-field="players"></dd>
 
-  <footer class="card-body d-flex gap-2">
-    <button class="btn btn-primary" id="activate" type="button">Activate</button>
-  </footer>
+      <dt class="col-sm-1" aria-label="Questions Answer correctly">Correct</dt>
+      <dd class="col-sm-1" data-field="correct"></dd>
+
+      <dt class="col-sm-1" aria-label="Questions answered incorrectly">Incorrect</dt>
+      <dd class="col-sm-1" data-field="incorrect"></dd>
+    </dl>
+  </div>
 </section>
 `;
 
-export class GamesSummaryElement extends BootstrapElement {
+export class GamesSummaryElement extends RPCElement {
   static observedAttributes = [
     'data-game-id',
     'data-game-title',
+    'data-game-short-code',
     'data-game-question-count',
     'data-game-player-count',
     'data-game-correct-count',
     'data-game-incorrect-count',
+    'data-game-active',
   ];
 
   constructor() {
@@ -40,99 +59,211 @@ export class GamesSummaryElement extends BootstrapElement {
     this.titleElement = this.shadow.querySelector('#game-title');
 
     this.summaryListElement = this.shadow.querySelector('ul');
-    this.questionsElement = this.shadow.querySelector('[data-field="questions"]');
-    this.playersElement = this.shadow.querySelector('[data-field="players"]');
-    this.correctElement = this.shadow.querySelector('[data-field="correct"]');
-    this.incorrectElement = this.shadow.querySelector('[data-field="incorrect"]');
+    this.questionCountElement = this.shadow.querySelector('[data-field="questions"]');
+    this.playersCountElement = this.shadow.querySelector('[data-field="players"]');
+    this.correctCountElemenet = this.shadow.querySelector('[data-field="correct"]');
+    this.incorrectCountElemenet = this.shadow.querySelector('[data-field="incorrect"]');
 
-    this.questionsListElement = this.shadow.querySelector('.game-questions');
+    this.gameDataElement = this.shadow.querySelector('.game-data');
+    this.activateButtonElement = this.shadow.querySelector('.activate-game');
+    this.deactivateButtonElement = this.shadow.querySelector('.deactivate-game');
+    this.expandButtomElement = this.shadow.querySelector('.expand-game');
 
-    this.activateElement = this.shadow.querySelector('#activate');
+    this.boundedToggleList = this.toggleList.bind(this);
+    this.boundedAddQuestionList = this.addQuestionList.bind(this);
+    this.boundedRemoveQuestionList = this.removeQuestionList.bind(this);
+    this.boundedActivateGame = this.activateGame.bind(this);
+    this.boundedDeactivateGame = this.deactivateGame.bind(this);
   }
 
   get gameId() {
-    return this.getAttribute('data-game-id');
+    return this.dataset.gameId;
   }
 
   set gameId(value) {
-    this.setAttribute('data-game-id', value);
+    this.dataset.gameId = value;
   }
 
   get gameTitle() {
-    return this.getAttribute('data-game-title');
+    return this.dataset.gameTitle;
   }
 
   set gameTitle(value) {
-    this.setAttribute('data-game-title', value);
+    this.dataset.gameTitle = value;
   }
 
   get gameQuestionCount() {
-    return Number(this.getAttribute('data-game-question-count')) || 0;
+    return Number(this.dataset.gameQuestionCount);
   }
 
   set gameQuestionCount(value) {
-    this.setAttribute('data-game-question-count', value);
+    this.dataset.gameQuestionCount = value;
   }
 
   get gamePlayerCount() {
-    return Number(this.getAttribute('data-game-player-count')) || 0;
+    return Number(this.dataset.gamePlayerCount);
   }
 
   set gamePlayerCount(value) {
-    this.setAttribute('data-game-player-count', value);
+    this.dataset.gamePlayerCount = value;
   }
 
   get gameCorrectCount() {
-    return Number(this.getAttribute('data-game-correct-count')) || 0;
+    return Number(this.dataset.gameCorrectCount);
   }
 
   set gameCorrectCount(value) {
-    this.setAttribute('data-game-correct-count', value);
+    this.dataset.gameCorrectCount = value;
   }
 
   get gameIncorrectCount() {
-    return Number(this.getAttribute('data-game-incorrect-count')) || 0;
+    return Number(this.dataset.gameIncorrectCount);
   }
 
   set gameIncorrectCount(value) {
-    this.setAttribute('data-game-incorrect-count', value);
+    this.dataset.gameIncorrectCount = value;
   }
 
   get gameShortCode() {
-    return this.getAttribute('data-game-short-code');
+    return this.dataset.gameShortCode;
   }
 
   set gameShortCode(value) {
-    this.setAttribute('data-game-short-code');
+    this.dataset.gameShortCode = value;
   }
 
-  activate() {
-    console.log('Activate');
+  get gameActive() {
+    return this.dataset.gameActive === 'true';
   }
 
-  updateSummary() {
-    const title = `${this.dataset.gameTitle ?? 'Untitled Game'} - ${this.dataset.gameShortCode}`;
-    const totalQuestions = Number(this.dataset.gameQuestionCount ?? 0);
-    const correct = Number(this.dataset.gameCorrectCount ?? 0);
-    const incorrect = Number(this.dataset.gameIncorrectCount ?? 0);
+  set gameActive(value) {
+    this.dataset.gameActive = value;
+  }
 
+  toggleList() {
+    this.expanded = this.expandButtomElement.classList.contains('collapsed');
+    this.gameAccordion.toggle();
+    this.expandButtomElement.setAttribute(
+      'aria-expanded',
+      !this.expanded,
+    );
+
+    this.expandButtomElement.classList.toggle('collapsed');
+    if (this.expanded) {
+      this.gameDataElement.focus();
+      this.addQuestionList();
+      return;
+    }
+
+    this.removeQuestionList();
+  }
+
+  addQuestionList() {
+    this.questionsListElement = document.createElement('trivia-questions-list');
+    this.questionsListElement.setAttribute('data-game-id', this.gameId);
+    this.gameDataElement.append(this.questionsListElement);
+  }
+
+  removeQuestionList() {
+    this.questionsListElement.remove();
+  }
+
+  activateGame() {
+    this.makeRPCCall('games.activate', { id: this.gameId });
+  }
+
+  deactivateGame() {
+    this.makeRPCCall('games.deactivate', { id: this.gameId });
+  }
+
+  connectedCallback() {
+    if (this.hasConnected) {
+      return;
+    }
+
+    this.hasConnected = true;
+    this.setAttribute('aria-label', this.shadow.querySelector('h3').textContent);
+    this.gameAccordion = new Collapse(this.gameDataElement, { toggle: false });
+    this.expandButtomElement.addEventListener('click', this.boundedToggleList);
+  }
+
+  disconnectedCallback() {
+    this.expandButtomElement.removeEventListener('click', this.boundedToggleList);
+  }
+
+  updateTitle() {
+    const title = `${this.gameTitle ?? 'Untitled Game'} - ${this.gameShortCode}`;
+    this.titleElement.textContent = title;
+  }
+
+  updateGameStats() {
+    const correct = Number(this.gameCorrectCount ?? 0);
+    const totalQuestions = Number(this.gameQuestionCount ?? 0);
     const correctPercent = totalQuestions
       ? Math.round((correct / totalQuestions) * 100)
       : 0;
+
+
+    const incorrect = Number(this.gameIncorrectCount ?? 0);
 
     const incorrectPercent = totalQuestions
       ? Math.round((incorrect / totalQuestions) * 100)
       : 0;
 
-    this.titleElement.textContent = title;
-    this.questionsElement.textContent = totalQuestions;
-    this.correctElement.textContent = `${correct} (${correctPercent}%)`;
-    this.incorrectElement.textContent = `${incorrect} (${incorrectPercent}%)`;
-    this.questionsListElement.setAttribute('data-game-id', this.gameId);
+    this.playersCountElement.textContent = this.gamePlayerCount;
+    this.questionCountElement.textContent = totalQuestions;
+    this.correctCountElemenet.textContent = `${correct} (${correctPercent}%)`;
+    this.incorrectCountElemenet.textContent = `${incorrect} (${incorrectPercent}%)`;
   }
 
-  attributeChangedCallback() {
-    this.updateSummary();
+  toggleGameActive() {
+    if (this.gameActive) {
+      this.activateButtonElement.classList.add('d-none');
+      this.activateButtonElement.removeEventListener('click', this.boundedActivateGame);
+
+      this.deactivateButtonElement.classList.remove('d-none');
+      this.deactivateButtonElement.addEventListener('click', this.boundedDeactivateGame);
+      return;
+    }
+
+    this.activateButtonElement.classList.remove('d-none');
+    this.activateButtonElement.addEventListener('click', this.boundedActivateGame);
+
+    this.deactivateButtonElement.classList.add('d-none');
+    this.deactivateButtonElement.removeEventListener('click', this.boundedDeactivateGame);
+  }
+
+  attributeChangedCallback(name) {
+    if (!this.hasConnected) {
+      return;
+    }
+
+    switch (name) {
+      case 'data-game-title':
+      // falls through
+      case 'data-game-short-code':
+        this.updateTitle();
+        break;
+
+      case 'data-game-question-count':
+      // falls through
+      case 'data-game-player-count':
+      // falls through
+      case 'data-game-correctcount':
+      // falls through
+      case 'data-game-incorrect-count':
+        this.updateGameStats();
+        break;
+
+      case 'data-game-active':
+        this.toggleGameActive();
+        break;
+    }
+  }
+
+  onDataLoaded(result) {
+    console.log('Data loaded', result);
+    this.gameActive = result.active;
   }
 
 }

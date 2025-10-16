@@ -17,6 +17,7 @@ export class FormInput extends HTMLElement {
     'help',
     'placeholder',
     'required',
+    'value',
     'icon',
   ];
 
@@ -238,7 +239,7 @@ export class FormInput extends HTMLElement {
     this.inputElement.classList.toggle('is-valid', valid);
   }
 
-  attributeChangedCallback(name) {
+  attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'disabled':
         this.updateDisabled(this.getAttribute('disabled'));
@@ -249,6 +250,9 @@ export class FormInput extends HTMLElement {
       case 'prefix':
         this.updatePrefix();
         break;
+
+      case 'value':
+        this.value = newValue;
     }
   }
 

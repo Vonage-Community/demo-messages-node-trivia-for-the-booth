@@ -2,16 +2,16 @@ import { BootstrapElement } from '../bootstrap.js';
 
 const choiceTemplate = document.createElement('template');
 choiceTemplate.innerHTML = `
-<article class="card choice p-3" role="listitem">
-  <h6 class="m-0 p-0">
-    <strong class="choice-letter"></strong>: <span class="choice-text"></span>
+<article class="card p-3 choice" role="listitem">
+  <h6 class="m-0 p-0 choice-container">
+    <strong class="choice-letter float-start"></strong>: <span class="choice-text floag-start"></span>
   </h6>
 </article>
 `;
 
 export class ChoiceElement extends BootstrapElement {
   static observedAttributes = [
-    'data-title',
+    'data-text',
     'data-choice-letter',
     'data-selected',
     'data-correct',
@@ -24,7 +24,7 @@ export class ChoiceElement extends BootstrapElement {
     this.choiceElement = this.shadow.querySelector('article');
     this.letterElement = this.shadow.querySelector('.choice-letter');
     this.textElement = this.shadow.querySelector('.choice-text');
-    this.choiceElement = this.shadow.querySelector('.choice');
+    this.choiceContainerElement = this.shadow.querySelector('.choice-container');
   }
 
   connectedCallback() {
@@ -38,20 +38,22 @@ export class ChoiceElement extends BootstrapElement {
   }
 
   get choiceLetter() {
-    return this.getAttribute('data-choice-letter') ?? '';
+    return this.dataset.choiceLetter ?? '';
   }
 
-  get title() {
-    return this.getAttribute('data-title') ?? '';
+  get text() {
+    return this.dataset.text ?? '';
   }
 
   render() {
     this.letterElement.textContent = this.choiceLetter;
-    this.textElement.textContent = this.title;
+    this.textElement.textContent = this.text;
   }
 
   attributeChangedCallback() {
-    if (this.isConnected) this.render();
+    if (this.isConnected) {
+      this.render();
+    }
   }
 }
 

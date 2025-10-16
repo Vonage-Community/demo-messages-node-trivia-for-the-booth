@@ -43,7 +43,6 @@ export const submitRPCForm = (form) => async (event, data) => {
 
   if (!form.checkValidity()) {
     emitEvent('form:invald', { form: form });
-    console.log('Invalid form');
     form.classList.add('was-validated');
     return;
   }

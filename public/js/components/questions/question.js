@@ -78,35 +78,62 @@ export class QuestionElement extends RPCElement {
     };
   }
 
+  get choiceElement() {
+    return 'trivia-choice';
+  }
+
+  get choiceAData() {
+    return {
+      letter: 'A',
+      text: this.choiceA || '',
+    };
+  }
+
+  get choiceBData() {
+    return {
+      letter: 'B',
+      text: this.choiceB || '',
+    };
+  }
+
+  get choiceCData() {
+    return {
+      letter: 'C',
+      text: this.choiceC || '',
+    };
+  }
+
+  get choiceDData() {
+    return {
+      letter: 'D',
+      text: this.choiceD || '',
+    };
+  }
+
+  get choiceData() {
+    return [
+      this.choiceAData,
+      this.choiceBData,
+      this.choiceCData,
+      this.choiceDData,
+    ];
+  }
+
   connectedCallback() {
     this.updateQuestion();
   }
 
+  updateChoice(choice, choiceData) {
+    choice.dataset.choiceLetter = choiceData.letter;
+    choice.dataset.text = choiceData.text;
+  }
+
   updateQuestion() {
     this.choicesContainer.innerHTML = '';
-    const choices = [
-      {
-        letter: 'A',
-        text: this.choiceA || '',
-      },
-      {
-        letter: 'B',
-        text: this.choiceB || '',
-      },
-      {
-        letter: 'C',
-        text: this.choiceC || '',
-      },
-      {
-        letter: 'D',
-        text: this.choiceD || '',
-      },
-    ];
 
-    for (const { letter, text } of choices) {
-      const choice = document.createElement('trivia-choice');
-      choice.setAttribute('data-choice-letter', letter);
-      choice.setAttribute('data-title', text);
+    for (const choiceData of this.choiceData) {
+      const choice = document.createElement(this.choiceElement);
+      this.updateChoice(choice, choiceData);
       this.choicesContainer.append(choice);
     }
 
@@ -114,12 +141,12 @@ export class QuestionElement extends RPCElement {
   }
 
   onDataLoaded(result) {
-    this.setAttribute('data-question', result.question || '');
-    this.setAttribute('data-choice-a', result.choiceA || '');
-    this.setAttribute('data-choice-b', result.choiceB || '');
-    this.setAttribute('data-choice-c', result.choiceC || '');
-    this.setAttribute('data-choice-d', result.choiceD || '');
-    this.setAttribute('data-correct-choice', result.correctChoice || '');
+    this.dataset.question = result.question || '';
+    this.dataset.choiceA = result.choiceA || '';
+    this.dataset.choiceB = result.choiceB || '';
+    this.dataset.choiceC = result.choiceC || '';
+    this.dataset.choiceD = result.choiceD || '';
+    this.dataset.correctChoice = result.correctChoice || '';
     this.updateQuestion();
   }
 }

@@ -3,7 +3,7 @@ import './gameSummary.js';
 
 const gameListTemplate = document.createElement('template');
 gameListTemplate.innerHTML = `
-<section aria-labelledby="games-heading" class="games-list">
+<section aria-labelledby="games-heading" class="games-list accordion accordion-flush">
   <h1 id="games-heading">Games</h1>
   <ul class="card-group row" role="list"></ul>
 </section>
@@ -53,6 +53,10 @@ export class GamesListElement extends RPCElement {
     };
   }
 
+  get loadingTargetElement() {
+    return this.gamesSectionElement;
+  }
+
   connectedCallback() {
     this.makeRPCCall();
   }
@@ -60,19 +64,20 @@ export class GamesListElement extends RPCElement {
   render() {
     this.games.forEach((game) => {
       const gameSummaryElement = document.createElement('trivia-game-summary');
-      gameSummaryElement.dataset.gameId = game.id;
-      gameSummaryElement.dataset.gameTitle = game.title;
-      gameSummaryElement.dataset.gameShortCode = game.shortCode;
-      gameSummaryElement.dataset.gameAction = game.active;
-      gameSummaryElement.dataset.gameQuestionCount = game.questionCount;
-      gameSummaryElement.dataset.gamePlayerCount = game.playerCount;
-      gameSummaryElement.dataset.gameCorrectCount = game.totalCorrectAnswers;
-      gameSummaryElement.dataset.gameIncorrectCount = game.totalIncorrectAnswers;
       this.gamesSectionElement.append(gameSummaryElement);
+      gameSummaryElement.gameId = game.id;
+      gameSummaryElement.gameTitle = game.title;
+      gameSummaryElement.gameShortCode = game.shortCode;
+      gameSummaryElement.gameActive = game.active;
+      gameSummaryElement.gameQuestionCount = game.questionCount;
+      gameSummaryElement.gamePlayerCount = game.playerCount;
+      gameSummaryElement.gameCorrectCount = game.totalCorrectAnswers;
+      gameSummaryElement.gameIncorrectCount = game.totalIncorrectAnswers;
     });
   }
 
   onDataLoaded({ games, limit, total, offset }) {
+    this.toggleSpinner();
     this.games = games || [];
     this.limit = limit || 0;
     this.total = total || 0;

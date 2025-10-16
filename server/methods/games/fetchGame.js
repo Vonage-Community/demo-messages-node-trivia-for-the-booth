@@ -3,8 +3,9 @@ import debug from './log.js';
 
 const log = debug.extend('fetch');
 
-export const fetchGameMethod = async ({ id }) => {
+export const fetchGameMethod = async (args) => {
+  const { id, _auth: auth } = args;
   log(`Fetching game ${id}`);
-  return getGameById(id);
+  return getGameById(id, auth.role === 'admin');
 };
 

@@ -80,8 +80,130 @@ export class QuestionFormElement extends RPCElement {
     this.modal = this.shadow.querySelector('.question-form-modal');
     this.modalBody = this.shadow.querySelector('.modal-body');
     this.formElement = this.shadow.querySelector('.question-form');
+
+    this.questionInputElement = this.shadow.querySelector('trivia-form-input[name="question"]');
+    this.choiceAInputElement = this.shadow.querySelector('trivia-form-input[name="choiceA"]');
+    this.choiceBInputElement = this.shadow.querySelector('trivia-form-input[name="choiceB"]');
+    this.choiceCInputElement = this.shadow.querySelector('trivia-form-input[name="choiceC"]');
+    this.choiceDInputElement = this.shadow.querySelector('trivia-form-input[name="choiceD"]');
+
+    this.correctChoiceSelectElement = this.shadow.querySelector('select[name="correctChoice"]');
+
+    this.hiddenGameIdInput = this.shadow.querySelector('input[name="gameId"]');
+    this.hiddenQuestionIdInput = this.shadow.querySelector('input[name="questionId"]');
   }
 
+  get questionText() {
+    return this.dataset.question ?? '';
+  }
+
+  set questionText(newQuestionText) {
+    this.dataset.question = newQuestionText;
+  }
+
+  get choiceA() {
+    return this.dataset.choiceA ?? '';
+  }
+
+  set choiceA(newChoiceA) {
+    this.dataset.choiceA = newChoiceA;
+  }
+
+  get choiceB() {
+    return this.dataset.choiceB ?? '';
+  }
+
+  set choiceB(newChoiceB) {
+    this.dataset.choiceB = newChoiceB;
+  }
+
+  get choiceC() {
+    return this.dataset.choiceC ?? '';
+  }
+
+  set choiceC(newChoiceC) {
+    this.dataset.choiceC = newChoiceC;
+  }
+
+  get choiceD() {
+    return this.dataset.choiceD ?? '';
+  }
+
+  set choiceD(newChoiceD) {
+    this.dataset.choiceD = newChoiceD;
+  }
+
+  get correctChoice() {
+    return this.dataset.correctChoice ?? '';
+  }
+
+  set correctChoice(newCorrectChoice) {
+    this.dataset.correctChoice = newCorrectChoice;
+  }
+
+  get gameId() {
+    return Number(this.dataset.gameId) || null;
+  }
+
+  set gameId(newGameId) {
+    this.dataset.gameId = newGameId;
+  }
+
+  get questionId() {
+    return Number(this.dataset.questionId) || null;
+  }
+
+  set questionId(newQuestionId) {
+    this.dataset.questionId = newQuestionId;
+  }
+
+  get correctAnswerCount() {
+    return Number(this.dataset.correctAnswerCount) || 0;
+  }
+
+  set correctAnswerCount(newCorrectAnswerCount) {
+    this.dataset.correctAnswerCount = newCorrectAnswerCount;
+  }
+
+  get incorrectAnswerCount() {
+    return Number(this.dataset.incorrectAnswerCount) || 0;
+  }
+
+  set incorrectAnswerCount(newIncorrectAnswerCount) {
+    this.dataset.incorrectAnswerCount = newIncorrectAnswerCount;
+  }
+
+  get countChoiceA() {
+    return Number(this.dataset.countChoiceA) || 0;
+  }
+
+  set countChoiceA(newCountChoiceA) {
+    this.dataset.countChoiceA = newCountChoiceA;
+  }
+
+  get countChoiceB() {
+    return Number(this.dataset.countChoiceB) || 0;
+  }
+
+  set countChoiceB(newCountChoiceB) {
+    this.dataset.countChoiceB = newCountChoiceB;
+  }
+
+  get countChoiceC() {
+    return Number(this.dataset.countChoiceC) || 0;
+  }
+
+  set countChoiceC(newCountChoiceC) {
+    this.dataset.countChoiceC = newCountChoiceC;
+  }
+
+  get countChoiceD() {
+    return Number(this.dataset.countChoiceD) || 0;
+  }
+
+  set countChoiceD(newCountChoiceD) {
+    this.dataset.countChoiceD = newCountChoiceD;
+  }
   toggleModal() {
     this.connectedModal.toggle();
   }
@@ -99,7 +221,6 @@ export class QuestionFormElement extends RPCElement {
 
   afterSubmit(event) {
     console.log('afterSubmit', event);
-
   }
 
   connectedCallback() {
@@ -125,39 +246,40 @@ export class QuestionFormElement extends RPCElement {
   attributeChangedCallback(name, oldValue, newValue) {
     switch (name) {
       case 'data-question':
-        this.shadow.querySelector('trivia-form-input[name="question"]').setAttribute('value', newValue);
+        this.questionInputElement.setAttribute('value', newValue ?? '');
         break;
 
       case 'data-choice-a':
-        this.shadow.querySelector('trivia-form-input[name="choiceA"]').setAttribute('value', newValue);
+        this.choiceAInputElement.setAttribute('value', newValue ?? '');
         break;
 
       case 'data-choice-b':
-        this.shadow.querySelector('trivia-form-input[name="choiceB"]').setAttribute('value', newValue);
+        this.choiceBInputElement.setAttribute('value', newValue ?? '');
         break;
 
       case 'data-choice-c':
-        this.shadow.querySelector('trivia-form-input[name="choiceC"]').setAttribute('value', newValue);
+        this.choiceCInputElement.setAttribute('value', newValue ?? '');
         break;
 
       case 'data-choice-d':
-        this.shadow.querySelector('trivia-form-input[name="choiceD"]').setAttribute('value', newValue);
+        this.choiceDInputElement.setAttribute('value', newValue ?? '');
         break;
 
       case 'data-correct-choice':
-        this.shadow.querySelector('select[name="correctChoice"]').value = newValue;
+        this.correctChoiceSelectElement.value = newValue ?? '';
         break;
 
       case 'data-question-id':
-        this.formElement.setAttribute('data-rpc-method', 'questions.update');
-        this.shadow.querySelector('input[name="questionId"]').value = newValue;
+        this.formElement.dataset.rpcMethod = 'questions.update';
+        this.hiddenQuestionIdInput.value = newValue ?? '';
         break;
 
       case 'data-game-id':
-        this.shadow.querySelector('input[name="gameId"]').value = newValue;
+        this.hiddenGameIdInput.value = newValue ?? '';
         break;
     }
   }
+
 }
 
 customElements.define('trivia-question-form', QuestionFormElement);

@@ -9,15 +9,22 @@ const log = debug.extend('list');
 
 const listGamesStmt = db.prepare(`
   SELECT
-    id,
+    question_id AS id,
     game_id,
-    question,
+    question_text AS question,
     choice_a,
     choice_b,
     choice_c,
     choice_d,
-    correct_choice
-  FROM questions
+    correct_choice,
+    player_count,
+    correct_answer_count,
+    count_choice_a,
+    count_choice_b,
+    count_choice_c,
+    count_choice_d,
+    incorrect_answer_count
+  FROM game_detail_view
   WHERE game_id = ?
 `);
 

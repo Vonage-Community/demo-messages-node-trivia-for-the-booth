@@ -15,6 +15,9 @@ export class RPCElement extends BootstrapElement {
     if (new.target === RPCElement) {
       throw new TypeError('Cannot instantiate RPCElement directly');
     }
+
+    this.isLoading = false;
+    this.spinnerElement = null;
   }
 
   get rpcMethod() {
@@ -33,10 +36,47 @@ export class RPCElement extends BootstrapElement {
     return {};
   }
 
+  get loadingTargetElement() {
+    return null;
+  }
+
+  toggleSpinner() {
+    if (!this.loadingTargetElement) {
+      return;
+    }
+
+    if (this.spinnerTimeoutId) {
+      return;
+    }
+
+    if (!this.isLoading) {
+      clearTimeout(this.spinnerTimeoutId);
+      this.spinnerElement?.remove();
+      this.spinnerElement = null;
+      return;
+    }
+
+    this.spinnerTimeoutId = setTimeout(() => {
+      // stop race condition
+      if (this.isLoading) {
+        this.spinnerElement = document.createElement('trivia-spinner');
+        this.loadingTargetElement.append(this.spinnerElement);
+        return;
+      }
+
+      if (this.spinnerElement) {
+        this.spinnerElement.remove();
+      }
+
+    }, 300);
+  }
+
   async makeRPCCall(rpcMethod, rpcParams, rpcId) {
     rpcMethod = rpcMethod ?? this.rpcMethod;
     rpcParams = rpcParams ?? this.rpcParams;
     rpcId = rpcId ?? this.rpcId;
+    this.isLoading = true;
+    this.toggleSpinner();
 
     const eventData = {
       id: rpcId,
@@ -50,6 +90,8 @@ export class RPCElement extends BootstrapElement {
         'element:loading',
         eventData,
       );
+
+      this.onDataLoading(eventData);
 
       console.debug(`RPC Element making RPC call from ${this.tagName}`, rpcMethod, rpcParams);
 
@@ -68,6 +110,7 @@ export class RPCElement extends BootstrapElement {
           result,
         },
       );
+
       return result;
     } catch (err) {
       console.error(`RPC load failed for ${rpcMethod}`, err);
@@ -79,8 +122,13 @@ export class RPCElement extends BootstrapElement {
           error: err,
         },
       );
+    } finally {
+      this.isLoading = false;
+      this.toggleSpinner();
     }
   }
+
+  onDataLoading() { }
 
   onDataLoaded() { }
 

@@ -3,8 +3,8 @@ import 'bootstrap';
 import './components/index.js';
 import './handlers/index.js';
 import './rpc.js';
-import { submitRPCForm } from './form.js';
 import './toast.js';
+import { submitRPCForm } from './form.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const bootstrapForms = document.querySelectorAll('.needs-validation');

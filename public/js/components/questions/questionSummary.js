@@ -1,5 +1,6 @@
 import { QuestionElement } from './question.js';
 import './questionForm.js';
+import './choiceSummary.js';
 
 const questionControlTemplate = document.createElement('template');
 questionControlTemplate.innerHTML = `
@@ -9,6 +10,17 @@ questionControlTemplate.innerHTML = `
 `;
 
 export class QuestionSummaryElement extends QuestionElement {
+  static observedAttributes = [
+    ...QuestionElement.observedAttributes,
+    'data-correct-choice',
+    'data-correct-answer-count',
+    'data-incorrect-answer-count',
+    'data-count-choice-a',
+    'data-count-choice-b',
+    'data-count-choice-c',
+    'data-count-choice-d',
+  ];
+
   constructor() {
     super();
     this.choicesSection = this.shadow.querySelector('section.card-body');
@@ -19,19 +31,30 @@ export class QuestionSummaryElement extends QuestionElement {
     this.formShowing = false;
   }
 
+  get choiceElement() {
+    return 'trivia-choice-summary';
+  }
+
   toggleForm() {
     const questionElement = document.createElement('trivia-question-form');
+
+    questionElement.dataset.question = this.question || '';
+    questionElement.dataset.choiceA = this.choiceA || '';
+    questionElement.dataset.choiceB = this.choiceB || '';
+    questionElement.dataset.choiceC = this.choiceC || '';
+    questionElement.dataset.choiceD = this.choiceD || '';
+    questionElement.dataset.correctChoice = this.correctChoice || '';
+    questionElement.dataset.gameId = this.gameId || '';
+    questionElement.dataset.questionId = this.questionId || '';
+
+    questionElement.dataset.correctAnswerCount = this.correctAnswerCount ?? 0;
+    questionElement.dataset.incorrectAnswerCount = this.incorrectAnswerCount ?? 0;
+    questionElement.dataset.countChoiceA = this.countChoiceA ?? 0;
+    questionElement.dataset.countChoiceB = this.countChoiceB ?? 0;
+    questionElement.dataset.countChoiceC = this.countChoiceC ?? 0;
+    questionElement.dataset.countChoiceD = this.countChoiceD ?? 0;
+
     this.questionCardElement.append(questionElement);
-
-    questionElement.setAttribute('data-question', this.question || '');
-    questionElement.setAttribute('data-choice-a', this.choiceA || '');
-    questionElement.setAttribute('data-choice-b', this.choiceB || '');
-    questionElement.setAttribute('data-choice-c', this.choiceC || '');
-    questionElement.setAttribute('data-choice-d', this.choiceD || '');
-    questionElement.setAttribute('data-correct-choice', this.correctChoice || '');
-    questionElement.setAttribute('data-game-id', this.gameId || '');
-    questionElement.setAttribute('data-question-id', this.questionId || '');
-
     questionElement.toggleModal();
 
     questionElement.modal.addEventListener('hidden.bs.modal', () => {
@@ -39,12 +62,47 @@ export class QuestionSummaryElement extends QuestionElement {
     });
   }
 
-  updateQuestion() {
-    super.updateQuestion();
-    if (this.correctChoice) {
-      const correctChoiceElement = this.shadow.querySelector(`trivia-choice[data-choice-letter="${this.correctChoice}"]`);
-      correctChoiceElement.choiceElement.classList.toggle('border-success');
-    }
+  get totalAnswers() {
+    return Number(this.dataset.correctAnswerCount ?? 0) + Number(this.dataset.incorrectAnswerCount ?? 0);
+  }
+
+  get choiceAData() {
+    return {
+      ...super.choiceAData,
+      correctChoice: this.dataset.correctChoice,
+      count: this.dataset.countChoiceA,
+    };
+  }
+
+  get choiceBData() {
+    return {
+      ...super.choiceBData,
+      correctChoice: this.dataset.correctChoice,
+      count: this.dataset.countChoiceC,
+    };
+  }
+
+  get choiceCData() {
+    return {
+      ...super.choiceCData,
+      correctChoice: this.dataset.correctChoice,
+      count: this.dataset.countChoiceC,
+    };
+  }
+
+  get choiceDData() {
+    return {
+      ...super.choiceDData,
+      correctChoice: this.dataset.correctChoice,
+      count: this.dataset.countChoiceD,
+    };
+  }
+
+  updateChoice(choice, choiceData) {
+    super.updateChoice(choice, choiceData);
+    choice.dataset.correctChoice = choiceData.correctChoice;
+    choice.dataset.count = choiceData.count || 0;
+    choice.dataset.totalAnswers = this.totalAnswers;
   }
 
   connectedCallback() {
@@ -55,6 +113,17 @@ export class QuestionSummaryElement extends QuestionElement {
 
   disconnectedCallback() {
     this.editButtonElement.removeEventListener('click', this.boundedToggleForm);
+  }
+
+  onDataLoaded(result) {
+    super.onDataLoaded(result);
+    this.dataset.correctAnswerCount = result.correctAnswerCount ?? 0;
+    this.dataset.incorrectAnswerCount = result.incorrectAnswerCount ?? 0;
+    this.dataset.countChoiceA = result.countChoiceA ?? 0;
+    this.dataset.countChoiceB = result.countChoiceB ?? 0;
+    this.dataset.countChoiceC = result.countChoiceC ?? 0;
+    this.dataset.countChoiceD = result.countChoiceD ?? 0;
+    this.updateQuestion();
   }
 }
 
