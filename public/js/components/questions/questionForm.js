@@ -204,6 +204,7 @@ export class QuestionFormElement extends RPCElement {
   set countChoiceD(newCountChoiceD) {
     this.dataset.countChoiceD = newCountChoiceD;
   }
+
   toggleModal() {
     this.connectedModal.toggle();
   }
@@ -219,8 +220,8 @@ export class QuestionFormElement extends RPCElement {
     submitRPCForm(this.formElement)(null, data);
   }
 
-  afterSubmit(event) {
-    console.log('afterSubmit', event);
+  afterSubmit() {
+    this.connectedModal.hide();
   }
 
   connectedCallback() {
@@ -236,11 +237,13 @@ export class QuestionFormElement extends RPCElement {
       this.submitForm();
     });
 
-    registerEvent('form:submitted', this.afterSubmit);
+    this.boundedAfterSubmit = this.afterSubmit.bind(this);
+
+    registerEvent('form:submitted', this.boundedAfterSubmit);
   }
 
   disconnectedCallback() {
-    removeEvent('form:submitted', this.afterSubmit);
+    removeEvent('form:submitted', this.boundedAfterSubmit);
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

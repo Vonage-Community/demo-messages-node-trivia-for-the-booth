@@ -59,6 +59,7 @@ export class QuestionSummaryElement extends QuestionElement {
 
     questionElement.modal.addEventListener('hidden.bs.modal', () => {
       questionElement.remove();
+      this.makeRPCCall();
     });
   }
 
@@ -112,6 +113,7 @@ export class QuestionSummaryElement extends QuestionElement {
   }
 
   disconnectedCallback() {
+    console.log('Summary disconnected');
     this.editButtonElement.removeEventListener('click', this.boundedToggleForm);
   }
 

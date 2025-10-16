@@ -31,5 +31,7 @@ const listGamesStmt = db.prepare(`
 export const getQuestionsForGame = (gameId, detailed) => {
   log(`Fetching questions for game ${Number(gameId)}`);
   requireUInt('gameId', gameId);
-  return listGamesStmt.all(Number(gameId)).map((row) => fromQuestionRow(row, detailed));
+  return listGamesStmt.all(Number(gameId))
+    .map((row) => fromQuestionRow(row, detailed))
+    .filter((question) => question.question);
 };

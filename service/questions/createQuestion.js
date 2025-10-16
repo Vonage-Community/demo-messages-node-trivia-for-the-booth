@@ -35,6 +35,7 @@ export const createQuestion = (args = {}) => {
     choiceD: requireNonEmptyString('coiceD', args.choiceD),
     correctChoice: checkCorrectChoice(args.correctChoice),
   };
+  log('Question to create', question);
 
   const info = insertQuestion.run(question);
   question.id = info.lastInsertRowid;

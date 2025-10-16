@@ -8,6 +8,7 @@ gameListTemplate.innerHTML = `
 role="region"
 aria-describedby="game-title"
 aria-labelledby="game-title">
+
   <header class="card-header border-0 d-flex align-items-center gap-2">
     <button class="accordion-button bg-transparent collapsed expand-game"
       type="button"
@@ -20,10 +21,10 @@ aria-labelledby="game-title">
     <button class="btn btn-primary deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
   </header>
 
-  <div class="accordion-body accordion-collapse collapse game-data" id="game-stats"
+  <div class="accordion-body accordion-collapse collapse game-data transate-middle p-0 " id="game-stats"
   role="region"
   aria-label="Game details">
-    <dl class="row" id="game-stats">
+    <dl class="row d-flex justify-content-center" id="game-stats">
       <dt class="col-sm-1" aria-label="Total Questions">Questions</dt>
       <dd class="col-sm-1" data-field="questions"></dd>
 
@@ -42,7 +43,7 @@ aria-labelledby="game-title">
 
 export class GamesSummaryElement extends RPCElement {
   static observedAttributes = [
-    'data-game-id',
+    '',
     'data-game-title',
     'data-game-short-code',
     'data-game-question-count',
@@ -262,7 +263,6 @@ export class GamesSummaryElement extends RPCElement {
   }
 
   onDataLoaded(result) {
-    console.log('Data loaded', result);
     this.gameActive = result.active;
   }
 

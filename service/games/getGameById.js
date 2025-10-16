@@ -15,6 +15,7 @@ export const selectGameDetailById = db.prepare(`
   SELECT
     game_id,
     game_title,
+    short_code,
     active,
     question_text AS question,
     question_id AS questionId,
@@ -56,11 +57,12 @@ export const getGameById = (id, detailed = false) => {
     return fromQuestionRow(row, detailed);
   }).filter((row) => row);
 
+  log('Raw Game', first);
   const game = gameFromRow(first, detailed);
 
   game.questions = questions;
 
 
-  log(`Fetched game detail for ${id}`);
+  log(`Fetched game detail for ${id}`, game);
   return game;
 };

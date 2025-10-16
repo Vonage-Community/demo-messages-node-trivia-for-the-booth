@@ -93,8 +93,6 @@ export class RPCElement extends BootstrapElement {
 
       this.onDataLoading(eventData);
 
-      console.debug(`RPC Element making RPC call from ${this.tagName}`, rpcMethod, rpcParams);
-
       const [id, result] = await rpc(
         rpcMethod,
         rpcParams,

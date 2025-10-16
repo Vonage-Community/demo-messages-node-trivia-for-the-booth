@@ -1,4 +1,5 @@
 import { RPCElement } from '../rpcElement.js';
+import { registerEvent, removeEvent } from '../../events.js';
 import './gameSummary.js';
 
 const gameListTemplate = document.createElement('template');
@@ -16,6 +17,7 @@ export class GamesListElement extends RPCElement {
     this.shadow.append(gameListTemplate.content.cloneNode(true));
     this.gamesSectionElement = this.shadow.querySelector('ul');
     this.games = [];
+    this.hasConnected = false;
   }
 
   get rpcMethod() {
@@ -57,11 +59,32 @@ export class GamesListElement extends RPCElement {
     return this.gamesSectionElement;
   }
 
+  refreshList(event) {
+    const method = event.detail.method;
+    if (method === 'games.deactivate' || method === 'games.activate') {
+      this.makeRPCCall();
+    }
+  }
+
   connectedCallback() {
+    if (this.hasConnected) {
+      return;
+    }
+
+    this.hasConnected = true;
     this.makeRPCCall();
+
+    this.boundedRefreshList = this.refreshList.bind(this);
+
+    registerEvent('rpc:success', this.boundedRefreshList);
+  }
+
+  disconnectedCallback() {
+    removeEvent('rpc:success', this.boundedRefreshList);
   }
 
   render() {
+    this.gamesSectionElement.innerHTML = '';
     this.games.forEach((game) => {
       const gameSummaryElement = document.createElement('trivia-game-summary');
       this.gamesSectionElement.append(gameSummaryElement);
@@ -77,7 +100,6 @@ export class GamesListElement extends RPCElement {
   }
 
   onDataLoaded({ games, limit, total, offset }) {
-    this.toggleSpinner();
     this.games = games || [];
     this.limit = limit || 0;
     this.total = total || 0;

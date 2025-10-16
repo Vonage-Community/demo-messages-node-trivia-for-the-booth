@@ -6,17 +6,18 @@ import Collapse from 'bootstrap/js/dist/collapse';
 const questionListTemplate = document.createElement('template');
 questionListTemplate.innerHTML = `
 <section class="card mb-3 w-100 border-0" aria-labelledby="question-title">
-  <header class="card-header border-0 d-flex align-items-center gap-2">
-    <h3 id="question-title" class="mb-0">
-      Questions
-    </h3>
+  <header class="card-header border-0 d-flex justify-content-between align-items-center gap-2">
+      <h3 id="question-title" class="mb-0">
+        Questions
+      </h3>
 
-    <button class="btn btn-success add-question" aria-label="Add a new question">Add</button>
+      <button class="btn btn-success add-question" aria-label="Add a new question">Add</button>
   </header>
 
   <section class="question-list"
     role="region"
     aria-label="Questions list">
+    <div class="text-center fs-3 p-3" role="region">There are no questions</div>
   </section>
 </section>
 `;
@@ -36,11 +37,13 @@ export class QuestionListElement extends RPCElement {
   addQuestion() {
     const questionFormElement = document.createElement('trivia-question-form');
     this.questionListElement.append(questionFormElement);
+
     questionFormElement.setAttribute('data-game-id', this.gameId);
     questionFormElement.toggleModal();
 
     questionFormElement.modal.addEventListener('hidden.bs.modal', () => {
       questionFormElement.remove();
+      this.makeRPCCall();
     });
   }
 
@@ -85,6 +88,10 @@ export class QuestionListElement extends RPCElement {
   }
 
   onDataLoaded(questions) {
+    if (questions.length < 1) {
+      return;
+    }
+
     this.questionListElement.innerHTML = '';
 
     questions.forEach((question) => {

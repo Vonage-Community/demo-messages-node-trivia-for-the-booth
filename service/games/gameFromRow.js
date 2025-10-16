@@ -1,8 +1,8 @@
 
 export const gameFromRow = (row) => row
   ? {
-    id: row.id,
-    title: row.title,
+    id: row.id || row.game_id,
+    title: row.title || row.game_title,
     shortCode: row.short_code,
     active: !!row.active,
     questionCount: row.question_count,
