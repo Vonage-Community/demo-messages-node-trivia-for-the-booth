@@ -12,6 +12,7 @@ export const createGameDetailView = () => {
       g.title      AS game_title,
       g.short_code AS short_code,
       g.active     AS active,
+      g.bonus_game AS bonus_game,
       q.id         AS question_id,
       q.question   AS question_text,
       q.choice_a,

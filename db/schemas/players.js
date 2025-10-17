@@ -9,6 +9,8 @@ export const createPlayersTable = () => {
     CREATE TABLE IF NOT EXISTS players (
       game_id   INTEGER NOT NULL,
       player_id INTEGER NOT NULL,
+      started_at INTEGER DEFAULT (strftime('%s','now')),
+      completed_at INTEGER,
       PRIMARY KEY (game_id, player_id),
       FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
       FOREIGN KEY (player_id) REFERENCES users(id) ON DELETE CASCADE

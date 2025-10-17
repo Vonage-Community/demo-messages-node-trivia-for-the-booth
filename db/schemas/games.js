@@ -10,6 +10,7 @@ export const createGamesTable = () => {
       id         INTEGER PRIMARY KEY AUTOINCREMENT,
       title      TEXT NOT NULL,
       active     INTEGER NOT NULL DEFAULT 0,
+      bonus_game INTEGER NOT NULL DEFAULT 0,
       short_code TEXT NOT NULL
     );
   `);
