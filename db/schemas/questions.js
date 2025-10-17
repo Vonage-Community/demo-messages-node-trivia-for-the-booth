@@ -17,8 +17,7 @@ export const createQuestionsTable = () => {
       correct_choice CHAR NOT NULL CHECK (correct_choice IN ('A','B','C','D')),
       sort_order     INTEGER NOT NULL DEFAULT 0,
 
-      FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
-      UNIQUE (game_id, sort_order)
+      FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE
     );
 
     CREATE INDEX IF NOT EXISTS idx_questions_game_id ON questions(game_id);

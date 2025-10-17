@@ -19,6 +19,7 @@ export const createGameDetailView = () => {
       q.choice_c,
       q.choice_d,
       q.correct_choice,
+      q.sort_order,
 
       -- total number of players in the game
       (

@@ -1,6 +1,7 @@
 import { QuestionElement } from './question.js';
 import './questionForm.js';
 import './choiceSummary.js';
+import { registerEvent, removeEvent } from '../../events.js';
 
 const questionControlTemplate = document.createElement('template');
 questionControlTemplate.innerHTML = `
@@ -108,15 +109,36 @@ export class QuestionSummaryElement extends QuestionElement {
     choice.dataset.totalAnswers = this.totalAnswers;
   }
 
+  deleteQuestion() {
+    console.log('Deleting question', this.questionId);
+    this.makeRPCCall(
+      'questions.delete',
+      {
+        id: this.questionId,
+      },
+    );
+
+    const removeSummaryAfterDelete = () => {
+      console.log('Question deleted');
+      removeEvent('rpc:success', removeSummaryAfterDelete);
+      this.remove();
+    };
+
+    registerEvent('rpc:success', removeSummaryAfterDelete);
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.boundedToggleForm = this.toggleForm.bind(this);
+    this.boundedDeleteQuestion = this.deleteQuestion.bind(this);
     this.editButtonElement.addEventListener('click', this.boundedToggleForm);
+    this.deleteButtonElement.addEventListener('click', this.boundedDeleteQuestion);
   }
 
   disconnectedCallback() {
     console.log('Summary disconnected');
     this.editButtonElement.removeEventListener('click', this.boundedToggleForm);
+    this.deleteButtonElement.removeEventListener('click', this.boundedDeleteQuestion);
   }
 
   onDataLoaded(result) {

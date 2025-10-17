@@ -1,13 +1,11 @@
 import db from '../../db/index.js';
-import {
-  requireUInt,
-} from '../helpersAndGuards.js';
+import { requireUInt } from '../helpersAndGuards.js';
 import { fromQuestionRow } from './fromQuestionRow.js';
 import debug from './log.js';
 
-const log = debug.extend('list');
+const log = debug.extend('last-question');
 
-const listGamesStmt = db.prepare(`
+const lastQuestionStmt = db.prepare(`
   SELECT
     question_id AS id,
     game_id,
@@ -27,13 +25,14 @@ const listGamesStmt = db.prepare(`
     sort_order
   FROM game_detail_view
   WHERE game_id = ?
-  ORDER BY sort_order
+  ORDER BY sort_order DESC
+  LIMIT 1
 `);
 
-export const getQuestionsForGame = (gameId, detailed) => {
-  log(`Fetching questions for game ${Number(gameId)}`);
+export const getLastQuestionForGame = (gameId, detailed = false) => {
+  log(`Fetching last question for game ${Number(gameId)}`);
   requireUInt('gameId', gameId);
-  return listGamesStmt.all(Number(gameId))
-    .map((row) => fromQuestionRow(row, detailed))
-    .filter((question) => question.question);
+
+  const row = lastQuestionStmt.get(Number(gameId));
+  return row ? fromQuestionRow(row, detailed) : null;
 };

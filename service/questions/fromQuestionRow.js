@@ -7,6 +7,7 @@ export const fromQuestionRow = (question, detailed) => question
     choiceB: question.choice_b,
     choiceC: question.choice_c,
     choiceD: question.choice_d,
+    sortOrder: question.sort_order,
     ...(detailed
       ? {
         correctChoice: question.correct_choice,

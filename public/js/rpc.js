@@ -1,9 +1,14 @@
 import { emitEvent } from './events';
+const BASE_URL = typeof window.API_HOST_URL !== 'undefined'
+  ? window.API_HOST_URL
+  : window.location.origin;
+
+export const RPC_URL = `${BASE_URL}/rpc`;
 
 export const rpc = async (method, params, requestId = '1') => {
   const token = sessionStorage.getItem('auth_token');
 
-  const res = await fetch('http://localhost:3000/rpc', {
+  const res = await fetch(RPC_URL, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

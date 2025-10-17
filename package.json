@@ -8,9 +8,10 @@
   "main": "src/server.js",
   "scripts": {
     "build": "vite build",
-    "dev": "concurrently 'npm run dev:web' 'npm run dev:api'",
-    "dev:api": "node --watch server/index.js",
-    "dev:web": "cross-env SASS_SILENCE_ALL=all vite",
+    "dev": "cross-env NODE_ENV=development concurrently \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:api": "cross-env NODE_ENV=development node --watch server/index.js",
+    "dev:web": "cross-env NODE_ENV=development SASS_SILENCE_ALL=all vite",
+    "start": "cross-env NODE_ENV=production node server/index.js",
     "eslint": "eslint",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

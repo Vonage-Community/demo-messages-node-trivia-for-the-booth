@@ -34,6 +34,15 @@ choiceTemplate.innerHTML = `
             help="Choose a value between 1 and 10">
           </trivia-form-input-range>
 
+          <label for="correctChoice">Difficulty</label>
+
+          <select class="form-select" name="difficulty" aria-label="Question difficulty">
+            <option value="Easy">Piece of Cake</option>
+            <option value="Medium">Let's rock</option>
+            <option value="Hard">Come get Some</option>
+            <option value="Hardest">Damn I'm good</option>
+          </select>
+
           <input type="hidden" name="gameId">
 
         </div>
@@ -110,6 +119,7 @@ export class GenerateQuestionsFormElement extends RPCElement {
     switch (name) {
 
       case 'data-game-id':
+        console.log('game id', newValue);
         this.hiddenGameIdInput.value = newValue ?? '';
         break;
     }

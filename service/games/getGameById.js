@@ -38,7 +38,7 @@ export const selectGameDetailById = db.prepare(`
 export const getGameById = (id, detailed = false) => {
   log(`Fetching game detail for ${id}`);
 
-  const rows = selectGameDetailById.all(Number(id));
+  const rows = selectGameDetailById.all(id);
   if (!rows || rows.length === 0) {
     log(`${id} not found`);
     throw {

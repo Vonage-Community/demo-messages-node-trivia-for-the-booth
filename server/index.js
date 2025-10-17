@@ -4,13 +4,12 @@ import jayson from 'jayson/promise/index.js';
 import methods from './methods/index.js';
 import debug from './log.js';
 import path from 'node:path';
-import jsonwebtoken from 'jsonwebtoken';
-import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { jwtAuth, basicAuth } from './auth.js';
 
 dotenv.config();
 
-const log = debug.extend('rpc');
+const log = debug.extend('express');
 
 const app = new Express();
 const server = new jayson.Server(methods);
@@ -18,18 +17,26 @@ const server = new jayson.Server(methods);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const privateKey = readFileSync(process.env.VONAGE_PRIVATE_KEY);
+const paths = {
+  dist: path.join(__dirname, '..', 'dist'),
+  public: path.join(__dirname, '..', 'public'),
+};
+
+app.use(Express.static(paths.dist));
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(Express.static(paths.public));
+}
+
 const publicPath = path.join(__dirname, '..', 'public');
 log(`Public path ${publicPath}`);
 
 app.use(Express.static(publicPath));
 app.use(Express.json());
+app.use(basicAuth);
 
 app.post('/rpc', (req, res, next) => {
   log('RPC call');
-
-  const header = req.headers?.authorization ?? '';
-  const token = header.replace(/^Bearer\s+/i, '').trim();
 
   const body = {
     ...req.body,
@@ -37,24 +44,12 @@ app.post('/rpc', (req, res, next) => {
       ...(req.body?.params || {}),
     },
   };
-  let decoded;
-  if (token) {
-    try {
-      decoded = jsonwebtoken.verify(
-        token,
-        privateKey,
-        {
-          algorithms: ['RS256', 'HS256'],
-        },
-      );
 
-      body.params._auth = decoded;
-      log('JWT Decoded', decoded);
-    } catch (error) {
-      console.error('Error decoding JWT', error);
-    }
+  const rpcAuthCreds = jwtAuth(req);
+
+  if (rpcAuthCreds) {
+    body.params._auth = rpcAuthCreds;
   }
-
 
   server.call(body, (error, jsonRPCResponse) => {
     log('RPC Call complete');

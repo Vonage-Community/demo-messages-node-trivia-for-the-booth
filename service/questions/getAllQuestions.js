@@ -1,7 +1,4 @@
 import db from '../../db/index.js';
-import {
-  requireUInt,
-} from '../helpersAndGuards.js';
 import { fromQuestionRow } from './fromQuestionRow.js';
 import debug from './log.js';
 
@@ -26,14 +23,11 @@ const listGamesStmt = db.prepare(`
     incorrect_answer_count,
     sort_order
   FROM game_detail_view
-  WHERE game_id = ?
-  ORDER BY sort_order
 `);
 
-export const getQuestionsForGame = (gameId, detailed) => {
-  log(`Fetching questions for game ${Number(gameId)}`);
-  requireUInt('gameId', gameId);
-  return listGamesStmt.all(Number(gameId))
+export const getAllQuestions = (detailed) => {
+  log('Fetching questions ');
+  return listGamesStmt.all()
     .map((row) => fromQuestionRow(row, detailed))
     .filter((question) => question.question);
 };
