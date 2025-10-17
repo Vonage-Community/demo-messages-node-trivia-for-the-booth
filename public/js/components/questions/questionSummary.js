@@ -110,7 +110,6 @@ export class QuestionSummaryElement extends QuestionElement {
   }
 
   deleteQuestion() {
-    console.log('Deleting question', this.questionId);
     this.makeRPCCall(
       'questions.delete',
       {
@@ -119,7 +118,6 @@ export class QuestionSummaryElement extends QuestionElement {
     );
 
     const removeSummaryAfterDelete = () => {
-      console.log('Question deleted');
       removeEvent('rpc:success', removeSummaryAfterDelete);
       this.remove();
     };
@@ -136,7 +134,6 @@ export class QuestionSummaryElement extends QuestionElement {
   }
 
   disconnectedCallback() {
-    console.log('Summary disconnected');
     this.editButtonElement.removeEventListener('click', this.boundedToggleForm);
     this.deleteButtonElement.removeEventListener('click', this.boundedDeleteQuestion);
   }

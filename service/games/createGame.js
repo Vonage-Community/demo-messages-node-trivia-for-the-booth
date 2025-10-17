@@ -18,8 +18,8 @@ const generateShortCode = () => {
 
 
 export const insertGame = db.prepare(`
-  INSERT INTO games (title, active, short_code)
-  VALUES (@title, @active, @shortCode)
+  INSERT INTO games (title, active, short_code, bonus_game)
+  VALUES (@title, @active, @shortCode, @bonusGame)
 `);
 
 export const createGame = (args = {}) => {
@@ -27,13 +27,17 @@ export const createGame = (args = {}) => {
 
   const {
     title,
+    bonusGame,
   } = args;
 
   const game = {
     title: requireNonEmptyString('title', title),
     shortCode: generateShortCode(),
     active: 0,
+    bonusGame: bonusGame ? 1 : 0,
   };
+
+  log('Game to create', game);
 
   const info = insertGame.run(game);
   game.id = info.lastInsertRowid;

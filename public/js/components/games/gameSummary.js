@@ -51,6 +51,7 @@ export class GamesSummaryElement extends RPCElement {
     'data-game-correct-count',
     'data-game-incorrect-count',
     'data-game-active',
+    'data-game-bonus',
   ];
 
   constructor() {
@@ -133,12 +134,20 @@ export class GamesSummaryElement extends RPCElement {
     this.dataset.gameShortCode = value;
   }
 
-  get gameActive() {
-    return this.dataset.gameActive === 'true';
+  get isActive() {
+    return this.dataset.isActive === 'true';
   }
 
-  set gameActive(value) {
-    this.dataset.gameActive = value;
+  set isActive(value) {
+    this.dataset.isActive = value;
+  }
+
+  get isBonus() {
+    return this.dataset.gameBonus === 'true';
+  }
+
+  set isBonus(value) {
+    this.dataset.gameBonus = value;
   }
 
   toggleList() {
@@ -218,7 +227,14 @@ export class GamesSummaryElement extends RPCElement {
   }
 
   toggleGameActive() {
-    if (this.gameActive) {
+    if (this.isBonus) {
+      this.activateButtonElement.disabled = true;
+      this.activateButtonElement.textContent = 'Bonus';
+      this.activateButtonElement.removeEventListener('click', this.boundedActivateGame);
+      this.deactivateButtonElement.removeEventListener('click', this.boundedDeactivateGame);
+    }
+
+    if (this.isActive) {
       this.activateButtonElement.classList.add('d-none');
       this.activateButtonElement.removeEventListener('click', this.boundedActivateGame);
 
@@ -257,15 +273,16 @@ export class GamesSummaryElement extends RPCElement {
         break;
 
       case 'data-game-active':
+      case 'data-game-bonus':
         this.toggleGameActive();
         break;
     }
   }
 
   onDataLoaded(result) {
-    this.gameActive = result.active;
+    this.isActive = result.active;
+    this.isBonus = result.bonusGame;
   }
-
 }
 
 customElements.define(

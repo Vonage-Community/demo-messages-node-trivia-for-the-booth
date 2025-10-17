@@ -119,7 +119,6 @@ export class GenerateQuestionsFormElement extends RPCElement {
     switch (name) {
 
       case 'data-game-id':
-        console.log('game id', newValue);
         this.hiddenGameIdInput.value = newValue ?? '';
         break;
     }

@@ -22,6 +22,10 @@ choiceTemplate.innerHTML = `
             required>
           </trivia-form-input>
 
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" name="bonusGame">
+            <label class="form-check-label" for="bonusGame">Bonus game?</label>
+          </div>
 
           <input type="hidden" name="gameId">
         </div>
@@ -38,7 +42,7 @@ choiceTemplate.innerHTML = `
 
 export class GameFormElement extends RPCElement {
   static observedAttributes = [
-    'data-game-title',
+    '',
     'data-game-id',
   ];
 
@@ -80,6 +84,8 @@ export class GameFormElement extends RPCElement {
     for (const [name, value] of formData.entries()) {
       data[name] = value;
     };
+
+    data.bonusGame = data.bonusGame === 'on';
 
     submitRPCForm(this.formElement)(null, data);
   }

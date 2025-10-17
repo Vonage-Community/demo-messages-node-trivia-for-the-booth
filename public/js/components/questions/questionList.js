@@ -40,7 +40,6 @@ export class QuestionListElement extends RPCElement {
   }
 
   modalForm(which = 'trivia-question-form') {
-    console.log('ModalForm', which);
     const questionFormElement = document.createElement(which);
     this.questionListElement.append(questionFormElement);
 

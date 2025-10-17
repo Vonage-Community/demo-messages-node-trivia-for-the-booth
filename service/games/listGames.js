@@ -9,6 +9,7 @@ const listGamesStmt = db.prepare(`
     id,
     title,
     active,
+    bonus_game,
     short_code,
     question_count,
     player_count,

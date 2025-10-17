@@ -17,6 +17,7 @@ export const selectGameDetailById = db.prepare(`
     game_title,
     short_code,
     active,
+    bonus_game,
     question_text AS question,
     question_id AS questionId,
     choice_a,

@@ -24,7 +24,6 @@ export class GamesListElement extends RPCElement {
     this.shadow.append(gameListTemplate.content.cloneNode(true));
     this.gamesSectionElement = this.shadow.querySelector('ul');
     this.addButtonElement = this.shadow.querySelector('button.add-game');
-    console.log(this.addButtonElement);
     this.games = [];
     this.hasConnected = false;
   }
@@ -115,7 +114,8 @@ export class GamesListElement extends RPCElement {
       gameSummaryElement.gameId = game.id;
       gameSummaryElement.gameTitle = game.title;
       gameSummaryElement.gameShortCode = game.shortCode;
-      gameSummaryElement.gameActive = game.active;
+      gameSummaryElement.isActive = game.active;
+      gameSummaryElement.isBonus = game.bonusGame;
       gameSummaryElement.gameQuestionCount = game.questionCount;
       gameSummaryElement.gamePlayerCount = game.playerCount;
       gameSummaryElement.gameCorrectCount = game.totalCorrectAnswers;
