@@ -6,6 +6,7 @@ const questionControlTemplate = document.createElement('template');
 questionControlTemplate.innerHTML = `
 <div class="card-body p-0 pt-3">
   <button class="btn btn-secondary edit-question" aria-label="Edit this question">Edit</button>
+  <button class="btn btn-danger delete-question" aria-label="Delete this question">Delete</button>
 </div>
 `;
 
@@ -26,6 +27,7 @@ export class QuestionSummaryElement extends QuestionElement {
     this.choicesSection = this.shadow.querySelector('section.card-body');
     this.choicesSection.append(questionControlTemplate.content.cloneNode(true));
     this.editButtonElement = this.shadow.querySelector('button.edit-question');
+    this.deleteButtonElement = this.shadow.querySelector('button.delete-question');
     this.questionCardElement.classList.add('border-bottom');
     this.radioElements = [];
     this.formShowing = false;

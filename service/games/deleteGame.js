@@ -11,8 +11,26 @@ export const deleteGameById = db.prepare(`
 export const deleteGame = (id) => {
   log(`Deleting ${id}`);
   const existing = getGameById(id);
-  deleteGameById.run(id);
-  log(`${id} deleted`);
-  return existing;
+  try {
+    deleteGameById.run(id);
+    log(`${id} deleted`);
+    return existing;
+  } catch (error) {
+    if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY' || /FOREIGN KEY/.test(error.message)) {
+      log(`Blocked deletion of game ${id} because answers exist`);
+      throw {
+        code: -32051,
+        message: 'Cannot delete game: one or more players have submitted answers for this game.',
+        data: { gameId: id },
+      };
+    }
+
+    log(`Unexpected error deleting game ${id}: ${error.message}`);
+    throw {
+      code: -32099,
+      message: 'Unexpected database error while deleting game.',
+      data: { error: error.message, gameId: id },
+    };
+  }
 };
 
