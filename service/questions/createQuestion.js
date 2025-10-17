@@ -43,3 +43,32 @@ export const createQuestion = (args = {}) => {
   log('Question created');
   return question;
 };
+
+export const createQuestionsBatch = (gameId, questions = []) => {
+  log(`Creating ${questions.length} questions for game ${gameId}`);
+
+  const game = getGameById(gameId);
+
+  // Reuse your single insert prepared statement
+  const insert = insertQuestion;
+
+  // Create a transaction for speed & atomicity
+  const insertMany = db.transaction((questionsArray) => {
+    for (const q of questionsArray) {
+      const question = {
+        gameId: game.id,
+        question: requireNonEmptyString('question', q.question),
+        choiceA: requireNonEmptyString('choiceA', q.choiceA),
+        choiceB: requireNonEmptyString('choiceB', q.choiceB),
+        choiceC: requireNonEmptyString('choiceC', q.choiceC),
+        choiceD: requireNonEmptyString('choiceD', q.choiceD),
+        correctChoice: checkCorrectChoice(q.correctChoice),
+      };
+      insert.run(question);
+    }
+  });
+
+  insertMany(questions);
+  log(`Inserted ${questions.length} questions successfully`);
+  return { inserted: questions.length };
+};

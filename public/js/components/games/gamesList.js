@@ -1,11 +1,18 @@
 import { RPCElement } from '../rpcElement.js';
 import { registerEvent, removeEvent } from '../../events.js';
 import './gameSummary.js';
+import './gameForm.js';
 
 const gameListTemplate = document.createElement('template');
 gameListTemplate.innerHTML = `
 <section aria-labelledby="games-heading" class="games-list accordion accordion-flush">
-  <h1 id="games-heading">Games</h1>
+  <header class="d-flex justify-content-between align-items-center">
+    <h1 id="games-heading">
+      Games
+    </h1>
+
+    <button class="btn btn-success add-game">Create Game</button>
+  </header>
   <ul class="card-group row" role="list"></ul>
 </section>
 `;
@@ -16,6 +23,8 @@ export class GamesListElement extends RPCElement {
 
     this.shadow.append(gameListTemplate.content.cloneNode(true));
     this.gamesSectionElement = this.shadow.querySelector('ul');
+    this.addButtonElement = this.shadow.querySelector('button.add-game');
+    console.log(this.addButtonElement);
     this.games = [];
     this.hasConnected = false;
   }
@@ -59,6 +68,18 @@ export class GamesListElement extends RPCElement {
     return this.gamesSectionElement;
   }
 
+  addGame() {
+    const gameFormElement = document.createElement('trivia-game-form');
+    this.gamesSectionElement.append(gameFormElement);
+
+    gameFormElement.toggleModal();
+
+    gameFormElement.modal.addEventListener('hidden.bs.modal', () => {
+      gameFormElement.remove();
+      this.makeRPCCall();
+    });
+  }
+
   refreshList(event) {
     const method = event.detail.method;
     if (method === 'games.deactivate' || method === 'games.activate') {
@@ -75,12 +96,15 @@ export class GamesListElement extends RPCElement {
     this.makeRPCCall();
 
     this.boundedRefreshList = this.refreshList.bind(this);
+    this.boundedAddGame = this.addGame.bind(this);
+    this.addButtonElement.addEventListener('click', this.boundedAddGame);
 
     registerEvent('rpc:success', this.boundedRefreshList);
   }
 
   disconnectedCallback() {
     removeEvent('rpc:success', this.boundedRefreshList);
+    this.addButtonElement.removeEventListener('click', this.boundedAddGame);
   }
 
   render() {

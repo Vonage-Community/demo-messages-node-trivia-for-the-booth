@@ -7,11 +7,11 @@ import { QuestionElement } from './question.js';
 
 const choiceTemplate = document.createElement('template');
 choiceTemplate.innerHTML = `
-<div class="modal fade question-form-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade question-form-modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <h1 class="modal-title fs-5">Add question</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
@@ -88,6 +88,7 @@ export class QuestionFormElement extends RPCElement {
     this.choiceDInputElement = this.shadow.querySelector('trivia-form-input[name="choiceD"]');
 
     this.correctChoiceSelectElement = this.shadow.querySelector('select[name="correctChoice"]');
+    this.titleModalTitleElement = this.shadow.querySelector('.modal-title');
 
     this.hiddenGameIdInput = this.shadow.querySelector('input[name="gameId"]');
     this.hiddenQuestionIdInput = this.shadow.querySelector('input[name="questionId"]');
@@ -155,54 +156,6 @@ export class QuestionFormElement extends RPCElement {
 
   set questionId(newQuestionId) {
     this.dataset.questionId = newQuestionId;
-  }
-
-  get correctAnswerCount() {
-    return Number(this.dataset.correctAnswerCount) || 0;
-  }
-
-  set correctAnswerCount(newCorrectAnswerCount) {
-    this.dataset.correctAnswerCount = newCorrectAnswerCount;
-  }
-
-  get incorrectAnswerCount() {
-    return Number(this.dataset.incorrectAnswerCount) || 0;
-  }
-
-  set incorrectAnswerCount(newIncorrectAnswerCount) {
-    this.dataset.incorrectAnswerCount = newIncorrectAnswerCount;
-  }
-
-  get countChoiceA() {
-    return Number(this.dataset.countChoiceA) || 0;
-  }
-
-  set countChoiceA(newCountChoiceA) {
-    this.dataset.countChoiceA = newCountChoiceA;
-  }
-
-  get countChoiceB() {
-    return Number(this.dataset.countChoiceB) || 0;
-  }
-
-  set countChoiceB(newCountChoiceB) {
-    this.dataset.countChoiceB = newCountChoiceB;
-  }
-
-  get countChoiceC() {
-    return Number(this.dataset.countChoiceC) || 0;
-  }
-
-  set countChoiceC(newCountChoiceC) {
-    this.dataset.countChoiceC = newCountChoiceC;
-  }
-
-  get countChoiceD() {
-    return Number(this.dataset.countChoiceD) || 0;
-  }
-
-  set countChoiceD(newCountChoiceD) {
-    this.dataset.countChoiceD = newCountChoiceD;
   }
 
   toggleModal() {
@@ -275,6 +228,7 @@ export class QuestionFormElement extends RPCElement {
       case 'data-question-id':
         this.formElement.dataset.rpcMethod = 'questions.update';
         this.hiddenQuestionIdInput.value = newValue ?? '';
+        this.titleModalTitleElement.textContent = 'Edit question';
         break;
 
       case 'data-game-id':

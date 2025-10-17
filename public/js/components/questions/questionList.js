@@ -1,6 +1,7 @@
 import { RPCElement } from '../rpcElement.js';
 import './questionSummary.js';
 import './questionForm.js';
+import './questionGenerateForm.js';
 import Collapse from 'bootstrap/js/dist/collapse';
 
 const questionListTemplate = document.createElement('template');
@@ -11,7 +12,10 @@ questionListTemplate.innerHTML = `
         Questions
       </h3>
 
-      <button class="btn btn-success add-question" aria-label="Add a new question">Add</button>
+      <div>
+        <button class="btn btn-success add-question" aria-label="Add a new question">Add</button>
+        <button class="btn btn-success generate-question" aria-label="Generate questions using Chat GPT">Generate</button>
+      </div>
   </header>
 
   <section class="question-list"
@@ -30,12 +34,14 @@ export class QuestionListElement extends RPCElement {
     this.shadow.append(questionListTemplate.content.cloneNode(true));
     this.questionListElement = this.shadow.querySelector('.question-list');
     this.addButtomElement = this.shadow.querySelector('button.add-question');
+    this.generateButtomElement = this.shadow.querySelector('button.generate-question');
     this.hasConnected = false;
     this.expanded = false;
   }
 
-  addQuestion() {
-    const questionFormElement = document.createElement('trivia-question-form');
+  modalForm(which = 'trivia-question-form') {
+    console.log('ModalForm', which);
+    const questionFormElement = document.createElement(which);
     this.questionListElement.append(questionFormElement);
 
     questionFormElement.setAttribute('data-game-id', this.gameId);
@@ -53,14 +59,24 @@ export class QuestionListElement extends RPCElement {
     }
 
     this.hasConnected = true;
-    this.boundedAddQuestion = this.addQuestion.bind(this);
     this.setAttribute('aria-label', this.shadow.querySelector('h3').textContent);
     this.questionAccordion = new Collapse(this.questionListElement, { toggle: false });
+
+    const addQuestionModal = () => { this.modalForm(); };
+    const addGenerateModal = () => {
+      this.modalForm('trivia-generate-questions-form');
+    };
+
+    this.boundedAddQuestion = addQuestionModal.bind(this);
+    this.boundedGenerateQuestions = addGenerateModal.bind(this);
+
     this.addButtomElement.addEventListener('click', this.boundedAddQuestion);
+    this.generateButtomElement.addEventListener('click', this.boundedGenerateQuestions);
   }
 
   disconnectedCallback() {
     this.addButtomElement.removeEventListener('click', this.boundedAddQuestion);
+    this.generateButtomElement.removeEventListener('click', this.boundedGenerateQuestions);
   }
 
   get rpcMethod() {
