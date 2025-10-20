@@ -1,19 +1,4 @@
-import './choice.js';
-import '../form/form-input.js';
 import { RPCElement } from '../rpcElement.js';
-
-const questionTemplate = document.createElement('template');
-questionTemplate.innerHTML = `
-<article class="question card border-0" role="group" aria-labelledby="question-text">
-  <header class="ms-3 mt-3">
-    <h4 class="card-title question-text"></h4>
-  </header>
-
-  <section class="card-body">
-    <div class="row row-cols-2 g-3 choices" role="list"></div>
-  </section>
-</article>
-`;
 
 export class QuestionElement extends RPCElement {
   static observedAttributes = [
@@ -24,48 +9,77 @@ export class QuestionElement extends RPCElement {
     'data-choice-b',
     'data-choice-c',
     'data-choice-d',
-    'data-correct-choice',
   ];
 
   constructor() {
     super();
-    this.shadow.append(questionTemplate.content.cloneNode(true));
-
-    this.questionCardElement = this.shadow.querySelector('article');
-    this.questionTextElement = this.shadow.querySelector('.question-text');
-    this.choicesContainer = this.shadow.querySelector('.choices');
+    if (new.target === RPCElement) {
+      throw new TypeError('Cannot instantiate QuestionElement directly');
+    }
   }
 
   get questionId() {
-    return this.getAttribute('data-question-id');
+    return this.dataset.questionId;
+  }
+
+  set questionId(value) {
+    this.dataset.questionId = value;
   }
 
   get gameId() {
-    return this.getAttribute('data-game-id');
+    return this.dataset.gameId;
+  }
+
+  set gameId(value) {
+    this.dataset.gameId = value;
   }
 
   get question() {
-    return this.getAttribute('data-question');
+    return this.dataset.question;
+  }
+
+  set question(value) {
+    this.dataset.question = value;
   }
 
   get choiceA() {
-    return this.getAttribute('data-choice-a');
+    return this.dataset.choiceA;
+  }
+
+  set choiceA(value) {
+    this.dataset.choiceA = value;
   }
 
   get choiceB() {
-    return this.getAttribute('data-choice-b');
+    return this.dataset.choiceB;
+  }
+
+  set choiceB(value) {
+    this.dataset.choiceB = value;
   }
 
   get choiceC() {
-    return this.getAttribute('data-choice-c');
+    return this.dataset.choiceC;
+  }
+
+  set choiceC(value) {
+    this.dataset.choiceC = value;
   }
 
   get choiceD() {
-    return this.getAttribute('data-choice-d');
+    return this.dataset.choiceD;
+  }
+
+  set choiceD(value) {
+    this.dataset.choiceD = value;
   }
 
   get correctChoice() {
-    return this.getAttribute('data-correct-choice');
+    return this.dataset.correctChoice;
+  }
+
+  set correctChoice(value) {
+    this.dataset.correctChoice = value;
   }
 
   get rpcMethod() {
@@ -78,76 +92,50 @@ export class QuestionElement extends RPCElement {
     };
   }
 
-  get choiceElement() {
-    return 'trivia-choice';
+  onDataLoaded(result) {
+    this.question = result?.question || '';
+    this.choiceA = result?.choiceA || '';
+    this.choiceB = result?.choiceB || '';
+    this.choiceC = result?.choiceC || '';
+    this.choiceD = result?.choiceD || '';
+    this.correctChoice = result?.correctChoice || '';
+    this.questionId = result?.id;
   }
 
-  get choiceAData() {
-    return {
-      letter: 'A',
-      text: this.choiceA || '',
-    };
-  }
-
-  get choiceBData() {
-    return {
-      letter: 'B',
-      text: this.choiceB || '',
-    };
-  }
-
-  get choiceCData() {
-    return {
-      letter: 'C',
-      text: this.choiceC || '',
-    };
-  }
-
-  get choiceDData() {
-    return {
-      letter: 'D',
-      text: this.choiceD || '',
-    };
-  }
-
-  get choiceData() {
-    return [
-      this.choiceAData,
-      this.choiceBData,
-      this.choiceCData,
-      this.choiceDData,
-    ];
-  }
-
-  connectedCallback() {
-    this.updateQuestion();
-  }
-
-  updateChoice(choice, choiceData) {
-    choice.dataset.choiceLetter = choiceData.letter;
-    choice.dataset.text = choiceData.text;
-  }
-
-  updateQuestion() {
-    this.choicesContainer.innerHTML = '';
-
-    for (const choiceData of this.choiceData) {
-      const choice = document.createElement(this.choiceElement);
-      this.updateChoice(choice, choiceData);
-      this.choicesContainer.append(choice);
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (!this.hasConnected) {
+      return;
     }
 
-    this.questionTextElement.textContent = this.question;
-  }
+    if (oldValue === newValue) {
+      return;
+    }
 
-  onDataLoaded(result) {
-    this.dataset.question = result.question || '';
-    this.dataset.choiceA = result.choiceA || '';
-    this.dataset.choiceB = result.choiceB || '';
-    this.dataset.choiceC = result.choiceC || '';
-    this.dataset.choiceD = result.choiceD || '';
-    this.dataset.correctChoice = result.correctChoice || '';
-    this.updateQuestion();
+    switch (name) {
+      case 'data-game-id':
+        this.gameId = newValue;
+        break;
+
+      case 'data-question':
+        this.question = newValue;
+        break;
+
+      case 'data-choice-a':
+        this.choiceA = newValue;
+        break;
+
+      case 'data-choice-b':
+        this.choiceB = newValue;
+        break;
+
+      case 'data-choice-c':
+        this.choiceC = newValue;
+        break;
+
+      case 'data-choice-d':
+        this.choiceD = newValue;
+        break;
+    }
   }
 }
 

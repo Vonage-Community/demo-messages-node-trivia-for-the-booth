@@ -1,6 +1,7 @@
 import db from '../../db/index.js';
 import { requireUInt, requireNonEmptyString } from '../helpersAndGuards.js';
 import { checkCorrectChoice } from '../questions/createQuestion.js';
+import { getQuestionById } from '../questions/getQuestionById.js';
 import { getGameById } from '../games.js';
 import debug from './log.js';
 
@@ -25,12 +26,30 @@ const updateAnswerStmt = db.prepare(`
      AND player_answer = 'N'
 `);
 
+export const checkForNextQuestionStmt = db.prepare(`
+SELECT
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM questions q
+      WHERE q.game_id = @gameId
+        AND q.id NOT IN (
+          SELECT a.question_id
+          FROM answers a
+          WHERE a.game_id = @gameId
+            AND a.player_id = @playerId
+        )
+    )
+    THEN 1 ELSE 0
+  END AS has_next_question;
+`);
+
 export const submitAnswerForPlayer = (args = {}) => {
   log('Submitting answer', args);
 
   const gameId = requireUInt('gameId', args.gameId);
   const questionId = requireUInt('questionId', args.questionId);
-  const playerId = requireUInt('playerId', args.playerId);
+  const playerId = args._auth.id;
   const answer = checkCorrectChoice(
     requireNonEmptyString('answer', args.answer),
   );
@@ -40,6 +59,14 @@ export const submitAnswerForPlayer = (args = {}) => {
     throw {
       code: 400,
       message: 'Game is not active. Answers cannot be submitted.',
+    };
+  }
+
+  const question = getQuestionById(questionId, true);
+  if (!question) {
+    throw {
+      code: 404,
+      message: 'Invalid Question. Answers cannot be submitted.',
     };
   }
 
@@ -95,12 +122,21 @@ export const submitAnswerForPlayer = (args = {}) => {
     };
   }
 
-  log(`✅ Player ${playerId} answered ${answer} for question ${questionId}`);
+  log(`Player ${playerId} answered ${answer} for question ${questionId}`);
+
+  const { has_next_question: hasNextQuestion } = checkForNextQuestionStmt.get({
+    gameId,
+    playerId,
+  });
+
+  log('Has next question', hasNextQuestion);
 
   return {
     gameId,
     questionId,
     answer,
-    success: true,
+    answeredCorrectly: answer === question.correctChoice,
+    correctAnswer: question.correctChoice,
+    hasNext: !!hasNextQuestion,
   };
 };

@@ -42,7 +42,7 @@ choiceTemplate.innerHTML = `
 
 export class GameFormElement extends RPCElement {
   static observedAttributes = [
-    '',
+    'data-game-title',
     'data-game-id',
   ];
 

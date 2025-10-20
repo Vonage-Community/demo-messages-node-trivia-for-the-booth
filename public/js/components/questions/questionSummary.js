@@ -3,12 +3,20 @@ import './questionForm.js';
 import './choiceSummary.js';
 import { registerEvent, removeEvent } from '../../events.js';
 
-const questionControlTemplate = document.createElement('template');
-questionControlTemplate.innerHTML = `
-<div class="card-body p-0 pt-3">
-  <button class="btn btn-secondary edit-question" aria-label="Edit this question">Edit</button>
-  <button class="btn btn-danger delete-question" aria-label="Delete this question">Delete</button>
-</div>
+const questionTemplate = document.createElement('template');
+questionTemplate.innerHTML = `
+<article class="question card border-0" role="group" aria-labelledby="question-text">
+  <header class="ms-3 mt-3">
+    <h4 class="card-title question-text"></h4>
+  </header>
+
+  <section class="card-body row row-cols-2 g-3 choices">
+    <div class="card-body p-0 pt-3">
+      <button class="btn btn-secondary edit-question" aria-label="Edit this question">Edit</button>
+      <button class="btn btn-danger delete-question" aria-label="Delete this question">Delete</button>
+    </div>
+  </section>
+</article>
 `;
 
 export class QuestionSummaryElement extends QuestionElement {
@@ -25,8 +33,13 @@ export class QuestionSummaryElement extends QuestionElement {
 
   constructor() {
     super();
+    this.shadow.append(questionTemplate.content.cloneNode(true));
+
+    this.questionCardElement = this.shadow.querySelector('.question');
+    this.questionTextElement = this.shadow.querySelector('.question-text');
+    this.choicesContainer = this.shadow.querySelector('.choices');
+    this.choices = [];
     this.choicesSection = this.shadow.querySelector('section.card-body');
-    this.choicesSection.append(questionControlTemplate.content.cloneNode(true));
     this.editButtonElement = this.shadow.querySelector('button.edit-question');
     this.deleteButtonElement = this.shadow.querySelector('button.delete-question');
     this.questionCardElement.classList.add('border-bottom');
@@ -126,7 +139,6 @@ export class QuestionSummaryElement extends QuestionElement {
   }
 
   connectedCallback() {
-    super.connectedCallback();
     this.boundedToggleForm = this.toggleForm.bind(this);
     this.boundedDeleteQuestion = this.deleteQuestion.bind(this);
     this.editButtonElement.addEventListener('click', this.boundedToggleForm);

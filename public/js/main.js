@@ -4,6 +4,7 @@ import './components/index.js';
 import './handlers/index.js';
 import './rpc.js';
 import './toast.js';
+import './auth.js';
 import { submitRPCForm } from './form.js';
 
 document.addEventListener('DOMContentLoaded', () => {

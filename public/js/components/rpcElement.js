@@ -16,6 +16,7 @@ export class RPCElement extends BootstrapElement {
       throw new TypeError('Cannot instantiate RPCElement directly');
     }
 
+    this.hasConnected = false;
     this.isLoading = false;
     this.spinnerElement = null;
   }
@@ -99,7 +100,7 @@ export class RPCElement extends BootstrapElement {
         rpcId,
       );
 
-      this.onDataLoaded(result);
+      this.onDataLoaded(result, rpcMethod, rpcParams, rpcId);
       emitEvent(
         'element:loaded',
         {
@@ -111,7 +112,7 @@ export class RPCElement extends BootstrapElement {
 
       return result;
     } catch (err) {
-      console.error(`RPC load failed for ${rpcMethod}`, err);
+      console.error(`RPC errored for ${rpcMethod}`, err);
       this.onDataError(err);
       emitEvent(
         'element:error',

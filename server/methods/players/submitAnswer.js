@@ -6,8 +6,5 @@ const log = debug.extend('submit-answer');
 export const submitAnswerMethod = async (args = {}) => {
   log('Submit answer RPC', args);
 
-  return submitAnswerForPlayer({
-    ...args,
-    playerId: args._auth.id,
-  });
+  return submitAnswerForPlayer(args);
 };

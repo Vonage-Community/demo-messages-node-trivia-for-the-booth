@@ -1,15 +1,15 @@
-import { BootstrapElement } from '../bootstrap.js';
+import { RPCElement } from '../rpcElement.js';
 
 const choiceTemplate = document.createElement('template');
 choiceTemplate.innerHTML = `
 <article class="card p-3 choice" role="listitem">
   <h6 class="m-0 p-0 choice-container">
-    <strong class="choice-letter float-start"></strong>: <span class="choice-text floag-start"></span>
+    <strong class="choice-letter float-start"></strong>: <span class="choice-text"></span>
   </h6>
 </article>
 `;
 
-export class ChoiceElement extends BootstrapElement {
+export class ChoiceElement extends RPCElement {
   static observedAttributes = [
     'data-text',
     'data-choice-letter',
@@ -21,7 +21,7 @@ export class ChoiceElement extends BootstrapElement {
     super();
     this.shadow.append(choiceTemplate.content.cloneNode(true));
 
-    this.choiceElement = this.shadow.querySelector('article');
+    this.choiceElement = this.shadow.querySelector('.choice');
     this.letterElement = this.shadow.querySelector('.choice-letter');
     this.textElement = this.shadow.querySelector('.choice-text');
     this.choiceContainerElement = this.shadow.querySelector('.choice-container');

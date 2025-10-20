@@ -44,6 +44,6 @@ export const rpc = async (method, params, requestId = '1') => {
     throw error;
   }
 
-  emitEvent('rpc:success', { id, method, params });
+  emitEvent('rpc:success', { id, method, params, result });
   return [id, result];
 };
