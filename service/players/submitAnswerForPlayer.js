@@ -15,7 +15,7 @@ const getAnswerTimingStmt = db.prepare(`
 
 const updateAnswerStmt = db.prepare(`
   UPDATE answers
-     SET player_answer = @playerAnswer,
+     SET player_answer = @answer,
          client_answered_at = @clientAnsweredAt,
          server_received_at = strftime('%s','now'),
          response_time_ms = (@clientAnsweredAt - client_received_at) * 1000
@@ -31,8 +31,8 @@ export const submitAnswerForPlayer = (args = {}) => {
   const gameId = requireUInt('gameId', args.gameId);
   const questionId = requireUInt('questionId', args.questionId);
   const playerId = requireUInt('playerId', args.playerId);
-  const playerAnswer = checkCorrectChoice(
-    requireNonEmptyString('playerAnswer', args.playerAnswer),
+  const answer = checkCorrectChoice(
+    requireNonEmptyString('answer', args.answer),
   );
 
   const game = getGameById(gameId);
@@ -84,7 +84,7 @@ export const submitAnswerForPlayer = (args = {}) => {
     gameId,
     questionId,
     playerId,
-    playerAnswer,
+    answer,
     clientAnsweredAt,
   });
 
@@ -95,12 +95,12 @@ export const submitAnswerForPlayer = (args = {}) => {
     };
   }
 
-  log(`✅ Player ${playerId} answered ${playerAnswer} for question ${questionId}`);
+  log(`✅ Player ${playerId} answered ${answer} for question ${questionId}`);
 
   return {
     gameId,
     questionId,
-    playerAnswer,
+    answer,
     success: true,
   };
 };

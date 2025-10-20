@@ -1,6 +1,6 @@
 export const fromQuestionRow = (question, detailed) => question
   ? {
-    id: question.id || question.questionId,
+    id: question.id || question.question_id,
     gameId: Number(question.game_id),
     question: question.question,
     choiceA: question.choice_a,

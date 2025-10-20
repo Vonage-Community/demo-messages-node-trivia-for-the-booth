@@ -3,7 +3,7 @@ import debug from './log.js';
 
 const log = debug.extend('fetch_active');
 
-export const getActiveGameMethod = async () => {
+export const getActiveGameMethod = async (args) => {
   log('Fetching active game');
-  return getActiveGame();
+  return getActiveGame(args);
 };

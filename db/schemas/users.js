@@ -31,7 +31,7 @@ export const createUsersTable = () => {
 
   log('Creating admin user');
   const insertUser = db.prepare(`
-    REPLACE INTO users (name, password, email, role)
+    INSERT OR IGNORE INTO users (name, password, email, role)
     VALUES (@name, @password, @email, 'admin')
   `);
 

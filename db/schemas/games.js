@@ -6,7 +6,7 @@ const log = debug.extend('games');
 export const createGamesTable = () => {
   log('Creating games table');
   db.exec(`
-    CREATE TABLE games (
+    CREATE TABLE IF NOT EXISTS games (
       id           INTEGER PRIMARY KEY AUTOINCREMENT,
       title        TEXT NOT NULL,
       active       INTEGER NOT NULL DEFAULT 0 CHECK (active IN (0,1)),

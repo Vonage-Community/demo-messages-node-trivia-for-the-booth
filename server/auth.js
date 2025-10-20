@@ -17,6 +17,7 @@ export const requireLogin = (fn, role) => async (args) => {
     };
   }
 
+  // If we want to enforce a role
   if (role && user.role !== role) {
     log('Invalid role');
     throw {

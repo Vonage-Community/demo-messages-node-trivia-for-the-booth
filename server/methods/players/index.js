@@ -6,5 +6,5 @@ import { submitAnswerMethod } from './submitAnswer.js';
 export const players = {
   start: requireLogin(startGameMethod),
   next: requireLogin(nextQuestionMethod),
-  submit: requireLogin(submitAnswerMethod),
+  answer: requireLogin(submitAnswerMethod),
 };

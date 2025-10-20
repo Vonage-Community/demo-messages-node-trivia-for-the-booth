@@ -2,13 +2,15 @@ import db from '../../db/index.js';
 import { requireUInt } from '../helpersAndGuards.js';
 import { getGameById } from '../games.js';
 import debug from './log.js';
+import { isPlayerPlayingGame } from './isPlayerPlayingGame.js';
 
 const log = debug.extend('add-player');
 
-const insertPlayerStmt = db.prepare(`
+export const insertPlayerStmt = db.prepare(`
   INSERT INTO players (game_id, player_id)
   VALUES (@gameId, @playerId)
 `);
+
 
 export const addPlayerToGame = (args = {}) => {
   log('Adding player to game', args);
@@ -25,12 +27,29 @@ export const addPlayerToGame = (args = {}) => {
     };
   }
 
-  insertPlayerStmt.run({
+  const params = {
     gameId: game.id,
     playerId,
-  });
+  };
 
-  log(`Player ${playerId} joined game ${gameId}`);
+  log('Player params', params);
+  const alreadyPlaying = isPlayerPlayingGame(params);
+
+  if (alreadyPlaying) {
+    log(`Player ${playerId} already joined game ${gameId}`);
+    return { game, playerId };
+  }
+
+  try {
+    log('Player is joining the game');
+
+    insertPlayerStmt.run(params);
+
+    log(`Player ${playerId} joined game ${gameId}`);
+  } catch (error) {
+    log('SQLError', error);
+
+  }
 
   return {
     game,
