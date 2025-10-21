@@ -1,4 +1,3 @@
-import '../css/app.scss';
 import 'bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './components/index.js';

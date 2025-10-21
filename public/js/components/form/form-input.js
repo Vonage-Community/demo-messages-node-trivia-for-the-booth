@@ -176,7 +176,7 @@ export class FormInput extends HTMLElement {
 
   updatePrefix() {
     if (this.icon) {
-      this.prefixElement.innerHTML = `<i class="text-black bi bi-${this.icon}"/>`;
+      this.prefixElement.innerHTML = `<i class="bi bi-${this.icon}"/>`;
       return;
     }
 

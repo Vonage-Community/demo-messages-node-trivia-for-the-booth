@@ -1,19 +1,572 @@
+/* --------------------------------------------------
+   0. Fonts
+-------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap');
+
+// --------------------------------------------------
+// 1. Bootstrap setup
+// --------------------------------------------------
+@import "bootstrap/scss/functions";
+
+// --------------------------------------------------
+// 2. Vonage color palette
+// --------------------------------------------------
+$vonage-cyan: #60DEFE;
+$vonage-violet: #A663FF;
+$vonage-magenta: #FD3FE4;
+$vonage-coral: #FF9C9D;
+$vonage-purple: #B27BF2;
+$vonage-green: #1DBF73;
+$vonage-red: #F75959;
+$background-start: #1A0833;
+$background-end: #2D1159;
+$card-bg: #202020;
+
+// --------------------------------------------------
+// 3. Bootstrap variable overrides
+// --------------------------------------------------
+$primary: $vonage-cyan;
+$secondary: $vonage-violet;
+$success: $vonage-green;
+$danger: $vonage-red;
+
+$font-family-sans-serif: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+$font-family-monospace: 'Roboto Mono', monospace;
+
+$btn-primary-bg: $vonage-purple;
+$btn-border-radius: 0.5rem;
+
+$card-bg: $card-bg;
+$card-border-color: #2a2a2a;
+$card-color: #fff;
+
+$btn-danger-bg: $vonage-red;
+$btn-danger-border-color: $vonage-red;
+$btn-danger-color: #fff;
+$btn-danger-hover-bg: darken($vonage-red, 7%);
+$btn-danger-hover-border-color: darken($vonage-red, 10%);
+$btn-danger-active-bg: darken($vonage-red, 10%);
+$btn-danger-active-border-color: darken($vonage-red, 12%);
+
+// --------------------------------------------------
+// 4. Bootstrap imports
+// --------------------------------------------------
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons.css";
+
+// --------------------------------------------------
+// 5. Global resets
+// --------------------------------------------------
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: #fff;
+  background: linear-gradient(135deg, $background-start, $background-end);
+  animation: bgShift 25s ease-in-out infinite;
+}
 
 :root {
   --page-padding: 24px;
 }
 
-body {
-  height: 100vh;
+// --------------------------------------------------
+// 6. Elements
+// --------------------------------------------------
+article {
+  outline: none;
+  margin-block-start: 10rem;
 }
 
-#logo {
-  height: 75px;
+.hidden-inert {
+  visibility: hidden;
 }
 
-nav {
-  padding: 0px;
-  margin: 0px;
+input[type="range"]:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+// --------------------------------------------------
+// 7. Buttons
+// --------------------------------------------------
+.btn {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 8px;
+  text-transform: none;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-primary {
+  background-color: #6f42c1; // Vivid-style purple accent
+  border-color: #6f42c1;
+  color: #fff;
+
+  &:hover {
+    background-color: lighten(#6f42c1, 5%);
+    border-color: lighten(#6f42c1, 5%);
+  }
+
+  &:active {
+    background-color: darken(#6f42c1, 5%);
+    border-color: darken(#6f42c1, 5%);
+  }
+}
+
+.btn-outline-secondary {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  background-color: transparent;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.btn-next {
+  color: #000;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 2rem;
+  transform: translateY(60px);
+  position: relative;
+  margin-top: 2rem;
+  opacity: 0;
+  transition: all 0.6s ease-out;
+}
+
+.btn-next.show {
+  transform: translateY(0);
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.btn-next.hide {
+  opacity: 0;
+  transform: translateY(60px);
+  animation: slideDown 0.5s ease-in forwards;
+}
+
+.btn-choice,
+.btn-choice:disabled {
+  background-color: $vonage-purple;
+  color: #000;
+  transition: all 0.25s ease-in-out;
+  margin: 0.5rem;
+  opacity: 0;
+  transform: translateX(40px);
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+.btn-choice:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.btn-choice:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.btn-choice:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.btn-choice:nth-child(4) {
+  animation-delay: 0.7s;
+}
+
+.btn-choice:hover,
+.btn-choice:focus {
+  background-color: #fb8fd8;
+  color: #000;
+  transform: scale(1.03);
+}
+
+.btn-choice[aria-checked="true"] {
+  background-color: $vonage-magenta;
+  color: #000;
+  box-shadow: 0 0 25px rgba(253, 63, 228, 0.8);
+  transform: scale(1.05);
+}
+
+.btn-choice[aria-checked="true"]:hover,
+.btn-choice[aria-checked="true"]:focus {
+  background-color: $vonage-coral;
+  color: #000;
+  transform: scale(1.07);
+}
+
+.btn-choice.correct {
+  color: #000;
+  background-color: #1c8731;
+}
+
+.btn-choice.incorrect {
+  color: #000;
+  background-color: #fe9696;
+}
+
+@media (max-width: 768px) {
+  .btn-choice {
+    flex: 1 1 100%;
+  }
+}
+
+// --------------------------------------------------
+// 8. Background animation (.circles)
+// --------------------------------------------------
+.circles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.circles li {
+  position: absolute;
+  display: block;
+  list-style: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $vonage-cyan;
+  opacity: 0.9;
+  bottom: -150px;
+  animation: floatUp 25s linear infinite, colorCycle 14s ease-in-out infinite alternate, shapeMorph 20s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+
+.circles li:nth-child(1) {
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 0s;
+}
+
+.circles li:nth-child(2) {
+  left: 10%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 2s;
+  animation-duration: 12s;
+}
+
+.circles li:nth-child(3) {
+  left: 70%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 4s;
+}
+
+.circles li:nth-child(4) {
+  left: 40%;
+  width: 60px;
+  height: 60px;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.circles li:nth-child(5) {
+  left: 65%;
+  width: 25px;
+  height: 25px;
+  animation-delay: 0s;
+}
+
+.circles li:nth-child(6) {
+  left: 75%;
+  width: 110px;
+  height: 110px;
+  animation-delay: 3s;
+}
+
+.circles li:nth-child(7) {
+  left: 35%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 7s;
+}
+
+.circles li:nth-child(8) {
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  animation-delay: 15s;
+  animation-duration: 45s;
+}
+
+.circles li:nth-child(9) {
+  left: 20%;
+  width: 15px;
+  height: 15px;
+  animation-delay: 2s;
+  animation-duration: 35s;
+}
+
+.circles li:nth-child(10) {
+  left: 85%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
+
+// --------------------------------------------------
+// 9. Keyframes
+// --------------------------------------------------
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-1000px) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes colorCycle {
+  0% {
+    background: $vonage-cyan;
+  }
+  25% {
+    background: $vonage-violet;
+  }
+  50% {
+    background: $vonage-magenta;
+  }
+  75% {
+    background: $vonage-coral;
+  }
+  100% {
+    background: $vonage-cyan;
+  }
+}
+
+@keyframes shapeMorph {
+  0%, 100% {
+    border-radius: 50%;
+  }
+  25% {
+    border-radius: 25%;
+  }
+  50% {
+    border-radius: 0%;
+  }
+  75% {
+    border-radius: 20%;
+  }
+}
+
+@keyframes bgShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+// --------------------------------------------------
+// 10. Typography Reset — Use Montserrat Everywhere
+// --------------------------------------------------
+
+html,
+body,
+button,
+input,
+select,
+textarea,
+label,
+p,
+h1, h2, h3, h4, h5, h6,
+.btn,
+.card,
+a,
+[class*="btn-"],
+[class*="form-control"],
+[class*="form-select"] {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+// --------------------------------------------------
+// 11. Focus Styles
+// --------------------------------------------------
+
+:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, $vonage-purple 25%, transparent),
+    0 0 0 6px color-mix(in srgb, $vonage-purple 12%, transparent);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, $vonage-purple 25%, transparent),
+    0 0 0 6px color-mix(in srgb, $vonage-purple 12%, transparent);
+}
+
+// --------------------------------------------------
+// 12. Elevated Surfaces
+// --------------------------------------------------
+
+.card {
+  background-color: #202020;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.75rem;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 6px 12px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 12px rgba(0, 0, 0, 0.4),
+      0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
+// --------------------------------------------------
+// 13. Global Motion
+// --------------------------------------------------
+
+* {
+  transition: background-color 0.25s ease,
+              color 0.25s ease,
+              box-shadow 0.25s ease,
+              transform 0.25s ease;
+}
+
+// --------------------------------------------------
+// 14. Vivid-style Form Controls
+// --------------------------------------------------
+
+.form-control,
+.form-select {
+  background-color: #2a1b47; // solid dark violet surface
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 0.75rem 1rem;
+  transition: all 0.25s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.65);
+    opacity: 1;
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    background-color: #32205a;
+  }
+
+  &:focus {
+    background-color: #3a2570;
+    border-color: $vonage-purple;
+    color: #fff;
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, $vonage-purple 25%, transparent),
+      0 0 0 6px color-mix(in srgb, $vonage-purple 12%, transparent);
+    outline: none;
+  }
+
+  &:disabled,
+  &[readonly] {
+    background-color: #201237;
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+}
+
+/* Prefix / suffix icons (input-group) */
+.input-group-text {
+  background-color: #26194a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: 0.5rem 0 0 0.5rem;
+  font-weight: 500;
 }

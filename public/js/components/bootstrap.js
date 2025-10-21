@@ -1,7 +1,17 @@
 import bootstrap from 'bootstrap/dist/css/bootstrap.min.css?inline';
+import appStyles from '../../css/app.scss?inline';
+import adminStyles from '../../css/admin.scss?inline';
 
-const sheet = new CSSStyleSheet();
-sheet.replaceSync(bootstrap);
+const mode = document.documentElement.dataset.theme;
+
+const bsSheet = new CSSStyleSheet();
+bsSheet.replaceSync(bootstrap);
+
+const appSheet = new CSSStyleSheet();
+appSheet.replaceSync(appStyles);
+
+const adminSheet = new CSSStyleSheet();
+adminSheet.replaceSync(adminStyles);
 
 export class BootstrapElement extends HTMLElement {
   constructor() {
@@ -11,7 +21,7 @@ export class BootstrapElement extends HTMLElement {
     }
 
     this.shadow = this.attachShadow({ mode: 'open' });
-    this.shadow.adoptedStyleSheets = [sheet];
+    this.shadow.adoptedStyleSheets = [bsSheet, mode === 'admin' ? adminSheet : appSheet];
     this.hasConnected = false;
   }
 }

@@ -1,0 +1,244 @@
+/* --------------------------------------------------
+   Vonage Admin Dashboard Theme (Light Mode Only)
+   Matches Vonage Developer Dashboard visual style
+-------------------------------------------------- */
+
+/* Force light background for admin theme */
+:root[data-theme="admin"],
+html[data-theme="admin"],
+body.admin {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #212529 !important;
+}
+
+/* 0. Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap');
+
+/* 1. Core Colors */
+$primary: #b27bf2;
+$secondary: #6f42c1;
+$success: #1dbf73;
+$danger: #f75959;
+$background: #ffffff;
+$surface: #f8f9fa;
+$surface-border: #dee2e6;
+$text-color: #212529;
+$text-muted: #6c757d;
+$link-color: $secondary;
+$link-hover: #563d7c;
+
+/* 2. Base Resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: $text-color;
+  background-color: $background;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $link-hover;
+    text-decoration: underline;
+  }
+}
+
+/* 3. Typography */
+h1, h2, h3, h4, h5 {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  color: $text-color;
+  margin-bottom: 0.75rem;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+p { color: $text-color; line-height: 1.6; }
+small { color: $text-muted; }
+
+/* 4. Layout */
+.admin-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  background-color: $background;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: $surface;
+  border-right: 1px solid $surface-border;
+  padding: 1rem 1.5rem;
+}
+
+.sidebar h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.sidebar a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: $text-color;
+  border-radius: 0.375rem;
+  margin-bottom: 0.25rem;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #ececec;
+  }
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem 3rem;
+  background-color: $background;
+}
+
+/* 5. Cards */
+.card {
+  background-color: #fff;
+  border: 1px solid $surface-border;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $text-color;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 0.95rem;
+  }
+}
+
+/* 6. Buttons */
+.btn {
+  display: inline-block;
+  border-radius: 0.5rem;
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid transparent;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.25s ease;
+}
+
+.btn-primary {
+  background-color: $primary;
+  border-color: $primary;
+  color: #fff;
+
+  &:hover {
+    background-color: darken($primary, 5%);
+  }
+
+  &:active {
+    background-color: darken($primary, 10%);
+  }
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid $secondary;
+  color: $secondary;
+
+  &:hover {
+    background-color: $secondary;
+    color: #fff;
+  }
+}
+
+/* 7. Forms */
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  display: inline-block;
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid $surface-border;
+  color: $text-color;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow:
+      0 0 0 3px color-mix(in srgb, $primary 25%, transparent),
+      0 0 0 6px color-mix(in srgb, $primary 12%, transparent);
+    outline: none;
+  }
+
+  &:disabled,
+  &[readonly] {
+    background-color: $surface;
+    color: $text-muted;
+  }
+}
+
+/* 8. Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid $surface-border;
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  tbody tr:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+/* 9. Utility */
+.text-muted { color: $text-muted; }
+.border-bottom { border-bottom: 1px solid $surface-border; }

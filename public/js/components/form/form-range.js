@@ -1,15 +1,5 @@
 import { FormInput } from './form-input.js';
 
-const style = document.createElement('template');
-style.innerHTML = `
-<style>
-  input[type="range"]:focus {
-    outline: none !important;
-    box-shadow: none !important;
-  }
-</style>
-`;
-
 export class FormInputRange extends FormInput {
   constructor() {
     super();
@@ -27,7 +17,6 @@ export class FormInputRange extends FormInput {
 
     const inputGroup = this.querySelector('.input-group');
     inputGroup.append(this.outputElement);
-    this.append(style.content.cloneNode(true));
   }
 
   connectedCallback() {

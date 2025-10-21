@@ -18,6 +18,13 @@ export default defineConfig({
     outDir: '../dist',
     emptyOutDir: true,
     target: 'esnext',
+    rollupOptions: {
+      input: {
+        main: '/src/js/main.js',
+        admin: '/src/js/admin.js',
+        player: '/src/js/player.js',
+      },
+    },
   },
 
   plugins: [

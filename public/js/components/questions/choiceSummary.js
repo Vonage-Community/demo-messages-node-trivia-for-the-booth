@@ -2,7 +2,7 @@ import { ChoiceElement } from './choice.js';
 
 const countTemplate = document.createElement('template');
 countTemplate.innerHTML = `
-  <div class="progress float-end ms-2" style="width: 20%;">
+  <div class="progress choice-progress float-end ms-2">
     <div class="progress-bar" aria-valuemax="100" aria-valuemin="0"></div>
   </div>
   <span class="choice-stats float-end" ></span>

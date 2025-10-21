@@ -1,6 +1,5 @@
 import { QuestionElement } from './question.js';
 import JSConfetti from 'js-confetti';
-import styleSheet from '../styleSheet.js';
 const jsConfetti = new JSConfetti();
 
 const questionTemplate = document.createElement('template');
@@ -37,7 +36,6 @@ export class PlayQuestionElement extends QuestionElement {
   constructor() {
     super();
 
-    this.shadow.adoptedStyleSheets = [...this.shadow.adoptedStyleSheets, styleSheet];
     this.shadow.append(questionTemplate.content.cloneNode(true));
 
     this.boundedHandleClickQuestion = this.handleClickQuestion.bind(this);

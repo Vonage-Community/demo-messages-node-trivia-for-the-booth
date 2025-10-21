@@ -1,7 +1,6 @@
 import { GameElement } from './game.js';
 import '../questions/playQuestion.js';
-import styleSheet from '../styleSheet.js';
-import { registerEvent, removeEvent } from '../../events.js';
+import { registerEvent } from '../../events.js';
 
 const playGameTemplate = document.createElement('template');
 playGameTemplate.innerHTML = `
@@ -40,14 +39,6 @@ playGameTemplate.innerHTML = `
     </header>
   </article>
 </section>
-
-<style>
-article {
-  outline: none;
-  /* Bootstrap uses vh instead of dvh */
-  margin-block-start: 10rem;
-}
-</style>
 `;
 
 export class PlayGameElement extends GameElement {
@@ -55,7 +46,6 @@ export class PlayGameElement extends GameElement {
 
   constructor() {
     super();
-    this.shadow.adoptedStyleSheets = [...this.shadow.adoptedStyleSheets, styleSheet];
     this.shadow.append(playGameTemplate.content.cloneNode(true));
     this.noGameElement = this.shadow.querySelector('.no-game');
     this.noMoreQuestionsElement = this.shadow.querySelector('.no-more');
