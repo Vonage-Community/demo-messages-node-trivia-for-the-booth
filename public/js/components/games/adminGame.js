@@ -1,70 +1,70 @@
 import Collapse from 'bootstrap/js/dist/collapse';
 import '../questions/questionList.js';
-import { RPCElement } from '../rpcElement.js';
+import { GameElement } from './game.js';
 
 const gameListTemplate = document.createElement('template');
 gameListTemplate.innerHTML = `
-<section class="card mb-3 w-100 accordion-item"
-role="region"
-aria-describedby="game-title"
-aria-labelledby="game-title">
+<section class="border mb-3 w-100"
+  role="region"
+  aria-describedby="game-title"
+  aria-labelledby="game-title">
 
   <header class="card-header border-0 d-flex align-items-center gap-2">
     <button class="accordion-button bg-transparent collapsed expand-game"
       type="button"
       aria-controls="game-data-1"
       aria-expanded="false">
-      <h3 id="game-title">Title</h3>
+
+      <h3 class="game-title">Title</h3>
     </button>
 
-    <button class="btn btn-primary activate-game" type="button" aria-label="Activate Game">Activate</button>
-    <button class="btn btn-primary deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
+    <button class="btn btn-outline-primary activate-game" type="button" aria-label="Activate Game">Activate</button>
+    <button class="btn btn-outline-primary deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
   </header>
 
-  <div class="accordion-body accordion-collapse collapse game-data transate-middle p-0 " id="game-stats"
+  <div class="accordion-body accordion-collapse collapse game-data transate-middle p-3 "
   role="region"
-  aria-label="Game details">
+  aria-label="Game statistics">
     <dl class="row d-flex justify-content-center" id="game-stats">
-      <dt class="col-sm-1" aria-label="Total Questions">Questions</dt>
-      <dd class="col-sm-1" data-field="questions"></dd>
+      <dt class="col-sm-3" aria-label="Total Questions">Questions</dt>
+      <dd class="col-sm-3" data-field="questions"></dd>
 
-      <dt class="col-sm-1" aria-label="Total Players">Players</dt>
-      <dd class="col-sm-1" data-field="players"></dd>
+      <dt class="col-sm-3" aria-label="Total Players">Players</dt>
+      <dd class="col-sm-3" data-field="players"></dd>
+    </dl>
 
-      <dt class="col-sm-1" aria-label="Questions Answer correctly">Correct</dt>
-      <dd class="col-sm-1" data-field="correct"></dd>
+    <dl class="row d-flex justify-content-center" id="game-stats">
+      <dt class="col-sm-3" aria-label="Questions Answer correctly">Correct</dt>
+      <dd class="col-sm-3" data-field="correct"></dd>
 
-      <dt class="col-sm-1" aria-label="Questions answered incorrectly">Incorrect</dt>
-      <dd class="col-sm-1" data-field="incorrect"></dd>
+      <dt class="col-sm-3" aria-label="Questions answered incorrectly">Incorrect</dt>
+      <dd class="col-sm-3" data-field="incorrect"></dd>
     </dl>
   </div>
+
 </section>
 `;
 
-export class GamesSummaryElement extends RPCElement {
+export class AdminGameElement extends GameElement {
   static observedAttributes = [
-    '',
-    'data-game-title',
-    'data-game-short-code',
-    'data-game-question-count',
-    'data-game-player-count',
-    'data-game-correct-count',
-    'data-game-incorrect-count',
-    'data-game-active',
-    'data-game-bonus',
+    ...GameElement.observedAttributes,
+    'data-question-count',
+    'data-player-count',
+    'data-correct-count',
+    'data-incorrect-count',
   ];
 
   constructor() {
     super();
 
     this.shadow.append(gameListTemplate.content.cloneNode(true));
-    this.titleElement = this.shadow.querySelector('#game-title');
+    this.titleElement = this.shadow.querySelector('.game-title');
 
     this.summaryListElement = this.shadow.querySelector('ul');
     this.questionCountElement = this.shadow.querySelector('[data-field="questions"]');
     this.playersCountElement = this.shadow.querySelector('[data-field="players"]');
-    this.correctCountElemenet = this.shadow.querySelector('[data-field="correct"]');
-    this.incorrectCountElemenet = this.shadow.querySelector('[data-field="incorrect"]');
+    this.totalCorrectAnswersElemenet = this.shadow.querySelector('[data-field="correct"]');
+    this.totalIncorrectAnswersElemenet = this.shadow.querySelector('[data-field="incorrect"]');
 
     this.gameDataElement = this.shadow.querySelector('.game-data');
     this.activateButtonElement = this.shadow.querySelector('.activate-game');
@@ -78,76 +78,36 @@ export class GamesSummaryElement extends RPCElement {
     this.boundedDeactivateGame = this.deactivateGame.bind(this);
   }
 
-  get gameId() {
-    return this.dataset.gameId;
+  get questionCount() {
+    return Number(this.dataset.questionCount);
   }
 
-  set gameId(value) {
-    this.dataset.gameId = value;
+  set questionCount(value) {
+    this.dataset.questionCount = value;
   }
 
-  get gameTitle() {
-    return this.dataset.gameTitle;
+  get playerCount() {
+    return Number(this.dataset.playerCount);
   }
 
-  set gameTitle(value) {
-    this.dataset.gameTitle = value;
+  set playerCount(value) {
+    this.dataset.playepCount = value;
   }
 
-  get gameQuestionCount() {
-    return Number(this.dataset.gameQuestionCount);
+  get totalCorrectAnswers() {
+    return Number(this.dataset.totalCorrectAnswers);
   }
 
-  set gameQuestionCount(value) {
-    this.dataset.gameQuestionCount = value;
+  set totalCorrectAnswers(value) {
+    this.dataset.totalCorrectCount = value;
   }
 
-  get gamePlayerCount() {
-    return Number(this.dataset.gamePlayerCount);
+  get totalIncorrectAnswers() {
+    return Number(this.dataset.totalIncorrectAnswers);
   }
 
-  set gamePlayerCount(value) {
-    this.dataset.gamePlayerCount = value;
-  }
-
-  get gameCorrectCount() {
-    return Number(this.dataset.gameCorrectCount);
-  }
-
-  set gameCorrectCount(value) {
-    this.dataset.gameCorrectCount = value;
-  }
-
-  get gameIncorrectCount() {
-    return Number(this.dataset.gameIncorrectCount);
-  }
-
-  set gameIncorrectCount(value) {
-    this.dataset.gameIncorrectCount = value;
-  }
-
-  get gameShortCode() {
-    return this.dataset.gameShortCode;
-  }
-
-  set gameShortCode(value) {
-    this.dataset.gameShortCode = value;
-  }
-
-  get isActive() {
-    return this.dataset.isActive === 'true';
-  }
-
-  set isActive(value) {
-    this.dataset.isActive = value;
-  }
-
-  get isBonus() {
-    return this.dataset.gameBonus === 'true';
-  }
-
-  set isBonus(value) {
-    this.dataset.gameBonus = value;
+  set totalIncorrectAnswers(value) {
+    this.dataset.totalIncorrectAnswers = value;
   }
 
   toggleList() {
@@ -195,35 +155,63 @@ export class GamesSummaryElement extends RPCElement {
     this.setAttribute('aria-label', this.shadow.querySelector('h3').textContent);
     this.gameAccordion = new Collapse(this.gameDataElement, { toggle: false });
     this.expandButtomElement.addEventListener('click', this.boundedToggleList);
+    this.updateGame();
   }
 
   disconnectedCallback() {
     this.expandButtomElement.removeEventListener('click', this.boundedToggleList);
   }
 
+  updateGame() {
+    this.updateTitle();
+    this.updateGameStats();
+    this.updateButtons();
+  }
+
   updateTitle() {
-    const title = `${this.gameTitle ?? 'Untitled Game'} - ${this.gameShortCode}`;
+    const title = `${this.gameTitle ?? 'Untitled Game'} - ${this.shortCode}`;
     this.titleElement.textContent = title;
   }
 
   updateGameStats() {
-    const correct = Number(this.gameCorrectCount ?? 0);
-    const totalQuestions = Number(this.gameQuestionCount ?? 0);
+    const correct = Number(this.totalCorrectAnswers ?? 0);
+    const totalQuestions = Number(this.questionCount ?? 0);
+    const incorrect = Number(this.totalIncorrectAnswers ?? 0);
+
+    this.playersCountElement.textContent = this.playerCount;
+    this.questionCountElement.textContent = totalQuestions;
+
     const correctPercent = totalQuestions
       ? Math.round((correct / totalQuestions) * 100)
       : 0;
-
-
-    const incorrect = Number(this.gameIncorrectCount ?? 0);
 
     const incorrectPercent = totalQuestions
       ? Math.round((incorrect / totalQuestions) * 100)
       : 0;
 
-    this.playersCountElement.textContent = this.gamePlayerCount;
-    this.questionCountElement.textContent = totalQuestions;
-    this.correctCountElemenet.textContent = `${correct} (${correctPercent}%)`;
-    this.incorrectCountElemenet.textContent = `${incorrect} (${incorrectPercent}%)`;
+    this.totalCorrectAnswersElemenet.textContent = `${correct} (${correctPercent}%)`;
+    this.totalIncorrectAnswersElemenet.textContent = `${incorrect} (${incorrectPercent}%)`;
+  }
+
+  updateButtons() {
+    if (this.bonusGame) {
+      this.activateButtonElement.disabled = true;
+      this.activateButtonElement.textContent = 'Bonus game';
+      this.deactivateButtonElement.classList.add('d-none');
+      return;
+    }
+
+    if (this.active) {
+      this.activateButtonElement.disabled = false;
+      this.activateButtonElement.classList.remove('d-none');
+      this.deactivateButtonElement.classList.add('d-none');
+      return;
+    }
+
+    this.activateButtonElement.disabled = true;
+    this.activateButtonElement.classList.add('d-none');
+    this.deactivateButtonElement.classList.remove('d-none');
+
   }
 
   toggleGameActive() {
@@ -250,32 +238,33 @@ export class GamesSummaryElement extends RPCElement {
     this.deactivateButtonElement.removeEventListener('click', this.boundedDeactivateGame);
   }
 
-  attributeChangedCallback(name) {
+  attributeChangedCallback(name, oldValue, newValue) {
     if (!this.hasConnected) {
       return;
     }
 
-    switch (name) {
-      case 'data-game-title':
-      // falls through
-      case 'data-game-short-code':
-        this.updateTitle();
-        break;
+    super.attributeChangedCallback(name, oldValue, newValue);
 
-      case 'data-game-question-count':
+    switch (name) {
+      case 'data-question-count':
       // falls through
-      case 'data-game-player-count':
+      case 'data-player-count':
       // falls through
-      case 'data-game-correctcount':
+      case 'data-correctcount':
       // falls through
-      case 'data-game-incorrect-count':
+      case 'data-incorrect-count':
         this.updateGameStats();
         break;
 
-      case 'data-game-active':
-      case 'data-game-bonus':
+      case 'data-active':
+      case 'data-bonus':
         this.toggleGameActive();
         break;
+
+      case 'data-game-title':
+      // falls through
+      case 'data-short-code':
+        this.updateTitle();
     }
   }
 
@@ -286,6 +275,6 @@ export class GamesSummaryElement extends RPCElement {
 }
 
 customElements.define(
-  'trivia-game-summary',
-  GamesSummaryElement,
+  'trivia-admin-game',
+  AdminGameElement,
 );

@@ -9,7 +9,7 @@ registerEvent(
     };
 
     storeMessage('Login in successful');
-    window.sessionStorage.setItem('auth_token', event.detail.data.token);
+    sessionStorage.setItem('auth_token', event.detail.data.token);
     window.location.href = '/';
   },
 );

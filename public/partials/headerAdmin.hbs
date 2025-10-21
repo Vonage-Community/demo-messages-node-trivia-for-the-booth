@@ -13,5 +13,31 @@
 
   <body class="d-flex flex-column admin">
 
-    {{> toast }}
-    <main class="m-3 pt-5">
+    <main id="admin-view" class="main-content">
+
+      <aside class="admin-sidebar">
+        <h2 class="sidebar-header fs-5 fw-semibold mb-0">Admin</h2>
+
+        <nav class="nav flex-column" id="admin-nav">
+          <a href="#games" class="nav-link active">
+            <i class="bi bi-controller me-2"></i> Games
+          </a>
+
+          <a href="#players" class="nav-link">
+            <i class="bi bi-people me-2"></i> Players
+          </a>
+
+          <a href="#users" class="nav-link">
+            <i class="bi bi-person-badge me-2"></i> Users
+          </a>
+        </nav>
+
+      </aside>
+
+      <nav class="navbar navbar-expanded-lg bg-body-tertiary container-fluid">
+        <h1 class="navbar-brand">Games</h1>
+      </nav>
+
+      <section id="adminSection">
+
+

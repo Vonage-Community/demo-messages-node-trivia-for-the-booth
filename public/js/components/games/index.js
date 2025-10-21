@@ -1,3 +1,2 @@
-import './gamesList.js';
-import './gameSummary.js';
+import './game.js';
 import './playGame.js';

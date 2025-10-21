@@ -1,31 +1,34 @@
 import { RPCElement } from '../rpcElement.js';
 import { registerEvent, removeEvent } from '../../events.js';
-import './gameSummary.js';
 import './gameForm.js';
+import './adminGame.js';
 
 const gameListTemplate = document.createElement('template');
 gameListTemplate.innerHTML = `
-<section aria-labelledby="games-heading" class="games-list accordion accordion-flush">
-  <header class="d-flex justify-content-between align-items-center">
-    <h1 id="games-heading">
-      Games
-    </h1>
+<section aria-label="Games List" class="games-list accordion accordion-flush">
 
+  <header class="mt-3 mb-3 d-flex justify-content-end align-items-center w-100">
     <button class="btn btn-success add-game">Create Game</button>
   </header>
-  <ul class="card-group row" role="list"></ul>
+
+  <ul class="games card-group row p-0 m-0" role="list"></ul>
 </section>
 `;
 
-export class GamesListElement extends RPCElement {
+export class AdminGamesListElement extends RPCElement {
   constructor() {
     super();
 
     this.shadow.append(gameListTemplate.content.cloneNode(true));
-    this.gamesSectionElement = this.shadow.querySelector('ul');
-    this.addButtonElement = this.shadow.querySelector('button.add-game');
+    this.gamesSectionElement = this.shadow.querySelector('.games');
+    this.addButtonElement = this.shadow.querySelector('.add-game');
+
     this.games = [];
     this.hasConnected = false;
+
+    this.boundedRefreshList = this.refreshList.bind(this);
+    this.boundedAddGame = this.addGame.bind(this);
+    this.boundedBuildGameElement = this.buildGameElement.bind(this);
   }
 
   get rpcMethod() {
@@ -33,27 +36,27 @@ export class GamesListElement extends RPCElement {
   }
 
   get limit() {
-    return this.getAttribute('limit') || 50;
+    return this.dataset.limit || 50;
   }
 
   set limit(value) {
-    this.setAttribute('limit', value);
+    this.dataset.limit = value;
   }
 
   get total() {
-    return this.getAttribute('total');
+    return this.dataset.total;
   }
 
   set total(value) {
-    this.setAttribute('total', value);
+    this.dataset.total = value;
   }
 
   get offset() {
-    return this.getAttribute('offset') || 0;
+    return this.dataset.offset || 0;
   }
 
   set offset(value) {
-    this.setAttribute('offset', value);
+    this.dataset.offset = value;
   }
 
   get rpcParams() {
@@ -94,8 +97,6 @@ export class GamesListElement extends RPCElement {
     this.hasConnected = true;
     this.makeRPCCall();
 
-    this.boundedRefreshList = this.refreshList.bind(this);
-    this.boundedAddGame = this.addGame.bind(this);
     this.addButtonElement.addEventListener('click', this.boundedAddGame);
 
     registerEvent('rpc:success', this.boundedRefreshList);
@@ -106,21 +107,29 @@ export class GamesListElement extends RPCElement {
     this.addButtonElement.removeEventListener('click', this.boundedAddGame);
   }
 
+  buildGameElement(game) {
+    const gameElement = document.createElement('trivia-admin-game');
+
+    Object.entries(game).forEach(([key, value]) => {
+      let normalKey = key;
+      if (key === 'id') {
+        normalKey = 'gameId';
+      }
+
+      if (key === 'title') {
+        normalKey = 'gameTitle';
+      }
+
+      gameElement.dataset[normalKey] = value;
+    });
+
+    this.gamesSectionElement.append(gameElement);
+    console.log(gameElement);
+  }
+
   render() {
     this.gamesSectionElement.innerHTML = '';
-    this.games.forEach((game) => {
-      const gameSummaryElement = document.createElement('trivia-game-summary');
-      this.gamesSectionElement.append(gameSummaryElement);
-      gameSummaryElement.gameId = game.id;
-      gameSummaryElement.gameTitle = game.title;
-      gameSummaryElement.gameShortCode = game.shortCode;
-      gameSummaryElement.isActive = game.active;
-      gameSummaryElement.isBonus = game.bonusGame;
-      gameSummaryElement.gameQuestionCount = game.questionCount;
-      gameSummaryElement.gamePlayerCount = game.playerCount;
-      gameSummaryElement.gameCorrectCount = game.totalCorrectAnswers;
-      gameSummaryElement.gameIncorrectCount = game.totalIncorrectAnswers;
-    });
+    this.games.forEach(this.boundedBuildGameElement);
   }
 
   onDataLoaded({ games, limit, total, offset }) {
@@ -133,6 +142,6 @@ export class GamesListElement extends RPCElement {
 }
 
 customElements.define(
-  'trivia-games',
-  GamesListElement,
+  'trivia-admin-games',
+  AdminGamesListElement,
 );

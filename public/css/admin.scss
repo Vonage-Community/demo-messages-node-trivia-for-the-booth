@@ -3,6 +3,8 @@
    Matches Vonage Developer Dashboard visual style
 -------------------------------------------------- */
 
+@import "bootstrap/scss/functions";
+
 /* Force light background for admin theme */
 :root[data-theme="admin"],
 html[data-theme="admin"],
@@ -27,6 +29,9 @@ $text-color: #212529;
 $text-muted: #6c757d;
 $link-color: $secondary;
 $link-hover: #563d7c;
+
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 /* 2. Base Resets */
 * {
@@ -242,3 +247,90 @@ small { color: $text-muted; }
 /* 9. Utility */
 .text-muted { color: $text-muted; }
 .border-bottom { border-bottom: 1px solid $surface-border; }
+
+/* --------------------------------------------------
+   Admin Sidebar Navigation
+-------------------------------------------------- */
+
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #dee2e6;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+
+  .sidebar-header {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f3f5;
+  }
+
+  .nav-link {
+    color: #212529;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background-color: #f1f3f5;
+      text-decoration: none;
+    }
+
+    &.active {
+      background-color: #000;
+      color: #fff;
+
+      i {
+        color: #fff;
+      }
+    }
+
+    i {
+      color: #6c757d;
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 992px) {
+    position: relative;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: none;
+
+    .nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      .nav-link {
+        margin-right: 0.75rem;
+      }
+    }
+  }
+}
+
+/* Shift main content when sidebar is fixed */
+body.admin .main-content {
+  margin-left: 260px;
+  padding: 2rem;
+}
+
+@media (max-width: 992px) {
+  body.admin .main-content {
+    margin-left: 0;
+  }
+}
+

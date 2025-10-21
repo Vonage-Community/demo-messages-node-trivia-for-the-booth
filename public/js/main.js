@@ -6,9 +6,22 @@ import './rpc.js';
 import './toast.js';
 import './auth.js';
 import { submitRPCForm } from './form.js';
+import { registerEvent } from './events.js';
+import { storeMessage } from './toast.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const bootstrapForms = document.querySelectorAll('.needs-validation');
+
+  registerEvent('rpc:error', (errorEvent) => {
+    const { code, message } = errorEvent.detail.error;
+    if (code === 401) {
+      storeMessage('You need to login to access that page');
+      //just in case
+      sessionStorage.removeItem('auth_token');
+      window.location.href = 'login';
+      return;
+    }
+  });
 
   // Loop over them and prevent submission
   Array.from(bootstrapForms).forEach(form => {
