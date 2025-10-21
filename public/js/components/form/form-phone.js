@@ -12,8 +12,8 @@ export class FormInputPhone extends FormInput {
     super.connectedCallback();
   }
 
-  get prefix() {
-    return '<i class="bi bi-telephone"/>';
+  get icon() {
+    return 'telephone';
   }
 }
 

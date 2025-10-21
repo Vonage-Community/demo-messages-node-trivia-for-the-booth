@@ -6,7 +6,7 @@ const inputTemplate = document.createElement('template'); inputTemplate.innerHTM
     <input class="form-control"></input>
   </div>
   <div class="invalid-feedback"></div>
-  <div class="form-text help-text d-none"></div>
+  <div class="form-text help-text text-white d-none"></div>
 </div>
 `;
 
@@ -176,12 +176,12 @@ export class FormInput extends HTMLElement {
 
   updatePrefix() {
     if (this.icon) {
-      this.prefixElement.innerHTML = `<i class="bi bi-${this.icon}"/>`;
+      this.prefixElement.innerHTML = `<i class="text-black bi bi-${this.icon}"/>`;
       return;
     }
 
     if (this.prefix) {
-      this.prefixElement.innerHTML = this.prefix;
+      this.prefixElement.textContent = this.prefix;
       return;
     }
 
