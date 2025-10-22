@@ -2,7 +2,6 @@ import Modal from 'bootstrap/js/dist/modal';
 import { submitRPCForm } from '../../form.js';
 import { registerEvent, removeEvent } from '../../events.js';
 import '../form/form-input.js';
-import { RPCElement } from '../rpcElement.js';
 import { QuestionElement } from './question.js';
 
 const choiceTemplate = document.createElement('template');
@@ -71,7 +70,7 @@ choiceTemplate.innerHTML = `
 </div>
 `;
 
-export class QuestionFormElement extends RPCElement {
+export class AdminQuestionFormElement extends QuestionElement {
   static observedAttributes = QuestionElement.observedAttributes;
 
   constructor() {
@@ -94,75 +93,12 @@ export class QuestionFormElement extends RPCElement {
     this.hiddenQuestionIdInput = this.shadow.querySelector('input[name="questionId"]');
   }
 
-  get questionText() {
-    return this.dataset.question ?? '';
-  }
-
-  set questionText(newQuestionText) {
-    this.dataset.question = newQuestionText;
-  }
-
-  get choiceA() {
-    return this.dataset.choiceA ?? '';
-  }
-
-  set choiceA(newChoiceA) {
-    this.dataset.choiceA = newChoiceA;
-  }
-
-  get choiceB() {
-    return this.dataset.choiceB ?? '';
-  }
-
-  set choiceB(newChoiceB) {
-    this.dataset.choiceB = newChoiceB;
-  }
-
-  get choiceC() {
-    return this.dataset.choiceC ?? '';
-  }
-
-  set choiceC(newChoiceC) {
-    this.dataset.choiceC = newChoiceC;
-  }
-
-  get choiceD() {
-    return this.dataset.choiceD ?? '';
-  }
-
-  set choiceD(newChoiceD) {
-    this.dataset.choiceD = newChoiceD;
-  }
-
-  get correctChoice() {
-    return this.dataset.correctChoice ?? '';
-  }
-
-  set correctChoice(newCorrectChoice) {
-    this.dataset.correctChoice = newCorrectChoice;
-  }
-
-  get gameId() {
-    return Number(this.dataset.gameId) || null;
-  }
-
-  set gameId(newGameId) {
-    this.dataset.gameId = newGameId;
-  }
-
-  get questionId() {
-    return Number(this.dataset.questionId) || null;
-  }
-
-  set questionId(newQuestionId) {
-    this.dataset.questionId = newQuestionId;
-  }
-
   toggleModal() {
     this.connectedModal.toggle();
   }
 
   submitForm() {
+    // I don't want to mess around with internals
     const formData = new FormData(this.formElement);
 
     const data = {};
@@ -200,6 +136,7 @@ export class QuestionFormElement extends RPCElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    super.attributeChangedCallback(name, oldValue, newValue);
     switch (name) {
       case 'data-question':
         this.questionInputElement.setAttribute('value', newValue ?? '');
@@ -239,4 +176,7 @@ export class QuestionFormElement extends RPCElement {
 
 }
 
-customElements.define('trivia-question-form', QuestionFormElement);
+customElements.define(
+  'trivia-admin-question-form',
+  AdminQuestionFormElement,
+);

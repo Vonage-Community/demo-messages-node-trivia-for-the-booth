@@ -1,14 +1,14 @@
 import { RPCElement } from '../rpcElement.js';
-import './questionSummary.js';
-import './questionForm.js';
-import './questionGenerateForm.js';
+import './adminQuestion.js';
+import './adminQuestionForm.js';
+import './adminQuestionGenerateForm.js';
 import Collapse from 'bootstrap/js/dist/collapse';
 
 const questionListTemplate = document.createElement('template');
 questionListTemplate.innerHTML = `
-<section class="card mb-3 w-100 border-0" aria-labelledby="question-title">
-  <header class="card-header border-0 d-flex justify-content-between align-items-center gap-2">
-      <h3 id="question-title" class="mb-0">
+<section class="mb-3 w-100 border-0" aria-label="Questions">
+  <header class="border-0 d-flex justify-content-between align-items-center gap-2">
+      <h3 class="mb-0">
         Questions
       </h3>
 
@@ -26,24 +26,26 @@ questionListTemplate.innerHTML = `
 </section>
 `;
 
-export class QuestionListElement extends RPCElement {
+export class AdminQuestionListElement extends RPCElement {
   static observedAttributes = ['data-game-id'];
 
   constructor() {
     super();
     this.shadow.append(questionListTemplate.content.cloneNode(true));
     this.questionListElement = this.shadow.querySelector('.question-list');
-    this.addButtomElement = this.shadow.querySelector('button.add-question');
-    this.generateButtomElement = this.shadow.querySelector('button.generate-question');
+    this.addButtomElement = this.shadow.querySelector('.add-question');
+    this.generateButtomElement = this.shadow.querySelector('.generate-question');
+
+    this.boundedBuildQuestionElement = this.buildQuestionElement.bind(this);
     this.hasConnected = false;
     this.expanded = false;
   }
 
-  modalForm(which = 'trivia-question-form') {
+  modalForm(which = 'trivia-admin-question-form') {
     const questionFormElement = document.createElement(which);
     this.questionListElement.append(questionFormElement);
 
-    questionFormElement.setAttribute('data-game-id', this.gameId);
+    questionFormElement.dataset.gameId = this.gameId;
     questionFormElement.toggleModal();
 
     questionFormElement.modal.addEventListener('hidden.bs.modal', () => {
@@ -63,7 +65,7 @@ export class QuestionListElement extends RPCElement {
 
     const addQuestionModal = () => { this.modalForm(); };
     const addGenerateModal = () => {
-      this.modalForm('trivia-generate-questions-form');
+      this.modalForm('trivia-admin-generate-questions-form');
     };
 
     this.boundedAddQuestion = addQuestionModal.bind(this);
@@ -89,11 +91,11 @@ export class QuestionListElement extends RPCElement {
   }
 
   get gameId() {
-    return this.getAttribute('data-game-id');
+    return this.dataset.gameId;
   }
 
-  get loadingTargetElement() {
-    return this.questionListElement;
+  set gameId(value) {
+    this.dataset.gameId = value;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -102,28 +104,30 @@ export class QuestionListElement extends RPCElement {
     }
   }
 
+  buildQuestionElement(question) {
+    const questionElement = document.createElement('trivia-admin-question');
+    Object.entries(question).forEach(([key, value]) => {
+      questionElement.dataset[key === 'id' ? 'questionId' : key] = value;
+    });
+
+    console.log(questionElement);
+    this.questionListElement.append(questionElement);
+  }
+
+
   onDataLoaded(questions) {
     if (questions.length < 1) {
       return;
     }
 
     this.questionListElement.innerHTML = '';
+    console.log(questions);
 
-    questions.forEach((question) => {
-      const questionElement = document.createElement('trivia-question-summary');
-
-      questionElement.setAttribute('data-game-id', this.gameId);
-      questionElement.setAttribute('data-question-id', question.id);
-      questionElement.setAttribute('data-question', question.question);
-      questionElement.setAttribute('data-choice-a', question.choiceA);
-      questionElement.setAttribute('data-choice-b', question.choiceB);
-      questionElement.setAttribute('data-choice-c', question.choiceC);
-      questionElement.setAttribute('data-choice-d', question.choiceD);
-      questionElement.setAttribute('data-correct-choice', question.correctChoice);
-
-      this.questionListElement.append(questionElement);
-    });
+    questions.forEach(this.boundedBuildQuestionElement);
   }
 }
 
-customElements.define('trivia-questions-list', QuestionListElement);
+customElements.define(
+  'trivia-admin-questions-list',
+  AdminQuestionListElement,
+);

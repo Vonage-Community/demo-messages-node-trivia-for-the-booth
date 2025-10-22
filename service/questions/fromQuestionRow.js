@@ -12,11 +12,11 @@ export const fromQuestionRow = (question, detailed) => question
       ? {
         correctChoice: question.correct_choice,
         correctAnswerCount: question.correct_answer_count,
-        incorretAnswerCount: question.incorrect_answer_count,
+        incorrectAnswerCount: question.incorrect_answer_count,
         countChoiceA: question.count_choice_a,
         countChoiceB: question.count_choice_b,
         countChoiceC: question.count_choice_c,
-        countChoiced: question.count_choice_d,
+        countChoiceD: question.count_choice_d,
       }
       : {}
     ),

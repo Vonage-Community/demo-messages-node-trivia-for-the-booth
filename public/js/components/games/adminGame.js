@@ -1,5 +1,5 @@
 import Collapse from 'bootstrap/js/dist/collapse';
-import '../questions/questionList.js';
+import '../questions/adminQuestionList.js';
 import { GameElement } from './game.js';
 
 const gameListTemplate = document.createElement('template');
@@ -73,7 +73,6 @@ export class AdminGameElement extends GameElement {
 
     this.boundedToggleList = this.toggleList.bind(this);
     this.boundedAddQuestionList = this.addQuestionList.bind(this);
-    this.boundedRemoveQuestionList = this.removeQuestionList.bind(this);
     this.boundedActivateGame = this.activateGame.bind(this);
     this.boundedDeactivateGame = this.deactivateGame.bind(this);
   }
@@ -124,18 +123,12 @@ export class AdminGameElement extends GameElement {
       this.addQuestionList();
       return;
     }
-
-    this.removeQuestionList();
   }
 
   addQuestionList() {
-    this.questionsListElement = document.createElement('trivia-questions-list');
-    this.questionsListElement.setAttribute('data-game-id', this.gameId);
-    this.gameDataElement.append(this.questionsListElement);
-  }
-
-  removeQuestionList() {
-    this.questionsListElement.remove();
+    const questionsListElement = document.createElement('trivia-admin-questions-list');
+    questionsListElement.dataset.gameId = this.gameId;
+    this.gameDataElement.append(questionsListElement);
   }
 
   activateGame() {

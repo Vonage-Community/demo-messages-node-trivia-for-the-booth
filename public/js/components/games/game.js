@@ -91,11 +91,8 @@ export class GameElement extends RPCElement {
 
   callActiveGame() {
     if (!this.gameId || !this.active) {
-      console.log('Checking for active game');
       this.makeRPCCall('games.active');
     }
-
-    console.log('Have active game');
   }
 
   onDataLoaded(results) {

@@ -124,7 +124,6 @@ export class AdminGamesListElement extends RPCElement {
     });
 
     this.gamesSectionElement.append(gameElement);
-    console.log(gameElement);
   }
 
   render() {

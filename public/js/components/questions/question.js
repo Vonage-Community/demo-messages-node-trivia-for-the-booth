@@ -74,13 +74,6 @@ export class QuestionElement extends RPCElement {
     this.dataset.choiceD = value;
   }
 
-  get correctChoice() {
-    return this.dataset.correctChoice;
-  }
-
-  set correctChoice(value) {
-    this.dataset.correctChoice = value;
-  }
 
   get rpcMethod() {
     return 'questions.fetch';

@@ -43,8 +43,6 @@ choiceTemplate.innerHTML = `
             <option value="Hardest">Damn I'm good</option>
           </select>
 
-          <input type="hidden" name="gameId">
-
         </div>
 
         <div class="modal-footer">
@@ -57,7 +55,7 @@ choiceTemplate.innerHTML = `
 </div>
 `;
 
-export class GenerateQuestionsFormElement extends RPCElement {
+export class AdminGenerateQuestionsFormElement extends RPCElement {
   static observedAttributes = ['data-game-id'];
 
   constructor() {
@@ -69,8 +67,14 @@ export class GenerateQuestionsFormElement extends RPCElement {
 
     this.themeInputElement = this.shadow.querySelector('[name="themes"]');
     this.countInputElement = this.shadow.querySelector('[name="count"]');
+  }
 
-    this.hiddenGameIdInput = this.shadow.querySelector('[name="gameId"]');
+  get gameId() {
+    return this.dataset.gameId;
+  }
+
+  set gameId(value) {
+    this.dataset.gameId = value;
   }
 
   toggleModal() {
@@ -86,6 +90,8 @@ export class GenerateQuestionsFormElement extends RPCElement {
     };
 
     data.themes = (this.themeInputElement?.value || '').split(',');
+    data.gameId = this.gameId;
+
     submitRPCForm(this.formElement)(null, data);
   }
 
@@ -126,6 +132,6 @@ export class GenerateQuestionsFormElement extends RPCElement {
 }
 
 customElements.define(
-  'trivia-generate-questions-form',
-  GenerateQuestionsFormElement,
+  'trivia-admin-generate-questions-form',
+  AdminGenerateQuestionsFormElement,
 );
