@@ -1,3 +1,3 @@
 import './question.js';
-import './questionGenerateForm.js';
+import './choiceSummary.js';
 import './playQuestion.js';

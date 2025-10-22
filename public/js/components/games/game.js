@@ -50,7 +50,7 @@ export class GameElement extends RPCElement {
   }
 
   get active() {
-    return this.dataset.active;
+    return this.dataset.active === 'true';
   }
 
   set active(value) {
@@ -58,7 +58,7 @@ export class GameElement extends RPCElement {
   }
 
   get bonus() {
-    return this.dataset.bonus;
+    return this.dataset.bonus === 'true';
   }
 
   set bonus(value) {
@@ -66,7 +66,7 @@ export class GameElement extends RPCElement {
   }
 
   get playing() {
-    return this.dataset.playing;
+    return this.dataset.playing === 'true';
   }
 
   set playing(value) {
@@ -106,7 +106,6 @@ export class GameElement extends RPCElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    console.log('Attribute changed', name, oldValue, newValue);
 
     switch (name) {
       case 'data-game-id':

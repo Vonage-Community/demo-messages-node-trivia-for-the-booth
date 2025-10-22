@@ -1,6 +1,6 @@
 import { QuestionElement } from './question.js';
 import './adminQuestionForm.js';
-import './adminChoice.js';
+import './choiceSummary.js';
 import { registerEvent, removeEvent } from '../../events.js';
 
 const questionTemplate = document.createElement('template');
@@ -193,7 +193,7 @@ export class AdminQuestionElement extends QuestionElement {
   }
 
   buildChoiceElement(choiceData) {
-    const choiceElement = document.createElement('trivia-admin-choice');
+    const choiceElement = document.createElement('trivia-choice-summary');
     Object.entries(choiceData).forEach(([key, value]) => {
       choiceElement.dataset[key] = value;
       choiceElement.dataset.totalAnswers = this.totalAnswers;

@@ -110,7 +110,6 @@ export class AdminQuestionListElement extends RPCElement {
       questionElement.dataset[key === 'id' ? 'questionId' : key] = value;
     });
 
-    console.log(questionElement);
     this.questionListElement.append(questionElement);
   }
 
@@ -121,7 +120,6 @@ export class AdminQuestionListElement extends RPCElement {
     }
 
     this.questionListElement.innerHTML = '';
-    console.log(questions);
 
     questions.forEach(this.boundedBuildQuestionElement);
   }

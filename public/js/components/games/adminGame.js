@@ -18,8 +18,8 @@ gameListTemplate.innerHTML = `
       <h3 class="game-title">Title</h3>
     </button>
 
-    <button class="btn btn-outline-primary activate-game" type="button" aria-label="Activate Game">Activate</button>
-    <button class="btn btn-outline-primary deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
+    <button class="btn activate-game" type="button" aria-label="Activate Game">Activate</button>
+    <button class="btn deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
   </header>
 
   <div class="accordion-body accordion-collapse collapse game-data transate-middle p-3 "
@@ -139,17 +139,6 @@ export class AdminGameElement extends GameElement {
     this.makeRPCCall('games.deactivate', { id: this.gameId });
   }
 
-  connectedCallback() {
-    if (this.hasConnected) {
-      return;
-    }
-
-    this.hasConnected = true;
-    this.setAttribute('aria-label', this.shadow.querySelector('h3').textContent);
-    this.gameAccordion = new Collapse(this.gameDataElement, { toggle: false });
-    this.expandButtomElement.addEventListener('click', this.boundedToggleList);
-    this.updateGame();
-  }
 
   disconnectedCallback() {
     this.expandButtomElement.removeEventListener('click', this.boundedToggleList);
@@ -188,6 +177,7 @@ export class AdminGameElement extends GameElement {
 
   updateButtons() {
     if (this.bonusGame) {
+      console.log('Bonus game');
       this.activateButtonElement.disabled = true;
       this.activateButtonElement.textContent = 'Bonus game';
       this.deactivateButtonElement.classList.add('d-none');
@@ -195,40 +185,35 @@ export class AdminGameElement extends GameElement {
     }
 
     if (this.active) {
-      this.activateButtonElement.disabled = false;
-      this.activateButtonElement.classList.remove('d-none');
-      this.deactivateButtonElement.classList.add('d-none');
-      return;
-    }
-
-    this.activateButtonElement.disabled = true;
-    this.activateButtonElement.classList.add('d-none');
-    this.deactivateButtonElement.classList.remove('d-none');
-
-  }
-
-  toggleGameActive() {
-    if (this.isBonus) {
+      console.log('Active game');
       this.activateButtonElement.disabled = true;
-      this.activateButtonElement.textContent = 'Bonus';
-      this.activateButtonElement.removeEventListener('click', this.boundedActivateGame);
-      this.deactivateButtonElement.removeEventListener('click', this.boundedDeactivateGame);
-    }
-
-    if (this.isActive) {
       this.activateButtonElement.classList.add('d-none');
-      this.activateButtonElement.removeEventListener('click', this.boundedActivateGame);
 
       this.deactivateButtonElement.classList.remove('d-none');
-      this.deactivateButtonElement.addEventListener('click', this.boundedDeactivateGame);
+      this.deactivateButtonElement.disabled = false;
       return;
     }
 
     this.activateButtonElement.classList.remove('d-none');
-    this.activateButtonElement.addEventListener('click', this.boundedActivateGame);
+    this.activateButtonElement.disabled = false;
 
     this.deactivateButtonElement.classList.add('d-none');
-    this.deactivateButtonElement.removeEventListener('click', this.boundedDeactivateGame);
+    this.deactivateButtonElement.disabled = true;
+
+  }
+
+  connectedCallback() {
+    if (this.hasConnected) {
+      return;
+    }
+
+    this.hasConnected = true;
+    this.setAttribute('aria-label', this.shadow.querySelector('h3').textContent);
+    this.gameAccordion = new Collapse(this.gameDataElement, { toggle: false });
+    this.expandButtomElement.addEventListener('click', this.boundedToggleList);
+    this.activateButtonElement.addEventListener('click', this.boundedActivateGame);
+    this.deactivateButtonElement.addEventListener('click', this.boundedDeactivateGame);
+    this.updateGame();
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -237,6 +222,7 @@ export class AdminGameElement extends GameElement {
     }
 
     super.attributeChangedCallback(name, oldValue, newValue);
+    console.log('attributeChangedCallback', name, oldValue, newValue);
 
     switch (name) {
       case 'data-question-count':
@@ -251,7 +237,7 @@ export class AdminGameElement extends GameElement {
 
       case 'data-active':
       case 'data-bonus':
-        this.toggleGameActive();
+        this.updateButtons();
         break;
 
       case 'data-game-title':
@@ -265,6 +251,7 @@ export class AdminGameElement extends GameElement {
     this.isActive = result.active;
     this.isBonus = result.bonusGame;
   }
+
 }
 
 customElements.define(

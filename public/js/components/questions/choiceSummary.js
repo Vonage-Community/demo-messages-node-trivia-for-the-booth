@@ -18,7 +18,7 @@ countTemplate.innerHTML = `
 </article>
 `;
 
-export class AdminChoiceElement extends BootstrapElement {
+export class ChoiceSummaryElement extends BootstrapElement {
   static observedAttributes = [
     'data-text',
     'data-choice-letter',
@@ -120,6 +120,6 @@ export class AdminChoiceElement extends BootstrapElement {
 }
 
 customElements.define(
-  'trivia-admin-choice',
-  AdminChoiceElement,
+  'trivia-choice-summary',
+  ChoiceSummaryElement,
 );

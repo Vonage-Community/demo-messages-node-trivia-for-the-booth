@@ -51,11 +51,8 @@ export const submitRPCForm = (form) => async (event, data) => {
 
   const method = form.dataset.rpcMethod;
 
-  console.log(form);
-
   if (!data) {
     const formData = new FormData(form);
-    console.log('formdata', formData);
     data = formData.entries().reduce(
       (data, [name, value]) => {
         data[name] = value;

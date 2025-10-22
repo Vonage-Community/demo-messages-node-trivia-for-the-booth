@@ -439,6 +439,14 @@ input[type="range"]:focus {
   }
 }
 
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.6s ease-out forwards;
+}
+
 // --------------------------------------------------
 // 10. Typography Reset — Use Montserrat Everywhere
 // --------------------------------------------------

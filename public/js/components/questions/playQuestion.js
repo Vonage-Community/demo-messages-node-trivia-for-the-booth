@@ -135,6 +135,16 @@ export class PlayQuestionElement extends QuestionElement {
     this.updateTitle();
     this.questionElement.classList.remove('fade-out');
     this.questionElement.classList.add('fade-in');
+    this.questionElement.addEventListener(
+      'animationend',
+      () => {
+        this.choicesElement.innerHTML = '';
+        this.updateChoices();
+      },
+      {
+        once: true,
+      },
+    );
   }
 
   updateChoices() {
@@ -202,7 +212,6 @@ export class PlayQuestionElement extends QuestionElement {
   }
 
   onDataLoaded(results, method) {
-    console.log(method);
     if (method === 'players.answer') {
       this.correctChoice = results.correctAnswer;
       this.answered = true;

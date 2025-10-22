@@ -33,6 +33,10 @@ export const getActiveGame = (args) => {
     };
   }
 
+  if (!args?._auth.id) {
+    return activeGame;
+  }
+
   const isPlayerPlaying = isPlayerPlayingGame({
     gameId: activeGame.id,
     playerId: args?._auth?.id,
