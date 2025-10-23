@@ -1,4 +1,4 @@
-import { getQuestionsForGame } from '../../../service/questions.js';
+import { getQuestionsForGame } from '../../../service/questions/getQuestionsForGame.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch_questions');

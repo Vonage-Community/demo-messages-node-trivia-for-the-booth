@@ -1,4 +1,4 @@
-import { setActiveGame } from '../../../service/games.js';
+import { setActiveGame } from '../../../service/games/setActiveGame.js';
 import debug from './log.js';
 
 const log = debug.extend('activate');

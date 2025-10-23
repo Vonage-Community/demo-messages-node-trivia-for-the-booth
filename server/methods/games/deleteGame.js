@@ -1,4 +1,4 @@
-import { deleteGame } from '../../../service/games.js';
+import { deleteGame } from '../../../service/games/deleteGame.js';
 import debug from './log.js';
 
 const log = debug.extend('delete');

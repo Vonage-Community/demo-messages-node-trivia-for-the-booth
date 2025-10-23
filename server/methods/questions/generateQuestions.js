@@ -1,8 +1,7 @@
 import OpenAI from 'openai';
-import dotenv from 'dotenv';
-import { createQuestionsBatch, getAllQuestions } from '../../../service/questions.js';
+import { createQuestionsBatch } from '../../../service/questions/createQuestion.js';
+import { getAllQuestions } from '../../../service/questions/getAllQuestions.js';
 import debug from './log.js';
-dotenv.config();
 const log = debug.extend('generate');
 
 const client = new OpenAI({
@@ -67,10 +66,12 @@ ${usedQuestions.slice(-50).join('\n')}
   const content = response.choices[0].message.content.trim();
   log('response', content);
   try {
-    return JSON.parse(content);
+    const questions = JSON.parse(content);
+    log('questions from GPT', questions);
+    return Array.isArray(questions) ? questions : [questions];
   } catch (err) {
-    console.error('Failed to parse JSON:', err);
-    console.log('Raw output:', content);
+    log('Failed to parse JSON:', err);
+    log('Raw output:', content);
     return [];
   }
 };
@@ -78,7 +79,7 @@ ${usedQuestions.slice(-50).join('\n')}
 export const generateQuestionsMethod = async (args) => {
   log('Generating questions');
   const { gameId, themes, count, difficulty } = args;
-  const usedQuestions = getAllQuestions().map(({ question }) => question);
+  const usedQuestions = getAllQuestions(gameId).map(({ question }) => question);
   const questions = await generateTriviaQuestions(gameId, count, themes, difficulty, usedQuestions);
   return createQuestionsBatch(gameId, questions);
 };

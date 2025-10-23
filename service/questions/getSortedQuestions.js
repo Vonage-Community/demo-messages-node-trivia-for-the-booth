@@ -2,7 +2,7 @@ import db from '../../db/index.js';
 import {
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
-import { getGameById } from '../games.js';
+import { getGameById } from '../games/getGameById.js';
 import debug from './log.js';
 
 const log = debug.extend('create');

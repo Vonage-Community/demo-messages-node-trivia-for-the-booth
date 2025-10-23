@@ -1,4 +1,4 @@
-import { getQuestionById } from '../../../service/questions.js';
+import { getQuestionById } from '../../../service/questions/getQuestionById.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch_id');

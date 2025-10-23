@@ -1,4 +1,4 @@
-import { listGames } from '../../../service/games.js';
+import { listGames } from '../../../service/games/listGames.js';
 import debug from './log.js';
 
 const log = debug.extend('list');

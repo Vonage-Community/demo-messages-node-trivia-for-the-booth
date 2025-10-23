@@ -1,4 +1,4 @@
-import { updateUser } from '../../../service/users.js';
+import { updateUser } from '../../../service/users/updateUser.js';
 import debug from './log.js';
 
 const log = debug.extend('update');

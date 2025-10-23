@@ -1,4 +1,4 @@
-import { deactivateGame } from '../../../service/games.js';
+import { deactivateGame } from '../../../service/games/deactivateGame.js';
 import debug from './log.js';
 
 const log = debug.extend('deactivate');

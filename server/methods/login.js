@@ -1,4 +1,4 @@
-import { fetchForLogin } from '../../service/users.js';
+import { fetchForLogin } from '../../service/users/fetchForLogin.js';
 import debug from '../log.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';

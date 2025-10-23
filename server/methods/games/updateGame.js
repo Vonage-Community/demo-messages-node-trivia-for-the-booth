@@ -1,4 +1,4 @@
-import { updateGame } from '../../../service/games.js';
+import { updateGame } from '../../../service/games/updateGame.js';
 import debug from './log.js';
 
 const log = debug.extend('update');

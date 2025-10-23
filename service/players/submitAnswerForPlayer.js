@@ -2,7 +2,7 @@ import db from '../../db/index.js';
 import { requireUInt, requireNonEmptyString } from '../helpersAndGuards.js';
 import { checkCorrectChoice } from '../questions/createQuestion.js';
 import { getQuestionById } from '../questions/getQuestionById.js';
-import { getGameById } from '../games.js';
+import { getGameById } from '../games/getGameById.js';
 import debug from './log.js';
 
 const log = debug.extend('submit-answer');

@@ -1,4 +1,4 @@
-import { createQuestion } from '../../../service/questions.js';
+import { createQuestion } from '../../../service/questions/createQuestion.js';
 import debug from './log.js';
 
 const log = debug.extend('create');

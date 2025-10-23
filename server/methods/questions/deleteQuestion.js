@@ -1,4 +1,4 @@
-import { deleteQuestion } from '../../../service/questions.js';
+import { deleteQuestion } from '../../../service/questions/deleteQuestion.js';
 import debug from './log.js';
 
 const log = debug.extend('delete');

@@ -1,4 +1,4 @@
-import { getGameById } from '../../../service/games.js';
+import { getGameById } from '../../../service/games/getGameById.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch');

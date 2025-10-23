@@ -1,4 +1,4 @@
-import { updateQuestion } from '../../../service/questions.js';
+import { updateQuestion } from '../../../service/questions/updateQuestion.js';
 import debug from './log.js';
 
 const log = debug.extend('update');

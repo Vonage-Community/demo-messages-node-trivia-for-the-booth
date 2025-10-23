@@ -140,10 +140,12 @@ export class AdminQuestionElement extends QuestionElement {
 
   toggleForm() {
     const questionFormElement = document.createElement('trivia-admin-question-form');
-    questionFormElement.dataset = this.dataset;
+    for (const [key, value] of Object.entries(this.dataset)) {
+      questionFormElement.dataset[key] = value;
+    }
 
     this.questionCardElement.append(questionFormElement);
-    //questionFormElement.toggleModal();
+    questionFormElement.toggleModal();
 
     questionFormElement.modal.addEventListener('hidden.bs.modal', () => {
       questionFormElement.remove();
@@ -198,8 +200,6 @@ export class AdminQuestionElement extends QuestionElement {
       choiceElement.dataset[key] = value;
       choiceElement.dataset.totalAnswers = this.totalAnswers;
     });
-
-    console.log(choiceElement);
 
     this.choicesElement.append(choiceElement);
 

@@ -2,7 +2,7 @@ import db from '../../db/index.js';
 import {
   requireNonEmptyString,
 } from '../helpersAndGuards.js';
-import { getGameById } from '../games.js';
+import { getGameById } from '../games/getGameById.js';
 import { getLastQuestionForGame } from './getLastQuestionForGame.js';
 import debug from './log.js';
 
@@ -47,29 +47,18 @@ export const insertQuestion = db.prepare(`
   )
 `);
 
-export const createQuestion = (args = {}) => {
-  log('Creating question', args);
-
-  const game = getGameById(args.gameId);
-
-  const question = {
-    gameId: game.id,
-    question: requireNonEmptyString('question', args.question),
-    choiceA: requireNonEmptyString('coiceA', args.choiceA),
-    choiceB: requireNonEmptyString('coiceB', args.choiceB),
-    choiceC: requireNonEmptyString('coiceC', args.choiceC),
-    choiceD: requireNonEmptyString('coiceD', args.choiceD),
-    correctChoice: checkCorrectChoice(args.correctChoice),
-    sortOrder: getNextSortOrder(game),
-  };
-  log('Question to create', question);
-
-  const info = insertQuestion.run(question);
-  question.id = info.lastInsertRowid;
-
-  log('Question created');
-  return question;
-};
+export const createQuestion = (args = {}) => createQuestionsBatch(
+  args.gameId, [
+    {
+      question: requireNonEmptyString('question', args.question),
+      choiceA: requireNonEmptyString('coiceA', args.choiceA),
+      choiceB: requireNonEmptyString('coiceB', args.choiceB),
+      choiceC: requireNonEmptyString('coiceC', args.choiceC),
+      choiceD: requireNonEmptyString('coiceD', args.choiceD),
+      correctChoice: checkCorrectChoice(args.correctChoice),
+    },
+  ],
+);
 
 export const createQuestionsBatch = (gameId, questions = []) => {
   log(`Creating ${questions.length} questions for game ${gameId}`);

@@ -92,9 +92,7 @@ export class PlayGameElement extends GameElement {
   }
 
   playingGame() {
-    console.log('playing game');
     if (this.noQuestions) {
-      console.log('no questions');
       return;
     }
 
@@ -106,7 +104,6 @@ export class PlayGameElement extends GameElement {
 
   updateGame() {
     this.updateTitle();
-    console.log('Game state', this.state);
     switch (this.state) {
       case GameElement.PLAYING:
         this.playingGame();
@@ -148,10 +145,8 @@ export class PlayGameElement extends GameElement {
   }
 
   noMoreQuestions() {
-    console.log('No more questions', this.gameElement);
     this.updateTitle();
     if (this.gameElement.classList.contains('d-none')) {
-      console.log('Not showing game element');
       this.noMoreQuestionsElement.classList.remove('d-none');
       this.noMoreQuestionsElement.classList.add('fade-in');
       return;
@@ -162,7 +157,6 @@ export class PlayGameElement extends GameElement {
     this.gameElement.addEventListener(
       'animationend',
       () => {
-        console.log('Game faded');
         this.gameElement.innerHTML = '';
         this.noMoreQuestionsElement.classList.remove('d-none');
         this.noMoreQuestionsElement.classList.add('fade-in');
@@ -192,8 +186,7 @@ export class PlayGameElement extends GameElement {
 
   onDataError(results) {
     const error = results?.data?.error;
-    const { code, message } = error;
-    console.log('RPC Error', code, message);
+    const { message } = error;
     if (message === 'No active game found') {
       this.noActiveGame();
       return;

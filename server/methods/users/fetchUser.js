@@ -1,4 +1,5 @@
-import { getUserById, getUserByEmail } from '../../../service/users.js';
+import { getUserById } from '../../../service/users/getUserById.js';
+import { getUserByEmail } from '../../../service/users/getUserByEmail.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch');
@@ -7,12 +8,10 @@ export const fetchUserMethod = async ({ id, email } = {}) => {
   log('Fetching user');
 
   if (id) {
-    log(`Fetching user using id ${id}`);
     return getUserById(id);
   }
 
   if (email) {
-    log('Fetching user by email');
     return getUserByEmail(email);
   }
 

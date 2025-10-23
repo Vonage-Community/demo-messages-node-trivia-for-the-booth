@@ -1,4 +1,4 @@
-import { getActiveGame } from '../../../service/games.js';
+import { getActiveGame } from '../../../service/games/getActiveGame.js';
 import debug from './log.js';
 
 const log = debug.extend('fetch_active');

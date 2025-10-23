@@ -1,6 +1,6 @@
 import db from '../../db/index.js';
 import { requireUInt } from '../helpersAndGuards.js';
-import { getGameById } from '../games.js';
+import { getGameById } from '../games/getGameById.js';
 import debug from './log.js';
 
 const log = debug.extend('is-playing');

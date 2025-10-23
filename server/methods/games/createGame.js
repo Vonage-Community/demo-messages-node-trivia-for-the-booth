@@ -1,4 +1,4 @@
-import { createGame } from '../../../service/games.js';
+import { createGame } from '../../../service/games/createGame.js';
 import debug from './log.js';
 
 const log = debug.extend('create');
