@@ -3,6 +3,8 @@ import { requireUInt, requireNonEmptyString } from '../helpersAndGuards.js';
 import { checkCorrectChoice } from '../questions/createQuestion.js';
 import { getQuestionById } from '../questions/getQuestionById.js';
 import { getGameById } from '../games/getGameById.js';
+import { scoreAnswer } from './scoreing.js';
+import { getScoreForPlayerInGame } from './getPlayerScore.js';
 import debug from './log.js';
 
 const log = debug.extend('submit-answer');
@@ -105,8 +107,8 @@ export const submitAnswerForPlayer = (args = {}) => {
       code: 400,
       message: 'Invalid answeredAt: in the future',
     };
-  }
 
+  }
   const info = updateAnswerStmt.run({
     gameId,
     questionId,
@@ -114,6 +116,8 @@ export const submitAnswerForPlayer = (args = {}) => {
     answer,
     clientAnsweredAt,
   });
+
+  const answerId = info.lastInsertRowid;
 
   if (info.changes === 0) {
     throw {
@@ -131,6 +135,16 @@ export const submitAnswerForPlayer = (args = {}) => {
 
   log('Has next question', hasNextQuestion);
 
+  const [score, bonuses, totalScore] = scoreAnswer({
+    userId: playerId,
+    gameId: gameId,
+    questionId: questionId,
+    answer: answer,
+    answerId: answerId,
+    clientAnsweredAt: clientAnsweredAt,
+    clientRecievedAt: record.client_received_at,
+  });
+
   return {
     gameId,
     questionId,
@@ -138,5 +152,8 @@ export const submitAnswerForPlayer = (args = {}) => {
     answeredCorrectly: answer === question.correctChoice,
     correctAnswer: question.correctChoice,
     hasNext: !!hasNextQuestion,
+    score: score,
+    bonuses: bonuses,
+    totalScore: getScoreForPlayerInGame(playerId, gameId),
   };
 };

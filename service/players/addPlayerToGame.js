@@ -11,12 +11,11 @@ export const insertPlayerStmt = db.prepare(`
   VALUES (@gameId, @playerId)
 `);
 
-
 export const addPlayerToGame = (args = {}) => {
   log('Adding player to game', args);
 
   const gameId = requireUInt('gameId', args.gameId);
-  const playerId = requireUInt('playerId', args.playerId);
+  const playerId = args._auth.id;
 
   const game = getGameById(gameId);
 

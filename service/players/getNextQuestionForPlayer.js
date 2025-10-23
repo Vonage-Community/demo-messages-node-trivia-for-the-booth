@@ -50,9 +50,9 @@ const nextQuestionStmt = db.prepare(`
   LIMIT 1
 `);
 
-const recordPresentedStmt = db.prepare(`
+export const recordPresentedStmt = db.prepare(`
   INSERT OR IGNORE INTO answers (game_id, question_id, player_id, player_answer, client_received_at)
-  VALUES (@gameId, @questionId, @playerId, 'N', strftime('%s','now'))
+  VALUES (@gameId, @questionId, @playerId, 'N', COALESCE(@clientRecievedAt, strftime('%s','now')))
 `);
 
 export const getNextQuestionForPlayer = (args = {}) => {
