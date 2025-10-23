@@ -70,7 +70,7 @@ export class GameElement extends RPCElement {
   }
 
   set playing(value) {
-    this.dataset.playing = !!value;
+    this.dataset.playing = value;
   }
 
   get state() {
@@ -106,6 +106,9 @@ export class GameElement extends RPCElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) {
+      return;
+    }
 
     switch (name) {
       case 'data-game-id':

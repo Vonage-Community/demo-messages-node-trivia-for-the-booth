@@ -26,6 +26,7 @@ const updateAnswerStmt = db.prepare(`
      AND question_id = @questionId
      AND player_id = @playerId
      AND player_answer = 'N'
+   RETURNING id;
 `);
 
 export const checkForNextQuestionStmt = db.prepare(`
@@ -117,7 +118,7 @@ export const submitAnswerForPlayer = (args = {}) => {
     clientAnsweredAt,
   });
 
-  const answerId = info.lastInsertRowid;
+  const answerId = info.id;
 
   if (info.changes === 0) {
     throw {

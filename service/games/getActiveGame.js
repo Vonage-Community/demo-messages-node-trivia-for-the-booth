@@ -34,6 +34,7 @@ export const getActiveGame = (args) => {
   }
 
   if (!args?._auth.id) {
+    log('No auth', args);
     return activeGame;
   }
 

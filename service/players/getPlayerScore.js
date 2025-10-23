@@ -5,13 +5,19 @@ const log = debug.extend('player_score');
 
 export const getScoresByPlayerId = db.prepare(`
   SELECT
-    id,
-    game_id,
-    answer_id,
-    user_id,
-    score_type,
-    score_points
-  FROM scores
+    s.id,
+    s.game_id,
+    s.answer_id,
+    s.user_id,
+    s.score_type,
+    s.score_points,
+    g.title AS game_title,
+    q.id AS question_id,
+    q.question AS question
+  FROM scores s
+  LEFT OUTER JOIN games g ON g.id = s.game_id
+  LEFT OUTER JOIN answers a ON a.id = s.answer_id
+  LEFT OUTER JOIN questions q ON q.id = a.question_id
   WHERE user_id = ?
 `);
 
@@ -28,7 +34,7 @@ export const getPlayerScores = ({ userId, gameId, answerId }) => {
       }
 
       if (gameId) {
-        return game_id === gameId;
+        return `${game_id}` === gameId;
       }
 
       return true;
@@ -40,6 +46,9 @@ export const getPlayerScores = ({ userId, gameId, answerId }) => {
     userId: score.user_id,
     scoreType: score.score_type,
     scorePoints: score.score_points,
+    gameTitle: score.game_title,
+    question: score.question,
+    questionId: score.question,
   }));
 
   log(`Scores for player ${userId}`, scores);

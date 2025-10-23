@@ -51,7 +51,6 @@ const findQuestion = (questions, questionId) => questions.find(
 
 const getStreakBonus = (questions, playerId, gameId) => {
   const playerAnswers = getAnswersForPlayer({ playerId, gameId });
-  log('playerAnswers', playerAnswers);
   let broken = false;
   const streakCount = playerAnswers.reverse().reduce(
     (streak, answer) => {
@@ -73,7 +72,6 @@ const getStreakBonus = (questions, playerId, gameId) => {
         broken = true;
         return streak;
       }
-
 
       streak++;
       return streak;
@@ -99,6 +97,7 @@ export const scoreAnswer = (params = {}) => {
     clientRecievedAt,
   } = params;
 
+  log('answer ID', answerId);
   const buildBonus = (type, points) => ({
     gameId: gameId,
     answerId: answerId,
@@ -114,6 +113,10 @@ export const scoreAnswer = (params = {}) => {
   log('Current Question', currentQuestion);
 
   const answeredCorrectly = answer === currentQuestion.correctChoice;
+  if (!answeredCorrectly) {
+    return [0, []];
+  }
+
   if (answeredCorrectly) {
     log('Answered Correct?', answeredCorrectly);
     bonuses.push(buildBonus('Correct Answer', 1));

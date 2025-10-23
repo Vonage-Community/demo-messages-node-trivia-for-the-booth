@@ -1,5 +1,8 @@
 import { QuestionElement } from './question.js';
 import JSConfetti from 'js-confetti';
+import { staggerAnimation } from '../../animation.js';
+import { emitEvent } from '../../events.js';
+
 const jsConfetti = new JSConfetti();
 
 const questionTemplate = document.createElement('template');
@@ -23,9 +26,12 @@ questionTemplate.innerHTML = `
 
   </section>
 
-  <p class="confirm d-none">Are you sure? Click again to confirm</p>
+  <p class="confirm d-none" aria-live="assertive"></p>
 
   <button class="btn btn-next border shadow-lg d-none" disabled>Next Question</button>
+
+  <ul class="bonuses list-unstyled">
+  </ul>
 
 </article>
 `;
@@ -46,6 +52,7 @@ export class PlayQuestionElement extends QuestionElement {
     this.choicesElement = this.shadow.querySelector('.choices');
     this.confirmElement = this.shadow.querySelector('.confirm');
     this.nextButtonElement = this.shadow.querySelector('.btn-next');
+    this.bonusesListElement = this.shadow.querySelector('.bonuses');
     this.answered = false;
     this.hasNext = false;
     this.choiceButtons = [];
@@ -67,9 +74,22 @@ export class PlayQuestionElement extends QuestionElement {
     this.dataset.correctChoice = value;
   }
 
+  updateBonuses(bonuses = []) {
+    this.bonusesListElement.innerHTML = '';
+    bonuses.forEach(({ type, points }) => {
+      const bonusesListElement = document.createElement('li');
+      bonusesListElement.textContent = `+${points} ${type}`;
+      this.bonusesListElement.append(bonusesListElement);
+    });
+    const bonusesElement = this.bonusesListElement.querySelectorAll('li');
+    staggerAnimation('slide-in-right')(bonusesElement);
+  }
+
   resetQuestion() {
     this.confirmElement.classList.toggle('d-none', true);
+    this.confirmElement.textContent = '';
     this.nextButtonElement.classList.toggle('d-none', true);
+    this.nextButtonElement.disabled = true;
     this.questionElement.classList.remove('d-none');
     this.questionElement.classList.add('fade-in');
     this.updateQuestion();
@@ -108,6 +128,7 @@ export class PlayQuestionElement extends QuestionElement {
   handleClickQuestion(event) {
     event.preventDefault();
     const eventSelectedChoice = event.target;
+    console.log('handle click', eventSelectedChoice);
     if (this.selectedChoice === eventSelectedChoice.dataset.choice) {
       this.answerQuestion();
       return;
@@ -115,6 +136,7 @@ export class PlayQuestionElement extends QuestionElement {
 
     this.selectedChoice = eventSelectedChoice.dataset.choice;
     this.confirmElement.classList.remove('d-none');
+    this.confirmElement.textContent = 'Are you sure? Click again to confirm';
   }
 
   handleClickNextQuestion() {
@@ -154,29 +176,9 @@ export class PlayQuestionElement extends QuestionElement {
     this.choicesElement.append(this.createButtonFor('B', this.choiceB));
     this.choicesElement.append(this.createButtonFor('C', this.choiceC));
     this.choicesElement.append(this.createButtonFor('D', this.choiceD));
+    staggerAnimation('slide-in-right')(this.choiceButtons);
     if (this.answered) {
       this.confirmElement.classList.toggle('d-none', true);
-    }
-  }
-
-  updateAfterAnswer() {
-    this.answered = true;
-    this.getChoiceByLetter(this.correctChoice).classList.toggle('correct', true);
-    if (this.selectedChoice !== this.correctChoice) {
-      this.getChoiceByLetter(this.selectedChoice).classList.toggle('incorrect', true);
-    }
-
-    if (this.answeredCorrectly) {
-      jsConfetti.addConfetti();
-    }
-
-    this.confirmElement.classList.toggle('d-none', true);
-
-    if (this.hasNext) {
-      this.nextButtonElement.classList.remove('d-none');
-      this.nextButtonElement.disabled = false;
-
-      requestAnimationFrame(() => this.nextButtonElement.classList.add('show'));
     }
   }
 
@@ -188,9 +190,74 @@ export class PlayQuestionElement extends QuestionElement {
 
     button.dataset.choice = letter;
     button.textContent = choice;
-    button.addEventListener('click', this.boundedHandleClickQuestion);
+    button.disabled = true;
+    const boundedClick = () => {
+      button.disabled = false;
+      button.addEventListener('click', this.boundedHandleClickQuestion);
+    };
+
+    boundedClick.bind(button);
+    button.addEventListener(
+      'animationend',
+      boundedClick,
+      { once: true },
+    );
     this.choiceButtons.push(button);
     return button;
+  }
+
+  updateAfterAnswer(results) {
+    this.updateBonuses(results.bonuses);
+    this.answered = true;
+    this.getChoiceByLetter(this.correctChoice).classList.toggle('correct', true);
+    if (this.selectedChoice !== this.correctChoice) {
+      this.getChoiceByLetter(this.selectedChoice).classList.toggle('incorrect', true);
+    }
+
+    if (this.answeredCorrectly) {
+      jsConfetti.addConfetti();
+    }
+
+    this.confirmElement.textContent = this.answeredCorrectly
+      ? 'Correct!'
+      : `You got it wrong. The correct answer is ${this[`choice${this.correctChoice}`]}`;
+
+    const hideButtons = this.shadow.querySelectorAll('.btn-choice:not(.correct):not(.incorrect)');
+
+    hideButtons.forEach((element) => {
+      element.classList.remove('slide-in-right');
+      element.style.animation = 'none';
+      requestAnimationFrame(() => {
+        element.style.animation = '';
+        element.classList.add('fade-out');
+        element.onEnd = () => {
+          element.classList.add('d-none');
+        };
+
+        element.addEventListener(
+          'animationend',
+          element.onEnd,
+          {
+            once: true,
+          },
+        );
+      });
+    });
+
+    if (!this.hasNext) {
+      this.nextButtonElement.textContent = 'End Round';
+      this.nextButtonElement.addEventListener('click', (event) => {
+        event.preventDefault();
+        emitEvent('game:complete', {
+          gameId: this.gameId,
+        });
+      });
+    }
+
+    this.nextButtonElement.classList.remove('d-none');
+    this.nextButtonElement.disabled = false;
+
+    requestAnimationFrame(() => this.nextButtonElement.classList.add('show'));
   }
 
   updateTitle() {
@@ -217,7 +284,7 @@ export class PlayQuestionElement extends QuestionElement {
       this.answered = true;
       this.answeredCorrectly = results.answeredCorrectly;
       this.hasNext = results.hasNext;
-      this.updateAfterAnswer();
+      this.updateAfterAnswer(results);
       return;
     }
 

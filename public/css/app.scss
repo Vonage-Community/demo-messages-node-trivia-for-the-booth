@@ -168,23 +168,6 @@ input[type="range"]:focus {
   margin: 0.5rem;
   opacity: 0;
   transform: translateX(40px);
-  animation: slideInRight 0.6s ease-out forwards;
-}
-
-.btn-choice:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-.btn-choice:nth-child(2) {
-  animation-delay: 0.3s;
-}
-
-.btn-choice:nth-child(3) {
-  animation-delay: 0.5s;
-}
-
-.btn-choice:nth-child(4) {
-  animation-delay: 0.7s;
 }
 
 .btn-choice:hover,
@@ -383,6 +366,17 @@ input[type="range"]:focus {
   }
 }
 
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
 @keyframes floatUp {
   0% {
     transform: translateY(0) rotate(0deg);
@@ -447,6 +441,23 @@ input[type="range"]:focus {
   animation: fadeOut 0.6s ease-out forwards;
 }
 
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(40px);
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+.slide-out-right {
+  opacity: 1;
+  transform: translateY(0);
+  animation: slideOutRight 0.6s ease-out forwards;
+  animation-fill-mode: forwards;
+}
+
+/* Allow staggered delays via inline style (set from JS) */
+[style*="animation-delay"] {
+  will-change: transform, opacity;
+}
 // --------------------------------------------------
 // 10. Typography Reset — Use Montserrat Everywhere
 // --------------------------------------------------

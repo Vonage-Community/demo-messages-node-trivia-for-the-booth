@@ -1,10 +1,13 @@
-import { GameElement } from './game.js';
 import '../questions/playQuestion.js';
+import { GameElement } from './game.js';
 import { registerEvent } from '../../events.js';
 
 const playGameTemplate = document.createElement('template');
 playGameTemplate.innerHTML = `
-<h1 class="game-title mb-4 text-white"></h1>
+<header class="game-header d-flex align-items-center justify-content-between mb-4">
+  <h1 class="game-title text-white mb-0"></h1>
+  <output class="player-score text-white fw-semibold" aria-live="polite">Score: 0</output>
+</header>
 
 <section class="game mt-5 flex-column justify-content-center align-items-center"
   aria-live="polite"
@@ -37,14 +40,19 @@ playGameTemplate.innerHTML = `
     <header class="mb-5">
       <h2 class="start-game-title mb-4">Start game?</h1>
       <h4>Bonus points are awarded for how fast you complete the game</h4>
-      <button class="start btn btn-success">Start</button>
+      <button class="start btn btn-success" disabled>Start</button>
     </header>
   </article>
 </section>
 `;
 
 export class PlayGameElement extends GameElement {
-  static observedAttributes = GameElement.observedAttriutes;
+  static observedAttributes = [
+    ...GameElement.observedAttributes,
+    'data-score',
+    'data-total-score',
+    'data-has-next',
+  ];
 
   constructor() {
     super();
@@ -55,9 +63,27 @@ export class PlayGameElement extends GameElement {
     this.startGameButton = this.shadow.querySelector('.start');
     this.gameElement = this.shadow.querySelector('.play-game');
     this.titleElement = this.shadow.querySelector('.game-title');
+    this.playerScoreElement = this.shadow.querySelector('.player-score');
 
-    this.boundedHandleNoMoreQuestions = this.handleNoMoreQuestions.bind(this);
+    this.boundedHandleRPCSuccess = this.handleRPCSuccess.bind(this);
     this.boundedStartGame = this.startGame.bind(this);
+    this.boundedNoMoreQuestions = this.noMoreQuestions.bind(this);
+  }
+
+  get totalScore() {
+    return Number(this.dataset.totalScore) || 0;
+  }
+
+  set totalScore(value) {
+    this.dataset.totalScore = value;
+  }
+
+  get hasNext() {
+    return this.dataset.hasNext === 'true';
+  }
+
+  set hasNext(value) {
+    this.dataset.hasNext = value;
   }
 
   updateTitle() {
@@ -89,10 +115,13 @@ export class PlayGameElement extends GameElement {
   notPlayingGame() {
     this.startGameElement.classList.remove('d-none');
     this.startGameElement.classList.add('fade-in');
+    this.startGameButton.disabled = false;
   }
 
   playingGame() {
-    if (this.noQuestions) {
+    if (!this.hasNext) {
+      console.log('No next question');
+      this.noMoreQuestions();
       return;
     }
 
@@ -104,6 +133,8 @@ export class PlayGameElement extends GameElement {
 
   updateGame() {
     this.updateTitle();
+    this.updateScore();
+    console.log('Game state', this.state);
     switch (this.state) {
       case GameElement.PLAYING:
         this.playingGame();
@@ -122,20 +153,41 @@ export class PlayGameElement extends GameElement {
 
     this.hasConnected = true;
     this.callActiveGame();
-    registerEvent('rpc:success', this.boundedHandleNoMoreQuestions);
-    this.startGameElement.addEventListener('click', this.boundedStartGame);
+
+    registerEvent('rpc:success', this.boundedHandleRPCSuccess);
+    registerEvent('game:complete', this.boundedNoMoreQuestions);
+    this.startGameButton.addEventListener('click', this.boundedStartGame);
   }
 
-  handleNoMoreQuestions(event) {
-    const method = event.detail.method;
-    const result = event.detail.result;
-
-    if (!['players.answer'].includes(method)) {
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (newValue === oldValue) {
       return;
     }
 
-    if (!result || !result.hasNext) {
-      this.noMoreQuestions();
+    if (name !== 'data-has-next') {
+      super.attributeChangedCallback(name, oldValue, newValue);
+    }
+
+    if (name === 'data-has-next') {
+      this.hasNext = newValue;
+    }
+
+  }
+
+  updateScore() {
+    this.playerScoreElement.textContent = `Score: ${this.totalScore}`;
+  }
+
+  handleEndGame(event) {
+    this.noMoreQuestions();
+  }
+
+  handleRPCSuccess(event) {
+    const result = event.detail.result;
+
+    if (result.totalScore) {
+      this.totalScore = result.totalScore;
+      this.updateScore();
     }
   }
 
@@ -168,15 +220,15 @@ export class PlayGameElement extends GameElement {
   }
 
   onDataLoaded(results, method) {
-    super.onDataLoaded(results);
-
     if (method === 'players.start') {
       super.onDataLoaded(results.game);
       this.playingGame();
       return;
     }
 
-    if (results.hasNext) {
+    super.onDataLoaded(results);
+    if (method === 'games.active') {
+      this.hasNext = results.hasNext;
       this.updateGame();
       return;
     }
