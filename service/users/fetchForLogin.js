@@ -5,7 +5,7 @@ import debug from './log.js';
 const log = debug.extend('fetch_email');
 
 export const selectUserByEmail = db.prepare(`
-  SELECT id, name, email, phone, password, role
+  SELECT id, name, password, role
   FROM users
   WHERE email = ?
 `);

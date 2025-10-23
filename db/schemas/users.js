@@ -1,9 +1,6 @@
 import db from '../../db/index.js';
 import debug from './log.js';
 import bcrypt from 'bcryptjs';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const log = debug.extend('users');
 
@@ -23,10 +20,9 @@ export const createUsersTable = () => {
   );
   log('Users table created');
 
-  if (!process.env.TRIVIA_ADMIN_EMAIL || !process.env.TRIVIA_ADMIN_PASSWORD) {
+  if (process.env.NODE_ENV !== 'production' || process.env.TRIVIA_ADMIN_EMAIL || !process.env.TRIVIA_ADMIN_PASSWORD) {
     log('Not creating admin user. Check the .env');
     return;
-
   }
 
   log('Creating admin user');

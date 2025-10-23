@@ -24,14 +24,14 @@ export const loginMethod = async ({ email, password }) => {
   }
 
   log('User', user);
-  log(password, user.password);
 
   if (bcrypt.compareSync(password, user.password)) {
     log('Login successful');
     return {
       token: jwt.sign(
         {
-          ...user,
+          name: user.name,
+          role: user.role,
         },
         privateKey,
         {
