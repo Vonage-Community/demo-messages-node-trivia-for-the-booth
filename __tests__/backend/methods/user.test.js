@@ -40,6 +40,7 @@ describe('User RPC calls', () => {
       name: faker.person.firstName(),
       email: faker.internet.email(),
       phone: faker.phone.number(),
+      password: faker.internet.password(),
     };
 
     const rpcResult = await rpc(
@@ -51,10 +52,11 @@ describe('User RPC calls', () => {
 
     expect(error).toBeUndefined();
     expect(result.id).toBeDefined();
+    const { password, ...paramsWithoutPassword } = params;
 
     expect(result).toEqual({
       id: result.id,
-      ...params,
+      ...paramsWithoutPassword,
     });
     user = result;
   });
@@ -167,6 +169,7 @@ describe('User RPC calls', () => {
       name: faker.person.firstName(),
       email: faker.internet.email(),
       phone: faker.phone.number(),
+      password: faker.internet.password(),
     };
 
     const rpcResult = await rpc(
@@ -177,10 +180,11 @@ describe('User RPC calls', () => {
     const { error, result } = rpcResult.body;
     expect(error).toBeUndefined();
     expect(result.id).toBeDefined();
+    const { password, ...paramsWithoutPassword } = params;
 
     expect(result).toEqual({
       id: result.id,
-      ...params,
+      ...paramsWithoutPassword,
     });
     otherUser = result;
   });

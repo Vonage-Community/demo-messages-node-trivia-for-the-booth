@@ -1,6 +1,7 @@
 import { rpc } from '../../server.js';
 import { faker } from '@faker-js/faker';
-import { createGame, deleteGame } from '../../../service/games.js';
+import { createGame } from '../../../service/games/createGame.js';
+import { deleteGame } from '../../../service/games/deleteGame.js';
 
 describe('Question RPC calls', () => {
   let question;

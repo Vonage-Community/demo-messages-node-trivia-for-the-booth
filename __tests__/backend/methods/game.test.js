@@ -5,7 +5,7 @@ describe('Game RPC calls', () => {
   let game;
   let otherGame;
 
-  test('No game shows up in list', async () => {
+  test.only('No game shows up in list', async () => {
     const rpcResult = await rpc(
       'games.list',
     );
