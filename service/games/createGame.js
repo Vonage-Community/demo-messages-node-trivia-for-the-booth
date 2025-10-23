@@ -41,7 +41,7 @@ export const createGame = (args = {}) => {
 
   const info = insertGame.run(game);
   game.id = info.lastInsertRowid;
-  log(`"${game.title}" created with id ${game.id}`);
+  log('Created game', gameFromRow(game));
 
   return gameFromRow(game);
 };

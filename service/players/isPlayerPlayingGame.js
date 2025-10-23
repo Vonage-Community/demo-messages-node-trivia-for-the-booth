@@ -3,7 +3,7 @@ import { requireUInt } from '../helpersAndGuards.js';
 import { getGameById } from '../games/getGameById.js';
 import debug from './log.js';
 
-const log = debug.extend('is-playing');
+const log = debug.extend('is_playing');
 
 export const checkForPlayerStmt = db.prepare(`
   SELECT game_id, player_id

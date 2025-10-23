@@ -3,7 +3,7 @@ import { requireUInt } from '../helpersAndGuards.js';
 import { fromQuestionRow } from './fromQuestionRow.js';
 import debug from './log.js';
 
-const log = debug.extend('last-question');
+const log = debug.extend('last_question');
 
 const lastQuestionStmt = db.prepare(`
   SELECT

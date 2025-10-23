@@ -20,7 +20,7 @@ export const createUsersTable = () => {
   );
   log('Users table created');
 
-  if (process.env.NODE_ENV !== 'production' || process.env.TRIVIA_ADMIN_EMAIL || !process.env.TRIVIA_ADMIN_PASSWORD) {
+  if (process.env.SQLITE_DISABLE_WAL !== '1' || process.env.TRIVIA_ADMIN_EMAIL || !process.env.TRIVIA_ADMIN_PASSWORD) {
     log('Not creating admin user. Check the .env');
     return;
   }

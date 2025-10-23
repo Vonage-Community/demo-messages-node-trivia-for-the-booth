@@ -52,13 +52,18 @@ const nextQuestionStmt = db.prepare(`
 
 export const recordPresentedStmt = db.prepare(`
   INSERT OR IGNORE INTO answers (game_id, question_id, player_id, player_answer, client_received_at)
-  VALUES (@gameId, @questionId, @playerId, 'N', COALESCE(@clientRecievedAt, strftime('%s','now')))
+  VALUES (@gameId, @questionId, @playerId, 'N', COALESCE(@clientReceivedAt, strftime('%s','now')))
 `);
 
 export const getNextQuestionForPlayer = (args = {}) => {
   const gameId = requireUInt('gameId', args.gameId);
   const playerId = requireUInt('playerId', args.playerId);
   const game = getGameById(gameId);
+
+  if (game.bonusGame) {
+    log('Bonus game');
+    return null;
+  }
 
   if (!game.active && !game.bonusGame) {
     throw { code: 400, message: 'Game is not active.' };
@@ -78,6 +83,7 @@ export const getNextQuestionForPlayer = (args = {}) => {
       gameId,
       questionId: question.question_id,
       playerId,
+      clientReceivedAt: null,
     });
   }
 

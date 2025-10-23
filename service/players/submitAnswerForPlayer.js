@@ -7,7 +7,7 @@ import { scoreAnswer } from './scoreing.js';
 import { getScoreForPlayerInGame } from './getPlayerScore.js';
 import debug from './log.js';
 
-const log = debug.extend('submit-answer');
+const log = debug.extend('submit_answer');
 
 const getAnswerTimingStmt = db.prepare(`
   SELECT client_received_at
@@ -127,15 +127,21 @@ export const submitAnswerForPlayer = (args = {}) => {
   }
 
   log(`Player ${playerId} answered ${answer} for question ${questionId}`);
+  let hasNextQuestion = 0;
 
-  const { has_next_question: hasNextQuestion } = checkForNextQuestionStmt.get({
-    gameId,
-    playerId,
-  });
+  if (!game.bonusGame) {
+    log('Not a bonus game, checking for next question');
+    const { has_next_question } = checkForNextQuestionStmt.get({
+      gameId,
+      playerId,
+    });
+
+    hasNextQuestion = has_next_question;
+  }
 
   log('Has next question', hasNextQuestion);
 
-  const [score, bonuses, totalScore] = scoreAnswer({
+  const [score, bonuses] = scoreAnswer({
     userId: playerId,
     gameId: gameId,
     questionId: questionId,

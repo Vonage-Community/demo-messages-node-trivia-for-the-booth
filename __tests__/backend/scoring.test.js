@@ -8,6 +8,7 @@ import { createUser } from '../../service/users/createUser.js';
 import { createQuestionsBatch } from '../../service/questions/createQuestion.js';
 import { getAllQuestions } from '../../service/questions/getAllQuestions.js';
 import { recordPresentedStmt } from '../../service/players/getNextQuestionForPlayer.js';
+import { setActiveGame } from '../../service/games/setActiveGame.js';
 
 const dropAllTables = () => {
   db.exec('PRAGMA foreign_keys = OFF;');
@@ -41,9 +42,10 @@ describe('Scores', () => {
 
     game = createGame({
       title: faker.person.firstName(),
-      bonusGame: true,
     });
 
+
+    setActiveGame(game.id);
     addPlayerToGame({
       gameId: game.id,
       _auth: {
@@ -79,7 +81,7 @@ describe('Scores', () => {
       gameId: game.id,
       questionId: question.id,
       playerId: user.id,
-      clientRecievedAt: serverTime,
+      clientReceivedAt: serverTime,
     });
 
     const result = submitAnswerForPlayer({

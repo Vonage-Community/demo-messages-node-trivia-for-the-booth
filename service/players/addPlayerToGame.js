@@ -4,7 +4,7 @@ import { getGameById } from '../games/getGameById.js';
 import debug from './log.js';
 import { isPlayerPlayingGame } from './isPlayerPlayingGame.js';
 
-const log = debug.extend('add-player');
+const log = debug.extend('add_player');
 
 export const insertPlayerStmt = db.prepare(`
   INSERT INTO players (game_id, player_id)
