@@ -6,9 +6,8 @@ import { createGamesView } from './gamesView.js';
 import { createAnswersTable } from './answers.js';
 import { createGameDetailView } from './gameDetailView.js';
 import { createCorrectAnswersView } from './correctAnswerView.js';
-import { createPlayerBonusTable } from './playerBonuses.js';
+import { createScoresTable } from './scores.js';
 import { createQuestionsLimitTrigger } from './questionLimitTrigger.js';
-import { createPlayerScoresView } from './playerScores.js';
 
 import debug from './log.js';
 
@@ -21,12 +20,11 @@ export const ensureSchema = () => {
   createQuestionsTable();
   createPlayersTable();
   createAnswersTable();
+  createScoresTable();
 
   createGamesView();
   createGameDetailView();
   createCorrectAnswersView();
-  createPlayerBonusTable();
-  createPlayerScoresView();
 
   createQuestionsLimitTrigger();
 };
