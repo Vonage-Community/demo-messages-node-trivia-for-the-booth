@@ -47,7 +47,7 @@ choiceTemplate.innerHTML = `
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-primary">Generate</button>
         </div>
       </form>
     </div>
@@ -119,15 +119,6 @@ export class AdminGenerateQuestionsFormElement extends RPCElement {
 
   disconnectedCallback() {
     removeEvent('form:submitted', this.boundedAfterSubmit);
-  }
-
-  attributeChangedCallback(name, oldValue, newValue) {
-    switch (name) {
-
-      case 'data-game-id':
-        this.hiddenGameIdInput.value = newValue ?? '';
-        break;
-    }
   }
 }
 
