@@ -6,7 +6,7 @@ const log = debug.extend('scores');
 const formatResult = (scores) => scores.reduce(
   (playerScores, score) => {
     log('Score', score);
-    const { gameId, questionId } = score;
+    const { gameId, questionId, gameTitle } = score;
     if (!gameId) {
       playerScores.bonus.push({
         type: score.scoreType,
@@ -24,6 +24,7 @@ const formatResult = (scores) => scores.reduce(
     if (!scoreGame) {
       scoreGame = {
         gameId,
+        gameTitle,
         questions: [],
       };
       playerScores.games.push(scoreGame);
@@ -56,8 +57,11 @@ const formatResult = (scores) => scores.reduce(
 
 export const getPlayerScoresMethod = async (args = {}) => {
   log('Getting player scores', args);
-  return formatResult(getPlayerScores({
+  const scores = formatResult(getPlayerScores({
     ...args,
     userId: args.userId ?? args._auth?.id,
   }));
+
+  scores.name = args._auth.name;
+  return scores;
 };
