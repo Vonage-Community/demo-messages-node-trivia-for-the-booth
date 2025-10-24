@@ -9,7 +9,7 @@ playerTemplate.innerHTML = `
 <header class="d-flex mb-5 justify-content-between">
   <h1 class="player-name"></h1>
   <div>
-    <button class="logout btn btn-primary">Play</button>
+    <a href="/play" class="play btn btn-primary">Play</a>
     <button class="logout btn btn-secondary">Logout</button>
   </div>
 </header>
@@ -38,12 +38,12 @@ export class PlayerProfilePageElement extends RPCElement {
   }
 
   connectedCallback() {
-    this.getPlayerScores();
     this.logoutButtonElement.addEventListener('click', () => {
-      storeMessage('Login in successful');
+      storeMessage('Log Out');
       sessionStorage.removeItem('auth_token');
       window.location.href = '/login';
     });
+    this.getPlayerScores();
   }
 
   getPlayerScores() {
