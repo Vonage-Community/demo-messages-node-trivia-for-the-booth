@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.location.href = 'login';
       return;
     }
+    window.location.reload();
   });
 
   // Loop over them and prevent submission
