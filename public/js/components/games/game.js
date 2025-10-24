@@ -4,7 +4,7 @@ export class GameElement extends RPCElement {
   static observedAttributes = [
     'data-game-id',
     'data-active',
-    'data-bonus',
+    'data-bonus-game',
     'data-playing',
     'data-question-title',
     'data-short-code',
@@ -57,12 +57,12 @@ export class GameElement extends RPCElement {
     this.dataset.active = !!value;
   }
 
-  get bonus() {
-    return this.dataset.bonus === 'true';
+  get bonusGame() {
+    return this.dataset.bonusGame === 'true';
   }
 
-  set bonus(value) {
-    this.dataset.bonus = !!value;
+  set bonusGame(value) {
+    this.dataset.bonusGame = !!value;
   }
 
   get playing() {
