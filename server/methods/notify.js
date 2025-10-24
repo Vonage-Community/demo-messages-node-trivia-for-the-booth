@@ -14,7 +14,7 @@ export const notifyMethod = async (args) => {
 
   const { users } = listUsers({ limit: 1000 }, true);
   users.forEach((user) => {
-    if (user.role === 'admin' || !user.notify) {
+    if (user.role === 'admin' || !user.notify || !user.phone) {
       return;
     }
 

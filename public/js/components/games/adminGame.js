@@ -18,6 +18,7 @@ gameListTemplate.innerHTML = `
       <h3 class="game-title">Title</h3>
     </button>
 
+    <button class="btn notify-game" type="button" aria-label="Notify new game"><i class="bi bi-bell"></i></button>
     <button class="btn activate-game" type="button" aria-label="Activate Game">Activate</button>
     <button class="btn deactivate-game" type="button" aria-label="Deactivate Game">Deactivate</button>
   </header>
@@ -70,11 +71,13 @@ export class AdminGameElement extends GameElement {
     this.activateButtonElement = this.shadow.querySelector('.activate-game');
     this.deactivateButtonElement = this.shadow.querySelector('.deactivate-game');
     this.expandButtomElement = this.shadow.querySelector('.expand-game');
+    this.notifyButtonElement = this.shadow.querySelector('.notify-game');
 
     this.boundedToggleList = this.toggleList.bind(this);
     this.boundedAddQuestionList = this.addQuestionList.bind(this);
     this.boundedActivateGame = this.activateGame.bind(this);
     this.boundedDeactivateGame = this.deactivateGame.bind(this);
+    this.boundedNotifyGame = this.notifiyNewGame.bind(this);
   }
 
   get questionCount() {
@@ -135,6 +138,10 @@ export class AdminGameElement extends GameElement {
     this.makeRPCCall('games.activate', { id: this.gameId });
   }
 
+  notifiyNewGame() {
+    this.makeRPCCall('notify');
+  }
+
   deactivateGame() {
     this.makeRPCCall('games.deactivate', { id: this.gameId });
   }
@@ -177,6 +184,9 @@ export class AdminGameElement extends GameElement {
 
   updateButtons() {
     if (this.bonusGame) {
+      this.notifyButtonElement.disabled = true;
+      this.notifyButtonElement.classList.add('d-none');
+
       this.activateButtonElement.disabled = true;
       this.activateButtonElement.textContent = 'Bonus game';
       this.deactivateButtonElement.classList.add('d-none');
@@ -184,6 +194,9 @@ export class AdminGameElement extends GameElement {
     }
 
     if (this.active) {
+      this.notifyButtonElement.disabled = false;
+      this.notifyButtonElement.classList.remove('d-none');
+
       this.activateButtonElement.disabled = true;
       this.activateButtonElement.classList.add('d-none');
 
@@ -191,6 +204,9 @@ export class AdminGameElement extends GameElement {
       this.deactivateButtonElement.disabled = false;
       return;
     }
+
+    this.notifyButtonElement.disabled = true;
+    this.notifyButtonElement.classList.add('d-none');
 
     this.activateButtonElement.classList.remove('d-none');
     this.activateButtonElement.disabled = false;
@@ -211,6 +227,7 @@ export class AdminGameElement extends GameElement {
     this.expandButtomElement.addEventListener('click', this.boundedToggleList);
     this.activateButtonElement.addEventListener('click', this.boundedActivateGame);
     this.deactivateButtonElement.addEventListener('click', this.boundedDeactivateGame);
+    this.notifyButtonElement.addEventListener('click', this.boundedNotifyGame);
     this.updateGame();
   }
 
@@ -244,11 +261,13 @@ export class AdminGameElement extends GameElement {
     }
   }
 
-  onDataLoaded(result) {
+  onDataLoaded(result, method) {
+    if (method === 'notify') {
+      return;
+    }
     this.isActive = result.active;
     this.isBonus = result.bonusGame;
   }
-
 }
 
 customElements.define(
