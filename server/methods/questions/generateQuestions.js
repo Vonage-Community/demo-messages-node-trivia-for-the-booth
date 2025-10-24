@@ -45,7 +45,8 @@ Each question should:
 Return only valid JSON — no explanations, markdown, or commentary.
 
 Each question must be unique.
-Vary question phrasing, the correct choice, and topics each time.
+Vary question phrasing, and topics slightly each time.
+You should evenly distribute the correct choice as best as possible.
 `;
 
   log('prompt', prompt);
