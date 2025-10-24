@@ -27,6 +27,7 @@ const formatResult = (scores) => scores.reduce(
         gameTitle,
         questions: [],
       };
+
       playerScores.games.push(scoreGame);
     }
 
@@ -37,6 +38,7 @@ const formatResult = (scores) => scores.reduce(
         questionId,
         scores: [],
       };
+
       scoreGame.questions.push(scoreQuestion);
     }
 

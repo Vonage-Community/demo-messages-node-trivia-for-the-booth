@@ -1,5 +1,6 @@
 import { BootstrapElement } from './components/bootstrap';
 import './components/games/adminGamesList.js';
+import './components/users/adminUsersList.js';
 
 const adminPageTemplate = document.createElement('template');
 adminPageTemplate.innerHTML = `
@@ -35,7 +36,9 @@ export class AdminPageElement extends BootstrapElement {
     this.adminSection = this.shadow.querySelector('#adminSection');
 
     this.boundedSwitchPage = this.switchPage.bind(this);
-    this.currentPage = 'games';
+    const currentUrl = new URL(window.location.href);
+    const windowPage = currentUrl.hash.replace('#', '');
+    this.currentPage = windowPage ? windowPage : 'games';
   }
 
   connectedCallback() {
@@ -63,6 +66,7 @@ export class AdminPageElement extends BootstrapElement {
       this.pageTitleElement.textContent = 'Users';
       this.gamesLink.classList.toggle('active', false);
       this.usersLink.classList.toggle('active', true);
+      this.adminSection.append(document.createElement('trivia-admin-users'));
       return;
     }
 

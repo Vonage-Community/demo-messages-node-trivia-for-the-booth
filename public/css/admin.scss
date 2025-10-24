@@ -334,3 +334,43 @@ body.admin .main-content {
   }
 }
 
+.user-bonuses {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.bonus-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: var(--bs-light, #f8f9fa);
+  border: 1px solid var(--bs-border-color, #dee2e6);
+  border-radius: 50rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--bs-body-color, #212529);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.bonus-pill:hover {
+  background-color: var(--bs-light-hover, #e9ecef);
+}
+
+.bonus-pill button {
+  border: none;
+  background: transparent;
+  color: var(--bs-danger, #dc3545);
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.bonus-pill button:hover {
+  color: var(--bs-dark, #000);
+}
