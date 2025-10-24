@@ -1,11 +1,15 @@
 import '../questions/playQuestion.js';
+import { storeMessage } from '../../toast.js';
 import { RPCElement } from '../rpcElement.js';
 import { staggerAnimation } from '../../animation.js';
 
 const playerTemplate = document.createElement('template');
 playerTemplate.innerHTML = `
 
-<h1 class="player-name mb-5"></h1>
+<header class="d-flex mb-5 justify-content-between">
+  <h1 class="player-name"></h1>
+  <button class="logout btn btn-secondary">Logout</button>
+</header>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
   <h2 class="">Your Score</h2>
@@ -27,10 +31,16 @@ export class PlayerProfilePageElement extends RPCElement {
     this.playerScoreElement = this.shadow.querySelector('.player-score');
     this.playerBonusesElement = this.shadow.querySelector('.bonuses');
     this.gameTitleElement = this.shadow.querySelector('.game-title');
+    this.logoutButtonElement = this.shadow.querySelector('.logout');
   }
 
   connectedCallback() {
     this.getPlayerScores();
+    this.logoutButtonElement.addEventListener('click', () => {
+      storeMessage('Login in successful');
+      sessionStorage.removeItem('auth_token');
+      window.location.href = '/login';
+    });
   }
 
   getPlayerScores() {
@@ -56,7 +66,7 @@ export class PlayerProfilePageElement extends RPCElement {
 
   startGameScrolling() {
     const boundedShowGame = this.showGame.bind(this);
-    setInterval(boundedShowGame, 5000);
+    setInterval(boundedShowGame, 10000);
     this.showGame();
   }
 

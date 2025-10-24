@@ -38,6 +38,7 @@ export const loginMethod = async ({ email, password }) => {
         {
           algorithm: 'RS256',
           header: { typ: 'JWT', alg: 'RS256' },
+          expiresIn: '3h',
         },
       ),
     };
