@@ -19,6 +19,7 @@ playGameTemplate.innerHTML = `
     <header class="mb-5">
       <h2 class="text-center">No active game</h1>
       <h3 class="text-center text-white">Please check back later</h3>
+      <a href="/" class="btn btn-primary btn-lg">Go back Home</a>
     </header>
   </article>
 
@@ -32,6 +33,7 @@ playGameTemplate.innerHTML = `
     aria-label="No more questions">
       <h2 class="text-center">You have answered all the questions for this round</h1>
       <h3 class="text-center text-white">Please check back later for the next game</h3>
+      <a href="/" class="btn btn-primary btn-lg">Go back Home</a>
   </article>
 
   <article class="start-game container text-center text-light d-none"
@@ -93,6 +95,7 @@ export class PlayGameElement extends GameElement {
   noActiveGame() {
     this.noGameElement.classList.remove('d-none');
     this.noGameElement.classList.add('fade-in');
+    this.playerScoreElement.classList.add('d-none');
   }
 
   setAriaActiveState(stateElement) {
@@ -124,6 +127,7 @@ export class PlayGameElement extends GameElement {
       return;
     }
 
+    this.playerScoreElement.classList.remove('d-none');
     this.setAriaActiveState(this.gameElement);
     const question = document.createElement('trivia-question-play');
     question.dataset.gameId = this.gameId;

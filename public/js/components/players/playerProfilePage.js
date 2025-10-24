@@ -9,12 +9,12 @@ playerTemplate.innerHTML = `
 <header class="d-flex mb-5 justify-content-between">
   <h1 class="player-name"></h1>
   <div>
-    <a href="/play" class="play btn btn-primary">Play</a>
     <button class="logout btn btn-secondary">Logout</button>
   </div>
 </header>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
+  <a href="/play" class="play btn btn-primary btn-lg mb-4">Play</a>
   <h2 class="">Your Score</h2>
   <h3 class="player-score mb-5">0</h3>
 
