@@ -177,7 +177,6 @@ export class AdminGameElement extends GameElement {
 
   updateButtons() {
     if (this.bonusGame) {
-      console.log('Bonus game');
       this.activateButtonElement.disabled = true;
       this.activateButtonElement.textContent = 'Bonus game';
       this.deactivateButtonElement.classList.add('d-none');
@@ -185,7 +184,6 @@ export class AdminGameElement extends GameElement {
     }
 
     if (this.active) {
-      console.log('Active game');
       this.activateButtonElement.disabled = true;
       this.activateButtonElement.classList.add('d-none');
 
@@ -222,7 +220,6 @@ export class AdminGameElement extends GameElement {
     }
 
     super.attributeChangedCallback(name, oldValue, newValue);
-    console.log('attributeChangedCallback', name, oldValue, newValue);
 
     switch (name) {
       case 'data-question-count':

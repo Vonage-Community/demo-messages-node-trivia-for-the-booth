@@ -72,7 +72,6 @@ export class PlayerProfilePageElement extends RPCElement {
     }
 
     if (!whatToShow) {
-      console.log('Nothing to show');
       return;
     }
 

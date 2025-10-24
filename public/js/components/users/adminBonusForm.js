@@ -128,7 +128,6 @@ export class BonusFormElement extends RPCElement {
     });
 
     this.boundedAfterSubmit = this.afterSubmit.bind(this);
-    console.log(this.playerId);
 
     registerEvent('form:submitted', this.boundedAfterSubmit);
   }

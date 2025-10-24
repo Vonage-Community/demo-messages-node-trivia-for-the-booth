@@ -129,7 +129,6 @@ export class PlayQuestionElement extends QuestionElement {
   handleClickQuestion(event) {
     event.preventDefault();
     const eventSelectedChoice = event.target;
-    console.log('handle click', eventSelectedChoice);
     if (this.selectedChoice === eventSelectedChoice.dataset.choice) {
       this.answerQuestion();
       return;

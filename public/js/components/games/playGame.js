@@ -120,7 +120,6 @@ export class PlayGameElement extends GameElement {
 
   playingGame() {
     if (!this.hasNext) {
-      console.log('No next question');
       this.noMoreQuestions();
       return;
     }
@@ -134,7 +133,6 @@ export class PlayGameElement extends GameElement {
   updateGame() {
     this.updateTitle();
     this.updateScore();
-    console.log('Game state', this.state);
     switch (this.state) {
       case GameElement.PLAYING:
         this.playingGame();

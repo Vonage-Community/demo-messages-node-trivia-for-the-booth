@@ -3,6 +3,14 @@ import './adminUser.js';
 
 const userListTemplate = document.createElement('template');
 userListTemplate.innerHTML = `
+<header class="mt-3">
+  <input
+    type="search"
+    class="form-control"
+    placeholder="Search by name or email..."
+    aria-label="Search users"
+  />
+</header>
 <section aria-label="Users List" class="users mt-3">
 </section>
 `;
@@ -12,11 +20,14 @@ export class AdminUsersListElement extends RPCElement {
     super();
 
     this.shadow.append(userListTemplate.content.cloneNode(true));
+    this.searchInputElement = this.shadow.querySelector('input[type="search"]');
     this.usersSectionElement = this.shadow.querySelector('.users');
 
+    this.boundedOnSearchInput = this.onSearchInput.bind(this);
     this.boundedBuildUser = this.buildUserElement.bind(this);
 
     this.users = [];
+    this.query = '';
     this.hasConnected = false;
   }
 
@@ -52,6 +63,7 @@ export class AdminUsersListElement extends RPCElement {
     return {
       limit: this.limit,
       offset: this.offset,
+      query: this.query || '',
     };
   }
 
@@ -66,9 +78,28 @@ export class AdminUsersListElement extends RPCElement {
 
     this.hasConnected = true;
     this.makeRPCCall();
+    this.searchInputElement.addEventListener('input', this.boundedOnSearchInput);
   }
 
   disconnectedCallback() {
+    this.searchInputElement.removeEventListener('input', this.boundedOnSearchInput);
+  }
+
+  onSearchInput(event) {
+    if (this.searchDelay) {
+      clearTimeout(this.searchDelay);
+    }
+    const value = event.target.value.trim();
+
+    this.query = value;
+
+    const boundedTimeoutCall = () => {
+      this.makeRPCCall();
+    };
+
+    boundedTimeoutCall.bind(this);
+
+    this.searchDelay = setTimeout(boundedTimeoutCall, 500);
   }
 
   buildUserElement(user) {
@@ -86,6 +117,7 @@ export class AdminUsersListElement extends RPCElement {
   }
 
   buildUsersList() {
+    this.usersSectionElement.innerHTML = '';
     this.users.forEach(this.boundedBuildUser);
   }
 
