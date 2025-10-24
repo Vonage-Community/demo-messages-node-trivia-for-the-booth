@@ -118,7 +118,7 @@ export const submitAnswerForPlayer = (args = {}) => {
     clientAnsweredAt,
   });
 
-  const answerId = info.id;
+  const answerId = info.lastInsertRowid;
 
   if (info.changes === 0) {
     throw {

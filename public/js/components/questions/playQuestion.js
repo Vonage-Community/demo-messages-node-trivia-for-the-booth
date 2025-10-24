@@ -75,6 +75,7 @@ export class PlayQuestionElement extends QuestionElement {
   }
 
   updateBonuses(bonuses = []) {
+    this.bonusesListElement.classList.remove('fade-out');
     this.bonusesListElement.innerHTML = '';
     bonuses.forEach(({ type, points }) => {
       const bonusesListElement = document.createElement('li');
@@ -140,6 +141,7 @@ export class PlayQuestionElement extends QuestionElement {
   }
 
   handleClickNextQuestion() {
+    this.bonusesListElement.classList.add('fade-out');
     this.questionElement.classList.add('fade-out');
     this.questionElement.addEventListener(
       'animationend',
@@ -257,6 +259,7 @@ export class PlayQuestionElement extends QuestionElement {
     this.nextButtonElement.classList.remove('d-none');
     this.nextButtonElement.disabled = false;
 
+    this.selectedChoice = null;
     requestAnimationFrame(() => this.nextButtonElement.classList.add('show'));
   }
 
