@@ -3,5 +3,5 @@ coverage
 private.key
 .env
 .vonagerc
-data
+data/trivia*
 dist

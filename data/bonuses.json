@@ -1,0 +1,70 @@
+{
+  "scoring": {
+    "speedBonus": [
+      {
+        "maxMs": 2000,
+        "points": 3,
+        "label": "Lightning Fast"
+      },
+      {
+        "maxMs": 5000,
+        "points": 2,
+        "label": "Fast"
+      },
+      {
+        "maxMs": 8000,
+        "points": 1,
+        "label": "Quick"
+      }
+    ],
+    "streakBonus": [
+      {
+        "streak": 3,
+        "points": 1,
+        "label": "On a Roll"
+      },
+      {
+        "streak": 5,
+        "points": 2,
+        "label": "Hot Streak"
+      },
+      {
+        "streak": 8,
+        "points": 3,
+        "label": "Unstoppable"
+      },
+      {
+        "streak": 10,
+        "points": 5,
+        "label": "Flawless Run"
+      }
+    ],
+    "completionBonus": [
+      {
+        "maxSeconds": 30,
+        "points": 10,
+        "label": "Perfect Pace"
+      },
+      {
+        "maxSeconds": 45,
+        "points": 7,
+        "label": "Blazing Fast"
+      },
+      {
+        "maxSeconds": 60,
+        "points": 5,
+        "label": "Fast Finish"
+      },
+      {
+        "maxSeconds": 90,
+        "points": 3,
+        "label": "Quick Run"
+      },
+      {
+        "maxSeconds": 120,
+        "points": 1,
+        "label": "Finished Strong"
+      }
+    ]
+  }
+}
