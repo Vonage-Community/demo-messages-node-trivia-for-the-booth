@@ -4,3 +4,4 @@ private.key
 .env
 .vonagerc
 data
+dist

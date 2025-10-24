@@ -33,7 +33,23 @@ log(`Public path ${publicPath}`);
 
 app.use(Express.static(publicPath));
 app.use(Express.json());
-app.use(basicAuth);
+app.use((req, res, next) => {
+  // Ignore API or asset requests
+  if (req.path.startsWith('/rpc') || req.path.includes('.')) {
+    return next();
+  }
+
+  const filePath = path.join(paths.dist, `${req.path}.html`);
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      next(); // let Express handle 404 or fall back
+    }
+  });
+});
+
+app.post('/messages/inbound', (req) => {
+  log('Inbound message', req.body);
+});
 
 app.post('/rpc', (req, res, next) => {
   log('RPC call');

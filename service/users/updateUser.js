@@ -11,7 +11,8 @@ export const updateUserSmt = db.prepare(`
   SET
     name = COALESCE(@name, name),
     email = COALESCE(@email, email),
-    phone = COALESCE(@phone, phone)
+    phone = COALESCE(@phone, phone),
+    notify = COALESCE(@notify, notify)
   WHERE id = @id
 `);
 
@@ -49,6 +50,10 @@ export const updateUser = (id, patch) => {
 
   if ('phone' in patch) {
     update.phone = requireNonEmptyString('phone', patch.phone);
+  }
+
+  if ('notify' in patch) {
+    update.notify = patch.notify ? 1 : 0;
   }
 
   updateUserSmt.run(update);

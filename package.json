@@ -24,6 +24,8 @@
     "@faker-js/faker": "10.0.0",
     "@popperjs/core": "2.11.8",
     "@vonage/jwt": "1.12.1",
+    "@vonage/messages": "1.22.1",
+    "@vonage/server-sdk": "3.25.1",
     "bcryptjs": "3.0.2",
     "better-sqlite3": "12.3.0",
     "body-parser": "2.2.0",

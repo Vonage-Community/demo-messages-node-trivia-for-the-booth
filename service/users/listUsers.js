@@ -4,7 +4,7 @@ import debug from './log.js';
 const log = debug.extend('list');
 
 export const listUsersStmt = db.prepare(`
-  SELECT id, name, email, phone
+  SELECT id, name, email, phone, notify, role
   FROM users
   ORDER BY id ASC
   LIMIT @limit OFFSET @offset
@@ -15,7 +15,7 @@ export const countUsersStmt = db.prepare(`
   FROM users
 `);
 
-export const listUsers = (args) => {
+export const listUsers = (args, detailed = false) => {
   const { limit, offset } = {
     limit: 50,
     offset: 0,
@@ -26,5 +26,18 @@ export const listUsers = (args) => {
   const users = listUsersStmt.all({ limit, offset });
   const { total } = countUsersStmt.get();
   log(`Found ${total} users`);
-  return { users, total: total, limit, offset };
+  return {
+    users: users.map(
+      (user) => ({
+        id: user.id,
+        email: user.email,
+        phone: user.phone,
+        notify: !!user.notify,
+        ...(detailed ? { role: user.role } : {}),
+      }),
+    ),
+    total: total,
+    limit,
+    offset,
+  };
 };

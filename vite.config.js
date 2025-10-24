@@ -20,16 +20,22 @@ export default defineConfig({
     target: 'esnext',
     rollupOptions: {
       input: {
-        main: '/src/js/main.js',
-        admin: '/src/js/admin.js',
-        player: '/src/js/player.js',
+        register: './public/register.html',
+        main: './public/index.html',
+        admin: './public/admin.html',
+        login: './public/login.html',
+        play: './public/play.html',
+        tos: './public/tos.html'
       },
     },
   },
 
   plugins: [
     handlebars({
-      partialDirectory: path.resolve(__dirname, 'public/partials'),
+      partialDirectory: [
+        path.resolve(__dirname, 'public/partials'),
+        path.resolve(__dirname, 'public'),
+      ],
       context: {
         siteName: 'Trivia Game',
         apiHostUrl,

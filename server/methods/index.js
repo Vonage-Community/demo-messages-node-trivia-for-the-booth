@@ -1,8 +1,10 @@
+import { requireLogin } from '../auth.js';
 import * as userMethods from './users/index.js';
 import * as gameMethods from './games/index.js';
 import * as questionMethods from './questions/index.js';
 import * as playerMethods from './players/index.js';
 import { loginMethod } from './login.js';
+import { notifyMethod } from './notify.js';
 import log from './log.js';
 import { catchError } from './catchError.js';
 
@@ -12,6 +14,7 @@ const methods = {
   ...questionMethods,
   ...playerMethods,
   login: loginMethod,
+  notify: requireLogin(notifyMethod, 'admin'),
 };
 
 const collapse = (stem, sep, obj) => (map, key) => {
