@@ -18,12 +18,16 @@ export const notifyMethod = async (args) => {
       return;
     }
 
-    log('Notifying user', user);
-    vonageClient.messages.send(new SMS({
-      from: fromNumber,
-      to: user.phone,
-      text: 'A new round of trivia has started. Visit the Vonage booth if you need the link again.',
-    }));
+    try {
+      log('Notifying user', user);
+      vonageClient.messages.send(new SMS({
+        from: fromNumber,
+        to: user.phone,
+        text: 'A new round of trivia has started. Visit the Vonage booth if you need the link again.',
+      }));
+    } catch (error) {
+      log('Error sending message', error);
+    }
   });
 };
 
