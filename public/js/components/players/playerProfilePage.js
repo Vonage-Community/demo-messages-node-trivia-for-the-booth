@@ -8,7 +8,10 @@ playerTemplate.innerHTML = `
 
 <header class="d-flex mb-5 justify-content-between">
   <h1 class="player-name"></h1>
-  <button class="logout btn btn-secondary">Logout</button>
+  <div>
+    <button class="logout btn btn-primary">Play</button>
+    <button class="logout btn btn-secondary">Logout</button>
+  </div>
 </header>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
@@ -59,7 +62,7 @@ export class PlayerProfilePageElement extends RPCElement {
   }
 
   updatePage() {
-    this.playerNameElement.textContent = `Hello ${this.name}`;
+    this.playerNameElement.textContent = `Hello ${this.playerName}`;
     this.playerScoreElement.textContent = this.score;
     this.startGameScrolling();
   }
