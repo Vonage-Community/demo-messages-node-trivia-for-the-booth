@@ -20,6 +20,11 @@ export const getUserName = () => {
   return decoded?.name;
 };
 
+export const getRole = () => {
+  const decoded = decodeJWT();
+  return decoded?.role;
+};
+
 export const getUserId = () => {
   const decoded = decodeJWT();
   return decoded?.id;

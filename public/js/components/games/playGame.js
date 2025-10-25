@@ -24,9 +24,6 @@ playGameTemplate.innerHTML = `
 
     <a href="/" class="btn btn-primary btn-lg">Go back Home</a>
 
-    <section class="bonus-games">
-      <p class="mt-2 mb-4">Bored? Try a bonus game</p>
-    </section>
   </article>
 
   <article class="play-game container text-center text-light d-none"
@@ -50,6 +47,10 @@ playGameTemplate.innerHTML = `
       <h4>Bonus points are awarded for how fast you complete the game</h4>
       <button class="start btn btn-success" disabled>Start</button>
     </header>
+  </article>
+
+  <article class="bonus-games container text-center d-flex flex-column flex-sm-shrink-1 justify-content-center d-none">
+    <p class="mt-2 mb-4">Bored? Try a bonus game</p>
   </article>
 </section>
 `;
@@ -103,6 +104,7 @@ export class PlayGameElement extends GameElement {
     this.noGameElement.classList.remove('d-none');
     this.noGameElement.classList.add('fade-in');
     this.playerScoreElement.classList.add('d-none');
+    this.bonusListElement.classList.remove('d-none', true);
   }
 
   setAriaActiveState(stateElement) {
@@ -134,6 +136,8 @@ export class PlayGameElement extends GameElement {
       return;
     }
 
+    console.log(this.bonusListElement);
+    this.bonusListElement.classList.add('d-none');
     this.playerScoreElement.classList.remove('d-none');
     this.setAriaActiveState(this.gameElement);
     const question = document.createElement('trivia-question-play');
@@ -212,6 +216,7 @@ export class PlayGameElement extends GameElement {
 
   noMoreQuestions() {
     this.updateTitle();
+    this.bonusListElement.classList.remove('d-none');
     if (this.gameElement.classList.contains('d-none')) {
       this.noMoreQuestionsElement.classList.remove('d-none');
       this.noMoreQuestionsElement.classList.add('fade-in');
@@ -236,11 +241,9 @@ export class PlayGameElement extends GameElement {
   buildBonusGameLinks(results) {
     const bonusGames = results.games.filter(({ bonusGame, questionCount }) => bonusGame && questionCount > 0);
     if (bonusGames.length < 1) {
-      this.bonusListElement.classList.toggle('d-none', true);
+      this.bonusListElement.classList.add('d-none');
       return;
     }
-
-    this.bonusListElement.classList.remove('d-none');
 
     const links = [];
 

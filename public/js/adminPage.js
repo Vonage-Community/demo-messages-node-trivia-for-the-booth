@@ -1,6 +1,7 @@
 import { BootstrapElement } from './components/bootstrap';
 import './components/games/adminGamesList.js';
 import './components/users/adminUsersList.js';
+import { getRole } from './auth.js';
 
 const adminPageTemplate = document.createElement('template');
 adminPageTemplate.innerHTML = `
@@ -43,6 +44,11 @@ export class AdminPageElement extends BootstrapElement {
 
   connectedCallback() {
     if (this.hasConnected) {
+      return;
+    }
+
+    if (getRole() !== 'admin') {
+      window.location.href = '/';
       return;
     }
 
