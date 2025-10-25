@@ -285,7 +285,7 @@ export class PlayQuestionElement extends QuestionElement {
       this.correctChoice = results.correctAnswer;
       this.answered = true;
       this.answeredCorrectly = results.answeredCorrectly;
-      this.hasNext = results.hasNext;
+      this.hasNext = results.hasNext ?? false;
       this.updateAfterAnswer(results);
       return;
     }

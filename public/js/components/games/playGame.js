@@ -136,7 +136,6 @@ export class PlayGameElement extends GameElement {
       return;
     }
 
-    console.log(this.bonusListElement);
     this.bonusListElement.classList.add('d-none');
     this.playerScoreElement.classList.remove('d-none');
     this.setAriaActiveState(this.gameElement);

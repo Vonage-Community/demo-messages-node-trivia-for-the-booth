@@ -133,7 +133,7 @@ export const submitAnswerForPlayer = (args = {}) => {
     playerId,
   });
 
-  const hasNextQuestion = has_next_question;
+  const hasNextQuestion = has_next_question ?? false;
 
   log('Has next question', hasNextQuestion);
 

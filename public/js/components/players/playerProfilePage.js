@@ -74,18 +74,28 @@ export class PlayerProfilePageElement extends RPCElement {
     this.showGame();
   }
 
+  getAllScoresForGame(game) {
+    return game.questions.reduce(
+      (gameScores, { scores }) => {
+        gameScores.push(scores);
+        return gameScores;
+      },
+      [],
+    ).flat();
+  }
+
   showGame() {
     this.gameTitleElement.innerHTML = '';
     this.playerBonusesElement.innerHTML = '';
     this.gameIndexToShow = this.gameIndexToShow || 0;
 
-    const game = this?.games[this.gameIndexToShow];
-    let whatToShow = game;
-    if (!game) {
-      whatToShow = this.bonuses.length > 0 ? this.bonuses : false;
+    let whatToShow = this.bonuses;
+    const game = this.games[this.gameIndexToShow];
+    if (game) {
+      whatToShow = this.getAllScoresForGame(game);
     }
 
-    if (!whatToShow) {
+    if (whatToShow?.length < 1) {
       return;
     }
 
@@ -93,16 +103,15 @@ export class PlayerProfilePageElement extends RPCElement {
       ? `Bonuses for game: ${game.gameTitle}`
       : 'Additional bonuses';
 
-    const bonuses = game.questions.map(({ scores }) => [...scores]).flat();;
-    const gameScore = game.questions.reduce(
-      (gameScore, { scores }) => {
-        scores.forEach(({ points }) => gameScore += points);
+    const gameScore = whatToShow.reduce(
+      (gameScore, { points }) => {
+        gameScore += points;
         return gameScore;
       },
       0,
     );
 
-    bonuses.forEach(({ type, points }) => {
+    whatToShow.forEach(({ type, points }) => {
       const playerBonusesElement = document.createElement('li');
       playerBonusesElement.textContent = `+${points} ${type}`;
       this.playerBonusesElement.append(playerBonusesElement);
@@ -117,9 +126,9 @@ export class PlayerProfilePageElement extends RPCElement {
     this.playerBonusesElement.append(totalPointsElement);
     const bonusesElement = this.playerBonusesElement.querySelectorAll('li');
     staggerAnimation('slide-in-right')(bonusesElement);
-    this.gameIndexToShow += this.games.length === (this.gameIndexToShow + 1)
+    this.gameIndexToShow += this.games[(this.gameIndexToShow + 1)]
       ? 0
-      : 1;
+      : -1;
   }
 }
 customElements.define(
