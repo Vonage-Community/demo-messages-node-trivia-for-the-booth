@@ -90,9 +90,18 @@ export class GameElement extends RPCElement {
   }
 
   callActiveGame() {
-    if (!this.gameId || !this.active) {
-      this.makeRPCCall('games.active');
+    if (this.gameId && this.active) {
+      return;
     }
+
+    const windowURL = new URL(window.location.href);
+    if (windowURL.searchParams.has('gameId')) {
+      this.gameId = windowURL.searchParams.get('gameId');
+      this.makeRPCCall('games.fetch', { id: this.gameId });
+      return;
+    }
+
+    this.makeRPCCall('games.active');
   }
 
   onDataLoaded(results) {

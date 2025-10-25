@@ -1,6 +1,7 @@
 import '../questions/playQuestion.js';
 import { GameElement } from './game.js';
 import { registerEvent } from '../../events.js';
+import { staggerAnimation } from '../../animation.js';
 
 const playGameTemplate = document.createElement('template');
 playGameTemplate.innerHTML = `
@@ -19,8 +20,13 @@ playGameTemplate.innerHTML = `
     <header class="mb-5">
       <h2 class="text-center">No active game</h1>
       <h3 class="text-center text-white">Please check back later</h3>
-      <a href="/" class="btn btn-primary btn-lg">Go back Home</a>
     </header>
+
+    <a href="/" class="btn btn-primary btn-lg">Go back Home</a>
+
+    <section class="bonus-games">
+      <p class="mt-2 mb-4">Bored? Try a bonus game</p>
+    </section>
   </article>
 
   <article class="play-game container text-center text-light d-none"
@@ -66,6 +72,7 @@ export class PlayGameElement extends GameElement {
     this.gameElement = this.shadow.querySelector('.play-game');
     this.titleElement = this.shadow.querySelector('.game-title');
     this.playerScoreElement = this.shadow.querySelector('.player-score');
+    this.bonusListElement = this.shadow.querySelector('.bonus-games');
 
     this.boundedHandleRPCSuccess = this.handleRPCSuccess.bind(this);
     this.boundedStartGame = this.startGame.bind(this);
@@ -155,10 +162,15 @@ export class PlayGameElement extends GameElement {
 
     this.hasConnected = true;
     this.callActiveGame();
+    this.loadBonusGame();
 
     registerEvent('rpc:success', this.boundedHandleRPCSuccess);
     registerEvent('game:complete', this.boundedNoMoreQuestions);
     this.startGameButton.addEventListener('click', this.boundedStartGame);
+  }
+
+  loadBonusGame() {
+    this.makeRPCCall('games.list');
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -221,6 +233,32 @@ export class PlayGameElement extends GameElement {
     );
   }
 
+  buildBonusGameLinks(results) {
+    const bonusGames = results.games.filter(({ bonusGame, questionCount }) => bonusGame && questionCount > 0);
+    if (bonusGames.length < 1) {
+      this.bonusListElement.classList.toggle('d-none', true);
+      return;
+    }
+
+    this.bonusListElement.classList.remove('d-none');
+
+    const links = [];
+
+    bonusGames.forEach((game) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('gameId', game.id);
+
+      const bonusLink = document.createElement('a');
+      bonusLink.href = url.toString();
+      bonusLink.innerHTML = game.title;
+      bonusLink.classList.add('btn', 'btn-primary', 'mt-2');
+      this.bonusListElement.append(bonusLink);
+      links.push(bonusLink);
+    });
+
+    staggerAnimation('slide-in-right')(links);
+  }
+
   onDataLoaded(results, method) {
     if (method === 'players.start') {
       super.onDataLoaded(results.game);
@@ -228,7 +266,19 @@ export class PlayGameElement extends GameElement {
       return;
     }
 
+    if (method === 'games.list') {
+      this.buildBonusGameLinks(results);
+      return;
+    }
+
     super.onDataLoaded(results);
+    if (method === 'games.fetch') {
+      this.hasNext = true;
+      this.active = true;
+      this.updateGame();
+      return;
+    }
+
     if (method === 'games.active') {
       this.hasNext = results.hasNext;
       this.updateGame();

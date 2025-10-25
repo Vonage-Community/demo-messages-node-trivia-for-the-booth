@@ -60,11 +60,6 @@ export const getNextQuestionForPlayer = (args = {}) => {
   const playerId = requireUInt('playerId', args.playerId);
   const game = getGameById(gameId);
 
-  if (game.bonusGame) {
-    log('Bonus game');
-    return null;
-  }
-
   if (!game.active && !game.bonusGame) {
     throw { code: 400, message: 'Game is not active.' };
   }
