@@ -55,7 +55,6 @@ export class AdminPageElement extends BootstrapElement {
   switchPage(event) {
     const href = new URL(event.target.href);
     const page = href.hash.replace('#', '');
-    console.log('page', page);
     this.currentPage = page;
     this.updatePage();
   }

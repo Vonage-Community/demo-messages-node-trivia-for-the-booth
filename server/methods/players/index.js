@@ -5,6 +5,7 @@ import { submitAnswerMethod } from './submitAnswer.js';
 import { getPlayerScoresMethod } from './getPlayerScores.js';
 import { deleteScoreMethod } from './deleteScore.js';
 import { addBonusMethod } from './addBonus.js';
+import { leaderboardMethod } from './leaderboard.js';
 
 export const players = {
   start: requireLogin(startGameMethod),
@@ -13,4 +14,5 @@ export const players = {
   scores: requireLogin(getPlayerScoresMethod),
   delete_score: requireLogin(deleteScoreMethod, 'admin'),
   add_bonus: requireLogin(addBonusMethod, 'admin'),
+  leaderboard: leaderboardMethod,
 };

@@ -3,3 +3,4 @@ import './questions/index.js';
 import './games/index.js';
 import './spinner.js';
 import './players/playerProfilePage.js';
+import './leaderboard.js';

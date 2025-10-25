@@ -7,6 +7,7 @@ import { deleteGameMethod } from './deleteGame.js';
 import { activateGameMethod } from './activateGame.js';
 import { deactivateGameMethod } from './deactivateGame.js';
 import { getActiveGameMethod } from './getActiveGame.js';
+import { gameLeaderboardMethod } from './leaderBoard.js';
 
 export const games = {
   create: requireLogin(createGameMethod, 'admin'),
@@ -17,4 +18,5 @@ export const games = {
   activate: requireLogin(activateGameMethod, 'admin'),
   deactivate: requireLogin(deactivateGameMethod, 'admin'),
   active: requireLogin(getActiveGameMethod),
+  leaderboard: gameLeaderboardMethod,
 };

@@ -4,7 +4,6 @@ import './components/index.js';
 import './handlers/index.js';
 import './rpc.js';
 import './toast.js';
-import './auth.js';
 import { submitRPCForm } from './form.js';
 import { registerEvent } from './events.js';
 import { storeMessage } from './toast.js';

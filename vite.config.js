@@ -25,7 +25,8 @@ export default defineConfig({
         admin: './public/admin.html',
         login: './public/login.html',
         play: './public/play.html',
-        tos: './public/tos.html'
+        tos: './public/tos.html',
+        leaderboard: './public/leaderboard.html',
       },
     },
   },

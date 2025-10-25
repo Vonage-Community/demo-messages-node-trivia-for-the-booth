@@ -1,6 +1,9 @@
-
 const decodeJWT = () => {
   const token = sessionStorage.getItem('auth_token');
+  if (!token) {
+    return {};
+  }
+
   const [, payload] = token.split('.');
   const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = decodeURIComponent(
@@ -12,9 +15,12 @@ const decodeJWT = () => {
   return JSON.parse(jsonPayload);
 };
 
-export const getPlayerName = () => {
+export const getUserName = () => {
   const decoded = decodeJWT();
-  return decoded.name;
+  return decoded?.name;
 };
 
-
+export const getUserId = () => {
+  const decoded = decodeJWT();
+  return decoded?.id;
+};

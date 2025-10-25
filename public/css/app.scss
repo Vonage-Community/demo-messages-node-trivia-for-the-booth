@@ -67,6 +67,10 @@ body {
   color: #fff;
   background: linear-gradient(135deg, $background-start, $background-end);
   animation: bgShift 25s ease-in-out infinite;
+  height: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background-attachment: fixed;
 }
 
 :root {
@@ -589,3 +593,20 @@ a,
   border-radius: 0.5rem 0 0 0.5rem;
   font-weight: 500;
 }
+
+.leaderboard-item .rank-1 {
+  background: rgba(255, 215, 0, 0.15); // Gold tint
+}
+
+.leaderboard-item .rank-2 {
+  background: rgba(192, 192, 192, 0.12); // Silver tint
+}
+
+.leaderboard-item .rank-3 {
+  background: rgba(205, 127, 50, 0.12); // Bronze tint
+}
+
+.leaderboard-item {
+  background: rgba(255, 255, 255, 0.05);
+}
+
