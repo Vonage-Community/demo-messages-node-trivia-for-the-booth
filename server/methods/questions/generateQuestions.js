@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 import { createQuestionsBatch } from '../../../service/questions/createQuestion.js';
-import { getAllQuestions } from '../../../service/questions/getAllQuestions.js';
 import debug from './log.js';
 const log = debug.extend('generate');
 
@@ -10,12 +9,44 @@ const client = new OpenAI({
 
 const seed = Math.random().toString(36).slice(2, 8);
 
+const shuffleChoices = (question) => {
+  // Extract choices into an array of { key, value } pairs
+  const choices = [
+    { key: 'A', value: question.choiceA },
+    { key: 'B', value: question.choiceB },
+    { key: 'C', value: question.choiceC },
+    { key: 'D', value: question.choiceD },
+  ];
+
+  // Find the current correct value
+  const correctValue = question[`choice${question.correctChoice}`];
+
+  // Fisher–Yates shuffle
+  for (let i = choices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [choices[i], choices[j]] = [choices[j], choices[i]];
+  }
+
+  // Reassign shuffled choices back to the question
+  const shuffledQuestion = { ...question };
+  choices.forEach((choice, index) => {
+    const newKey = String.fromCharCode(65 + index); // 'A', 'B', 'C', 'D'
+    shuffledQuestion[`choice${newKey}`] = choice.value;
+    if (choice.value === correctValue) {
+      shuffledQuestion.correctChoice = newKey;
+    }
+  });
+
+  log('Question shuffled', shuffledQuestion);
+
+  return shuffledQuestion;
+};
+
 const generateTriviaQuestions = async (
   gameId,
   count,
   themes,
   difficulty,
-  usedQuestions,
 ) => {
   log('Generating questions from chatGPT');
   let prompt = `
@@ -60,7 +91,7 @@ You should evenly distribute the correct choice as best as possible.
   const content = response.choices[0].message.content.trim();
   log('response', content);
   try {
-    const questions = JSON.parse(content);
+    const questions = JSON.parse(content).map(shuffleChoices);
     log('questions from GPT', questions);
     return Array.isArray(questions) ? questions : [questions];
   } catch (err) {
@@ -70,11 +101,11 @@ You should evenly distribute the correct choice as best as possible.
   }
 };
 
+
 export const generateQuestionsMethod = async (args) => {
   log('Generating questions');
   const { gameId, themes, count, difficulty } = args;
-  const usedQuestions = getAllQuestions(gameId).map(({ question }) => question);
-  const questions = await generateTriviaQuestions(gameId, count, themes, difficulty, usedQuestions);
+  const questions = await generateTriviaQuestions(gameId, count, themes, difficulty);
   return createQuestionsBatch(gameId, questions);
 };
 
