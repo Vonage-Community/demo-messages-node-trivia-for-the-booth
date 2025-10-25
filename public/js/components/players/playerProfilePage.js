@@ -14,7 +14,8 @@ playerTemplate.innerHTML = `
 </header>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
-  <a href="/play" class="play btn btn-primary btn-lg mb-4">Play</a>
+  <a href="/play" class="play btn btn-primary btn-lg mb-4">Play game</a>
+  <a href="/leaderboard" class="play btn btn-primary btn-lg mb-4">Check Leaderboards</a>
   <h2 class="">Your Score</h2>
   <h3 class="player-score mb-5">0</h3>
 

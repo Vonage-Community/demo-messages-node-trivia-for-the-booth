@@ -6,8 +6,9 @@ import { getUserId } from '../auth.js';
 const leaderboardTemplate = document.createElement('template');
 leaderboardTemplate.innerHTML = `
 
-<header class="d-flex mb-5 justify-content-between">
+<header class="d-flex mb-5 justify-content-between align-items-center">
   <h1>Leaderboards</h1>
+  <a href="/" class="home-link btn btn-primary">Home</a>
 </header>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
@@ -27,6 +28,7 @@ export class LeaderBoardElement extends RPCElement {
     this.shadow.append(leaderboardTemplate.content.cloneNode(true));
     this.leaderboardSectionElement = this.shadow.querySelector('.leaderboards');
     this.leaderBoardNameElement = this.shadow.querySelector('.leaderboard-name');
+    this.homeLinkElement = this.shadow.querySelector('.home-link');
 
     this.games = [];
     this.leaderboardIntervalId = null;
@@ -59,6 +61,10 @@ export class LeaderBoardElement extends RPCElement {
   connectedCallback() {
     if (this.hasConnected) {
       return;
+    }
+
+    if (!getUserId()) {
+      this.homeLinkElement.classList.add('d-none');
     }
 
     this.hasConnected = true;

@@ -11,7 +11,7 @@ import { gameLeaderboardMethod } from './leaderBoard.js';
 
 export const games = {
   create: requireLogin(createGameMethod, 'admin'),
-  list: requireLogin(listGamesMethod),
+  list: listGamesMethod,
   fetch: requireLogin(fetchGameMethod),
   update: requireLogin(updateGameMethod, 'admin'),
   delete: requireLogin(deleteGameMethod, 'admin'),
