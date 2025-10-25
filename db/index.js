@@ -29,7 +29,7 @@ if (resolvedDbPath !== ':memory:' && process.env.SQLITE_DISABLE_WAL !== '1') {
   db.pragma('journal_mode = WAL');
 }
 
-db.pragma('foreign_keys = ON');
+db.pragma('foreign_keys = OFF');
 
 log('SQLite initialized');
 
