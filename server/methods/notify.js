@@ -10,7 +10,7 @@ dotenv.config();
 const log = debug.extend('notify');
 
 const sendMessageToUser = (user, index) => {
-  if (user.role === 'admin' || !user.notify || !user.phone) {
+  if (user.role === 'admin' ||  !user.phone) {
     return;
   }
 
@@ -18,11 +18,15 @@ const sendMessageToUser = (user, index) => {
     const phone = user.phone.startsWith('1') ? user.phone : `1${user.phone}`;
     log('Notifying user', user);
     setTimeout(() => {
+      try {
       vonageClient.messages.send(new SMS({
         from: fromNumber,
         to: phone,
         text: 'A new round of trivia has started. Visit the Vonage booth if you need the link again.',
       }));
+      } catch (error) {
+        log('Error', error)
+      }
     }, 100 * index);
   } catch (error) {
     log('Error sending message', error);

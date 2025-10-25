@@ -49,7 +49,7 @@ playGameTemplate.innerHTML = `
     </header>
   </article>
 
-  <article class="bonus-games container text-center d-flex flex-column flex-sm-shrink-1 justify-content-center d-none">
+  <article class="bonus-games container text-center d-flex flex-column flex-sm-shrink-1 justify-content-center d-none mt-2">
     <p class="mt-2 mb-4">Bored? Try a bonus game</p>
   </article>
 </section>

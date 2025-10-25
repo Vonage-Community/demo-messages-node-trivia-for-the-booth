@@ -5,5 +5,9 @@ export const getHostUrl = (port = PORT) => {
     return `https://${process.env.CODESPACE_NAME}-${port}.app.github.dev`;
   }
 
+  if (process.env.HOST) {
+    return process.env.HOST;
+  }
+
   return `http://localhost:${port}`;
 };

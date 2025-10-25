@@ -50,7 +50,7 @@ export class LeaderBoardItemElement extends BootstrapElement {
   updateItem() {
     this.sectionElement.classList.add(`rank-${this.rank}`);
     this.nameElement.textContent = this.name;
-    this.pointsElement.textContent = `#${this.rank} ${this.totalPoints}pts`;
+    this.pointsElement.textContent = `Ranked: #${this.rank} Points: ${this.totalPoints}`;
   }
 
   connectedCallback() {

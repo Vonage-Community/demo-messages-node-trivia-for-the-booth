@@ -1,7 +1,5 @@
 import { emitEvent } from './events';
-const BASE_URL = typeof window.API_HOST_URL !== 'undefined'
-  ? window.API_HOST_URL
-  : window.location.origin;
+const BASE_URL = window.location.origin;
 
 export const RPC_URL = `${BASE_URL}/rpc`;
 

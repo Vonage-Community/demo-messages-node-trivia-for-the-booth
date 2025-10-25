@@ -18,14 +18,6 @@ export const isPlayerPlayingGame = (args = {}) => {
   const playerId = requireUInt('playerId', args.playerId);
 
   const game = getGameById(gameId);
-
-  if (!game.active && !game.bonusGame) {
-    throw {
-      code: 404,
-      message: 'Game is not found',
-    };
-  }
-
   const params = {
     gameId: game.id,
     playerId,
