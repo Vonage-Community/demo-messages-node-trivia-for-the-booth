@@ -6,16 +6,14 @@ import { getUserId } from '../auth.js';
 const leaderboardTemplate = document.createElement('template');
 leaderboardTemplate.innerHTML = `
 
-<header class="d-flex mb-5 justify-content-between align-items-center">
-  <h1>Leaderboards</h1>
-  <a href="/" class="home-link btn btn-primary">Home</a>
-</header>
+<a href="/" class="home-link btn btn-primary">Home</a>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
   <h2 class="leaderboard-name">Round 1</h2>
 
   <section class="leaderboards w-100">
   </section>
+  <p class="no-rounds">No rounds have been played</p>
 </div>
 `;
 
@@ -29,6 +27,7 @@ export class LeaderBoardElement extends RPCElement {
     this.leaderboardSectionElement = this.shadow.querySelector('.leaderboards');
     this.leaderBoardNameElement = this.shadow.querySelector('.leaderboard-name');
     this.homeLinkElement = this.shadow.querySelector('.home-link');
+    this.noGamesElement = this.shadow.querySelector('.no-rounds');
 
     this.games = [];
     this.leaderboardIntervalId = null;
@@ -54,8 +53,8 @@ export class LeaderBoardElement extends RPCElement {
 
   get leaderboardTitle() {
     return this.games[this.leaderboardGameIndex]
-      ? this.games[this.leaderboardGameIndex].title
-      : 'Global';
+      ? `Leaderboard for game ${this.games[this.leaderboardGameIndex].title}`
+      : 'Global Leaderboard';
   }
 
   connectedCallback() {
@@ -117,6 +116,7 @@ export class LeaderBoardElement extends RPCElement {
     });
 
     staggerAnimation('slide-in-right')(items);
+    this.noGamesElement.classList.toggle('d-none', results.length > 0);
   }
 
   loadGames() {

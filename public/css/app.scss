@@ -73,6 +73,21 @@ body {
   background-attachment: fixed;
 }
 
+.header-logo {
+  width: 200px;
+  height: auto;
+}
+
+.main-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  z-index: 10
+
+}
+
 :root {
   --page-padding: 24px;
 }

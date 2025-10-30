@@ -6,14 +6,13 @@ import { staggerAnimation } from '../../animation.js';
 const playerTemplate = document.createElement('template');
 playerTemplate.innerHTML = `
 
-<header class="d-flex mb-5 justify-content-between">
-  <h1 class="player-name"></h1>
-  <div>
-    <button class="logout btn btn-secondary">Logout</button>
-  </div>
-</header>
 
+<button class="logout btn btn-secondary">Logout</button>
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
+  <header class="d-flex mb-5 justify-content-between">
+    <h2 class="player-name"></h2>
+  </header>
+
   <a href="/play" class="play btn btn-primary btn-lg mb-4">Play game</a>
   <a href="/leaderboard" class="play btn btn-primary btn-lg mb-4">Check Leaderboards</a>
   <h2 class="">Your Score</h2>
@@ -95,6 +94,10 @@ export class PlayerProfilePageElement extends RPCElement {
       whatToShow = this.getAllScoresForGame(game);
     }
 
+    this.leaderboardGameIndex = this.games[(this.leaderboardGameIndex + 1)]
+      ? this.leaderboardGameIndex + 1
+      : -1;
+
     if (whatToShow?.length < 1) {
       return;
     }
@@ -126,9 +129,6 @@ export class PlayerProfilePageElement extends RPCElement {
     this.playerBonusesElement.append(totalPointsElement);
     const bonusesElement = this.playerBonusesElement.querySelectorAll('li');
     staggerAnimation('slide-in-right')(bonusesElement);
-    this.gameIndexToShow += this.games[(this.gameIndexToShow + 1)]
-      ? 0
-      : -1;
   }
 }
 customElements.define(
