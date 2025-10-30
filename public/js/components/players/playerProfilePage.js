@@ -6,8 +6,8 @@ import { staggerAnimation } from '../../animation.js';
 const playerTemplate = document.createElement('template');
 playerTemplate.innerHTML = `
 
+<button class="logout btn btn-secondary mt-2">Logout</button>
 
-<button class="logout btn btn-secondary">Logout</button>
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
   <header class="d-flex mb-5 justify-content-between">
     <h2 class="player-name"></h2>

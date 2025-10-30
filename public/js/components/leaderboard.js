@@ -6,7 +6,7 @@ import { getUserId } from '../auth.js';
 const leaderboardTemplate = document.createElement('template');
 leaderboardTemplate.innerHTML = `
 
-<a href="/" class="home-link btn btn-primary">Home</a>
+<a href="/" class="home-link btn btn-primary mt-2">Home</a>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
   <h2 class="leaderboard-name">Round 1</h2>
