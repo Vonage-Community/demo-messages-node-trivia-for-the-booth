@@ -8,7 +8,7 @@ leaderboardTemplate.innerHTML = `
 
 <a href="/" class="home-link btn btn-primary mt-2">Home</a>
 
-<div class="d-flex justify-content-between align-items-center flex-column mt-5">
+<div class="leader-board d-flex justify-content-between align-items-center flex-column mt-5">
   <h2 class="leaderboard-name">Round 1</h2>
 
   <section class="leaderboards w-100">
