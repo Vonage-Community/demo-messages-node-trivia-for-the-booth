@@ -6,7 +6,7 @@ import { staggerAnimation } from '../../animation.js';
 const playerTemplate = document.createElement('template');
 playerTemplate.innerHTML = `
 
-<button class="logout btn btn-secondary mt-2">Logout</button>
+<button class="logout btn btn-primary mt-2">Logout</button>
 
 <div class="d-flex justify-content-between align-items-center flex-column mt-5">
   <header class="d-flex mb-5 justify-content-between">
@@ -39,7 +39,7 @@ export class PlayerProfilePageElement extends RPCElement {
 
   connectedCallback() {
     this.logoutButtonElement.addEventListener('click', () => {
-      storeMessage('Log Out');
+      storeMessage('You have been logged out');
       sessionStorage.removeItem('auth_token');
       window.location.href = '/login';
     });
