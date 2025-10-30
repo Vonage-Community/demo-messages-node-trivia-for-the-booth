@@ -56,7 +56,7 @@ const reset = (bonusGame = false) => {
 
   createQuestionsBatch(
     game.id,
-    [1, 2, 3, 4, 5].map((number) => ({
+    [1, 2, 3, 4, 5].map(() => ({
       gameId: game.id,
       question: `Which country is ${faker.location.city()} located?`,
       choiceA: faker.location.country(),

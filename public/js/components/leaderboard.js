@@ -106,7 +106,7 @@ export class LeaderBoardElement extends RPCElement {
     this.leaderBoardNameElement.textContent = this.leaderboardTitle;
     const items = [];
 
-    results.forEach(({ name, totalPoints, rank, userId }) => {
+    results.forEach(({ name, totalPoints, rank }) => {
       const item = document.createElement('trivia-leaderboard-item');
       item.dataset.name = name;
       item.dataset.totalPoints = totalPoints;

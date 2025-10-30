@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const bootstrapForms = document.querySelectorAll('.needs-validation');
 
   registerEvent('rpc:error', (errorEvent) => {
-    const { code, message } = errorEvent.detail.error;
+    const { code } = errorEvent.detail.error;
     if (code === 401) {
       storeMessage('You need to login to access that page');
       //just in case

@@ -195,7 +195,7 @@ export class PlayGameElement extends GameElement {
     this.playerScoreElement.textContent = `Score: ${this.totalScore}`;
   }
 
-  handleEndGame(event) {
+  handleEndGame() {
     this.noMoreQuestions();
   }
 

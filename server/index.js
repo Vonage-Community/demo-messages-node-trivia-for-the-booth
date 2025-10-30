@@ -5,7 +5,7 @@ import methods from './methods/index.js';
 import debug from './log.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { jwtAuth, basicAuth } from './auth.js';
+import { jwtAuth } from './auth.js';
 
 dotenv.config();
 

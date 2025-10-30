@@ -55,7 +55,7 @@ describe('Scores', () => {
 
     createQuestionsBatch(
       game.id,
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((number) => ({
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => ({
         gameId: game.id,
         question: `Which country is ${faker.location.city()} located?`,
         choiceA: faker.location.country(),

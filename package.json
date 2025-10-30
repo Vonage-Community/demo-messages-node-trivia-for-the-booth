@@ -40,6 +40,7 @@
     "jayson": "4.2.0",
     "js-confetti": "0.13.1",
     "jsonwebtoken": "9.0.2",
+    "node-fetch": "3.3.2",
     "openai": "6.4.0"
   },
   "devDependencies": {

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { getUserByEmail } from '../service/users/getUserByEmail.js';
 import { resetPassword } from '../service/users/resetPassword.js';
 import inquirer from 'inquirer';
@@ -51,13 +50,13 @@ async function main() {
 
       passOk = newPassword === confirmPassword;
       if (!passOk) {
-        console.error(`❌ Passwords do not match`);
+        console.error('❌ Passwords do not match');
       }
       pass = newPassword;
-    } while(!passOk)
+    } while(!passOk);
 
 
-    resetPassword({id: user.id, password: pass})
+    resetPassword({id: user.id, password: pass});
 
     console.log('✅ Password successfully updated.');
   } catch (err) {
