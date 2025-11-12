@@ -17,7 +17,6 @@ export const requireLogin = (fn, role) => async (args) => {
     };
   }
 
-  // If we want to enforce a role
   if (role && user.role !== role) {
     log('Invalid role');
     throw {
@@ -29,3 +28,25 @@ export const requireLogin = (fn, role) => async (args) => {
   return fn(args);
 };
 
+export const jwtAuth = (req) => {
+  const header = req.headers?.authorization ?? '';
+  const token = header.replace(/^Bearer\s+/i, '').trim();
+
+  let decoded;
+  if (token) {
+    try {
+      decoded = jsonwebtoken.verify(
+        token,
+        privateKey,
+        {
+          algorithms: ['RS256', 'HS256'],
+        },
+      );
+
+      log('JWT Decoded', decoded);
+      return decoded;
+    } catch (error) {
+      console.error('Error decoding JWT', error);
+    }
+  }
+};
