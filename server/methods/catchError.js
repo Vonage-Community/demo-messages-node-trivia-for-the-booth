@@ -6,7 +6,7 @@ export const catchError = (method) => async (args) => {
   log(`Calling method ${method.name}`);
   try {
     const result = await method(args);
-    log(`Method ${method.name} completed`, result);
+    log(`Method ${method.name} completed`);
     return result;
   } catch (error) {
     log(`Method ${method.name} errored`, error);

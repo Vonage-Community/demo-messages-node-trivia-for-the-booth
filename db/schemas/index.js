@@ -2,6 +2,7 @@ import { createUsersTable } from './users.js';
 import { createGamesTable } from './games.js';
 import { createQuestionsTable } from './questions.js';
 import { createPlayersTable } from './players.js';
+import { createPrizesTable } from './prizes.js';
 import { createGamesView } from './gamesView.js';
 import { createAnswersTable } from './answers.js';
 import { createGameDetailView } from './gameDetailView.js';
@@ -21,6 +22,7 @@ export const ensureSchema = () => {
   createPlayersTable();
   createAnswersTable();
   createScoresTable();
+  createPrizesTable();
 
   createGamesView();
   createGameDetailView();

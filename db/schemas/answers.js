@@ -17,10 +17,6 @@ export const createAnswersTable = () => {
       server_received_at  INTEGER,
       response_time_ms    INTEGER,
 
-      FOREIGN KEY (game_id)     REFERENCES games(id)     ON DELETE RESTRICT,
-      FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE RESTRICT,
-      FOREIGN KEY (player_id)   REFERENCES users(id)     ON DELETE CASCADE,
-
       UNIQUE (question_id, player_id)
     );
 

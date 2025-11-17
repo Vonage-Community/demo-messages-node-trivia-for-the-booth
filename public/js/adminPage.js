@@ -1,30 +1,41 @@
 import { BootstrapElement } from './components/bootstrap';
 import './components/games/adminGamesList.js';
 import './components/users/adminUsersList.js';
+import './components/adminSetup.js';
 import { getRole } from './auth.js';
 
 const adminPageTemplate = document.createElement('template');
 adminPageTemplate.innerHTML = `
-<aside class="admin-sidebar">
-  <h2 class="sidebar-header fs-5 fw-semibold mb-0">Admin</h2>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Admin</a>
 
-  <nav class="nav flex-column" id="admin-nav">
-    <a href="#games" class="nav-link mb-3">
-      <i class="bi bi-controller me-2"></i> Games
-    </a>
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a href="#games" class="nav-link">
+          <i class="bi bi-controller me-2"></i> Games
+        </a>
+      </li>
 
-    <a href="#users" class="nav-link">
-      <i class="bi bi-person-badge me-2"></i> Users
-    </a>
-  </nav>
+      <li class="nav-item">
+        <a href="#users" class="nav-link">
+          <i class="bi bi-person-badge me-2"></i> Users
+        </a>
+      </li>
 
-</aside>
-
-<nav class="navbar navbar-expanded-lg bg-body-tertiary container-fluid">
-  <h1 class="page-title navbar-brand"></h1>
+      <li class="nav-item">
+        <a href="#setup" class="nav-link">
+          <i class="bi bi-gear-fill me-2"></i> Setup
+        </a>
+      </li>
+    </ul>
+  </div>
 </nav>
 
-<section id="adminSection">
+<h1 class="page-title ms-3 "></h1>
+
+<section id="adminSection" class="m-3">
+
 </section>
 `;
 export class AdminPageElement extends BootstrapElement {
@@ -34,6 +45,8 @@ export class AdminPageElement extends BootstrapElement {
     this.pageTitleElement = this.shadow.querySelector('.page-title');
     this.gamesLink = this.shadow.querySelector('a[href="#games"]');
     this.usersLink = this.shadow.querySelector('a[href="#users"]');
+    this.setupLink = this.shadow.querySelector('a[href="#setup"]');
+    this.adminLinks = this.shadow.querySelectorAll('a');
     this.adminSection = this.shadow.querySelector('#adminSection');
 
     this.boundedSwitchPage = this.switchPage.bind(this);
@@ -54,31 +67,47 @@ export class AdminPageElement extends BootstrapElement {
 
     this.hasConnected = true;
     this.updatePage();
-    this.gamesLink.addEventListener('click', this.boundedSwitchPage);
-    this.usersLink.addEventListener('click', this.boundedSwitchPage);
+    this.adminLinks.forEach(
+      (linkElement) => linkElement.addEventListener('click', this.boundedSwitchPage),
+    );
   }
 
   switchPage(event) {
     const href = new URL(event.target.href);
     const page = href.hash.replace('#', '');
+    if (this.currentPage === page) {
+      return;
+    }
+
     this.currentPage = page;
     this.updatePage();
   }
 
   updatePage() {
     this.adminSection.innerHTML = '';
-    if (this.currentPage === 'users') {
-      this.pageTitleElement.textContent = 'Users';
-      this.gamesLink.classList.toggle('active', false);
-      this.usersLink.classList.toggle('active', true);
-      this.adminSection.append(document.createElement('trivia-admin-users'));
-      return;
-    }
+    this.adminLinks.forEach(
+      (linkElement) => linkElement.classList.remove('active'),
+    );
+    switch (this.currentPage) {
+      case 'users':
+        this.pageTitleElement.textContent = 'Users';
+        this.usersLink.classList.toggle('active', true);
+        this.adminSection.append(document.createElement('trivia-admin-users'));
+        break;
 
-    this.pageTitleElement.textContent = 'Games';
-    this.gamesLink.classList.toggle('active', true);
-    this.usersLink.classList.toggle('active', false);
-    this.adminSection.append(document.createElement('trivia-admin-games'));
+      case 'setup':
+        this.pageTitleElement.textContent = 'Setup Application';
+        this.setupLink.classList.toggle('active', true);
+        this.adminSection.append(document.createElement('trivia-admin-setup'));
+        break;
+
+      case 'games':
+      // falls through
+      default:
+        this.pageTitleElement.textContent = 'Games';
+        this.gamesLink.classList.toggle('active', true);
+        this.adminSection.append(document.createElement('trivia-admin-games'));
+    }
   }
 }
 

@@ -3,6 +3,7 @@ import * as userMethods from './users/index.js';
 import * as gameMethods from './games/index.js';
 import * as questionMethods from './questions/index.js';
 import * as playerMethods from './players/index.js';
+import * as settingsMethods from './settings/index.js';
 import { loginMethod } from './login.js';
 import { notifyMethod } from './notify.js';
 import log from './log.js';
@@ -13,6 +14,7 @@ const methods = {
   ...gameMethods,
   ...questionMethods,
   ...playerMethods,
+  ...settingsMethods,
   login: loginMethod,
   notify: requireLogin(notifyMethod, 'admin'),
 };

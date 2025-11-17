@@ -1,6 +1,6 @@
 import debug from './log.js';
 import jsonwebtoken from 'jsonwebtoken';
-import { privateKey } from './vonage.js';
+import { getTriviaKey } from './initTriviaKey.js';
 
 const log = debug.extend('auth');
 
@@ -37,7 +37,7 @@ export const jwtAuth = (req) => {
     try {
       decoded = jsonwebtoken.verify(
         token,
-        privateKey,
+        getTriviaKey(),
         {
           algorithms: ['RS256', 'HS256'],
         },

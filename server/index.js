@@ -12,7 +12,7 @@ dotenv.config();
 const log = debug.extend('express');
 
 const app = new Express();
-const server = new jayson.Server(methods);
+const rpcServer = new jayson.Server(methods);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,6 +40,7 @@ app.use((req, res, next) => {
   }
 
   const filePath = path.join(paths.dist, `${req.path}.html`);
+  log('Static File Path', filePath);
   res.sendFile(filePath, (err) => {
     if (err) {
       next(); // let Express handle 404 or fall back
@@ -47,8 +48,17 @@ app.use((req, res, next) => {
   });
 });
 
+app.get('/setup', (req, res) => {
+  log('Setup Page');
+  res.send('Setup page');
+});
+
 app.post('/messages/inbound', (req) => {
   log('Inbound message', req.body);
+});
+
+app.post('/messages/status', (req) => {
+  log('Status message', req.body);
 });
 
 app.post('/rpc', (req, res, next) => {
@@ -61,13 +71,15 @@ app.post('/rpc', (req, res, next) => {
     },
   };
 
+  log(body);
+
   const rpcAuthCreds = jwtAuth(req);
 
   if (rpcAuthCreds) {
     body.params._auth = rpcAuthCreds;
   }
 
-  server.call(body, (error, jsonRPCResponse) => {
+  rpcServer.call(body, (error, jsonRPCResponse) => {
     log('RPC Call complete');
     if (error instanceof Error) {
       console.error('Error', error);
@@ -97,8 +109,11 @@ app.post('/rpc', (req, res, next) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`app listening on port ${port}`);
   log('Listening at http://localhost:3000/rpc');
 });
+
+server.keepAliveTimeout = 120 * 1000;
+server.headersTimeout = 120 * 1000;
 

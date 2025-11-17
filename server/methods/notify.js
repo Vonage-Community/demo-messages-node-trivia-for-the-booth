@@ -1,5 +1,5 @@
 import { listUsers } from '../../service/users/listUsers.js';
-import { vonageClient } from '../vonage.js';
+import { getMessageClient } from '../vonage.js';
 import dotenv from 'dotenv';
 import { SMS } from '@vonage/messages';
 import debug from './log.js';
@@ -10,6 +10,7 @@ dotenv.config();
 const log = debug.extend('notify');
 
 const sendMessageToUser = (user, index) => {
+  const vonageClient = getMessageClient();
   if (user.role === 'admin' || !user.phone) {
     return;
   }

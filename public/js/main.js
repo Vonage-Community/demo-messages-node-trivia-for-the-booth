@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       storeMessage('You need to login to access that page');
       //just in case
       sessionStorage.removeItem('auth_token');
-      window.location.href = 'login';
+      window.location.href = '/login';
       return;
     }
   });

@@ -3,5 +3,6 @@ coverage
 private.key
 .env
 .vonagerc
-data/trivia*
+data/*
+!data/bounuses.json
 dist

@@ -2,7 +2,7 @@ import { fetchForLogin } from '../../service/users/fetchForLogin.js';
 import debug from '../log.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { privateKey } from '../vonage.js';
+import { getTriviaKey } from '../initTriviaKey.js';
 
 const log = debug.extend('login');
 
@@ -34,7 +34,7 @@ export const loginMethod = async ({ email, password }) => {
           name: user.name,
           role: user.role,
         },
-        privateKey,
+        getTriviaKey(),
         {
           algorithm: 'RS256',
           header: { typ: 'JWT', alg: 'RS256' },

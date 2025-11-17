@@ -1,14 +1,40 @@
 import { Vonage } from '@vonage/server-sdk';
-import dotenv from 'dotenv';
-import { readFileSync } from 'node:fs';
+import { getSettings } from './settings.js';
 
-dotenv.config();
+export const getVonageClient = () => {
+  const {
+    apiKey,
+    apiSecret,
+  } = getSettings();
 
-export const privateKey = readFileSync(process.env.VONAGE_PRIVATE_KEY);
+  if (!apiKey || !apiSecret) {
+    throw {
+      code: -32602,
+      message: 'Missing API key or secret for Vonage Client',
+    };
+  }
 
-export const vonageClient = new Vonage({
-  applicationId: process.env.VONAGE_APPLICATION_ID,
-  privateKey: process.env.VONAGE_PRIVATE_KEY,
-  apiSecret: process.env.VONAGE_API_SECRET,
-  apiKey: process.env.VONAGE_API_KEY,
-});
+  return new Vonage({
+    apiSecret: apiSecret,
+    apiKey: apiKey,
+  });
+};
+
+export const getMessageClient = () => {
+  const {
+    applicationId,
+    privateKey,
+  } = getSettings();
+
+  if (!applicationId || !privateKey) {
+    throw {
+      code: -32602,
+      message: 'Missing Application Id or private key for Vonage client',
+    };
+
+  }
+  return new Vonage({
+    applicationId: applicationId,
+    privateKey: privateKey,
+  });
+};
