@@ -1,5 +1,6 @@
 import { RPCElement } from './rpcElement.js';
 import './adminVonage.js';
+import './adminNumbers.js';
 import { countries } from '../../countries.js';
 
 const setupTemplate = document.createElement('template');
@@ -10,30 +11,7 @@ setupTemplate.innerHTML = `
 
     <trivia-admin-setup-vonage></trivia-admin-setup-vonage>
 
-    <section class="border rounded m-3 p-3">
-      <h2 class="border-bottom pb-2">Phone Numbers</h2>
-
-      <table class="table">
-        <thead>
-          <th>Number</th>
-          <th>Manage</th>
-        </thead>
-
-        <tbody>
-          <td>
-            (+1) 6318675309
-            <p class="text-body">
-              <span> ${countries['US'].flag} ${countries['US'].name}</span >
-            </p>
-          </td>
-
-          <td>
-            <button class="btn btn-primary">Link</button>
-          </td>
-        </tbody>
-      </table>
-
-    </section>
+    <trivia-admin-setup-numbers></trivia-admin-setup-numbers>
 
     <section class="border rounded m-3 p-3">
       <h2 class="border-bottom p-2">Settings</h2>

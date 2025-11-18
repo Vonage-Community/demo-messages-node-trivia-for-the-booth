@@ -3,6 +3,7 @@ import './form/form-input.js';
 import { success } from '../toast.js';
 import { submitRPCForm } from '../form.js';
 import { registerEvent, removeEvent } from '../events.js';
+import { AdmiSettingsElement } from './adminSettings.js';
 
 const vonageSetupTemplate = document.createElement('template');
 vonageSetupTemplate.innerHTML = `
@@ -56,7 +57,7 @@ vonageSetupTemplate.innerHTML = `
 </section>
 `;
 
-export class VonageSetupElement extends RPCElement {
+export class VonageSetupElement extends AdmiSettingsElement {
   constructor() {
     super();
     this.shadow.append(vonageSetupTemplate.content.cloneNode(true));
@@ -74,11 +75,6 @@ export class VonageSetupElement extends RPCElement {
     this.boundedAfterSubmit = this.afterSubmit.bind(this);
     this.boundedShowApiForm = this.showAPIForm.bind(this);
     this.boundedCreateApplication = this.createApplication.bind(this);
-
-    this.apiKey = null;
-    this.apiSecret = null;
-    this.applicationId = null;
-    this.applicationName = null;
   }
 
   createApplication() {
@@ -160,11 +156,7 @@ export class VonageSetupElement extends RPCElement {
   }
 
   connectedCallback() {
-    if (this.hasConnected) {
-      return;
-    }
-
-    this.hasConnected = true;
+    super.connectedCallback();
 
     this.apiFormElement.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -175,15 +167,11 @@ export class VonageSetupElement extends RPCElement {
     this.apiEditButtonElement.addEventListener('click', this.boundedShowApiForm);
     this.createApplicationButtonElement.addEventListener('click', this.boundedCreateApplication);
 
-    this.makeRPCCall('settings.get');
     registerEvent('form:submitted', this.boundedAfterSubmit);
   }
 
   onDataLoaded(data, method) {
-    this.apiKey = data.apiKey;
-    this.apiSecret = data.apiSecret;
-    this.applicationId = data.applicationId;
-    this.applicationName = data.applicationName;
+    super.onDataLoaded(data, method);
     this.update();
   }
 

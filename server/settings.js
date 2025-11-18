@@ -29,21 +29,19 @@ const loadSettings = () => {
   }
 
   const data = readFileSync(settingsFile, 'utf-8');
-  log('Settings data', data);
   const settings = JSON.parse(data);
 
-  log('Settings', settings);
   return settings;
 };
 
 const saveSettings = (settings) => {
-  log('Saving settings', settings);
+  log('Saving settings');
   writeFileSync(settingsFile, JSON.stringify(settings, null, 2));
   log('Settings Saved!');
 };
 
 export const setSetting = (setting, value) => {
-  log(`Setting ${setting} to ${value}`);
+  log(`Setting ${setting}`);
   if (!Object.keys(defaultSettings).includes(setting)) {
     throw {
       code: 400,
