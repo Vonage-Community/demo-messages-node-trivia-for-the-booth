@@ -4,9 +4,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import debug from './log.js';
 import db from '../../db/index.js';
+import { fileURLToPath } from 'node:url';
+
 const log = debug.extend('scoring');
 
-const configFilePath = path.join(process.cwd(), 'data', 'bonuses.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const configFilePath = path.join(__dirname, 'bonuses.json');
 const configFileContents = fs.readFileSync(configFilePath, 'utf-8');
 const { scoring } = JSON.parse(configFileContents);
 
