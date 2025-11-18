@@ -3,7 +3,7 @@ import './form/form-input.js';
 import { success } from '../toast.js';
 import { submitRPCForm } from '../form.js';
 import { registerEvent, removeEvent } from '../events.js';
-import { AdmiSettingsElement } from './adminSettings.js';
+import { AdminSettingsElement } from './adminSettings.js';
 
 const vonageSetupTemplate = document.createElement('template');
 vonageSetupTemplate.innerHTML = `
@@ -32,6 +32,7 @@ vonageSetupTemplate.innerHTML = `
       <trivia-form-input
         name="apiSecret"
         label="API Secret"
+        type="password"
         disabled
         required>
       </trivia-form-input>
@@ -57,7 +58,7 @@ vonageSetupTemplate.innerHTML = `
 </section>
 `;
 
-export class VonageSetupElement extends AdmiSettingsElement {
+export class VonageSetupElement extends AdminSettingsElement {
   constructor() {
     super();
     this.shadow.append(vonageSetupTemplate.content.cloneNode(true));

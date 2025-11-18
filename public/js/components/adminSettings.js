@@ -1,6 +1,6 @@
 import { RPCElement } from './rpcElement.js';
 
-export class AdmiSettingsElement extends RPCElement {
+export class AdminSettingsElement extends RPCElement {
   constructor() {
     super();
 
@@ -26,6 +26,7 @@ export class AdmiSettingsElement extends RPCElement {
       this.apiSecret = data.apiSecret;
       this.applicationId = data.applicationId;
       this.applicationName = data.applicationName;
+      this.openAPIKey = data.openAPIKey;
     }
   }
 }

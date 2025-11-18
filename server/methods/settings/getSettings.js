@@ -5,10 +5,11 @@ const log = debug.extend('get');
 
 export const getSettingsMethod = async () => {
   log('Getting settings');
-  const { privateKey, apiSecret, ...settings } = getSettings();
+  const { privateKey, apiSecret, openAPIKey, ...settings } = getSettings();
   return {
     apiSecret: apiSecret ? '*****' : null,
     privateKey: privateKey ? '*****' : null,
+    openAPIKey: openAPIKey ? '*****' : null,
     ...settings,
   };
 };

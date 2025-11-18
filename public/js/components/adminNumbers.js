@@ -1,4 +1,4 @@
-import { AdmiSettingsElement } from './adminSettings.js';
+import { AdminSettingsElement } from './adminSettings.js';
 import { countries } from '../../countries.js';
 
 const setupNumberTemplate = document.createElement('template');
@@ -24,7 +24,7 @@ setupNumberTemplate.innerHTML = `
 </section>
 `;
 
-export class AdminSetupNumbersElement extends AdmiSettingsElement {
+export class AdminSetupNumbersElement extends AdminSettingsElement {
   constructor() {
     super();
     this.shadow.append(setupNumberTemplate.content.cloneNode(true));
@@ -129,7 +129,6 @@ export class AdminSetupNumbersElement extends AdmiSettingsElement {
     this.numbers = data.numbers || [];
     this.listNumbers();
   }
-
 }
 
 customElements.define(
