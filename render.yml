@@ -29,7 +29,6 @@ services:
       sizeGB: 1
 
     autoDeploy: true
-
     buildFilter:
       paths:
         - package.json
