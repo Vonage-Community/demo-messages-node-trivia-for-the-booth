@@ -1,8 +1,11 @@
-import { createQuestionsBatch } from '../../../service/questions/createQuestion.js';
 import OpenAI from 'openai';
+import { createQuestionsBatch } from '../../../service/questions/createQuestion.js';
 import debug from './log.js';
-import { getSettings } from '../../settings.js';
 const log = debug.extend('generate');
+
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const seed = Math.random().toString(36).slice(2, 8);
 
@@ -45,20 +48,6 @@ const generateTriviaQuestions = async (
   themes,
   difficulty,
 ) => {
-
-  const openAPIKey = await getSettings();
-
-  if (!openAPIKey) {
-    throw new {
-      code: -35000,
-      message: 'Missing Open API key',
-    };
-  }
-
-  const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
   log('Generating questions from chatGPT');
   let prompt = `
 You are a trivia question generator generating questions for Game ID ${gameId}.
