@@ -35,8 +35,9 @@ services:
         - package.json
         - package-lock.json
         - vite.config.js
-        - server
-        - public
-        - dist
-        - db
-        - data
+        - src/
+        - server/
+        - public/
+        - dist/
+        - db/
+        - data/
