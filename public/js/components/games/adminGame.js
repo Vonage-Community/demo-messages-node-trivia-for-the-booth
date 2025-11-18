@@ -1,5 +1,6 @@
 import Collapse from 'bootstrap/js/dist/collapse';
 import '../questions/adminQuestionList.js';
+import '../adminLeader.js';
 import { GameElement } from './game.js';
 
 const gameListTemplate = document.createElement('template');
@@ -41,8 +42,9 @@ gameListTemplate.innerHTML = `
       <dt class="col-sm-3" aria-label="Questions answered incorrectly">Incorrect</dt>
       <dd class="col-sm-3" data-field="incorrect"></dd>
     </dl>
-  </div>
 
+    <div class="leaderboard"></div>
+  </div>
 </section>
 `;
 
@@ -66,6 +68,7 @@ export class AdminGameElement extends GameElement {
     this.playersCountElement = this.shadow.querySelector('[data-field="players"]');
     this.totalCorrectAnswersElemenet = this.shadow.querySelector('[data-field="correct"]');
     this.totalIncorrectAnswersElemenet = this.shadow.querySelector('[data-field="incorrect"]');
+    this.leaderboardElement = this.shadow.querySelector('.leaderboard');
 
     this.gameDataElement = this.shadow.querySelector('.game-data');
     this.activateButtonElement = this.shadow.querySelector('.activate-game');
@@ -124,8 +127,16 @@ export class AdminGameElement extends GameElement {
     if (this.expanded) {
       this.gameDataElement.focus();
       this.addQuestionList();
+      this.addLeaderboard();
       return;
     }
+  }
+
+  addLeaderboard() {
+    this.leaderboardElement.innerHTML = '';
+    const leaderBoardElement = document.createElement('trivia-admin-leaderboard');
+    leaderBoardElement.dataset.gameId = this.gameId;
+    this.leaderboardElement.append(leaderBoardElement);
   }
 
   addQuestionList() {

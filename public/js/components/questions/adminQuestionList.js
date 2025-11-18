@@ -12,9 +12,9 @@ questionListTemplate.innerHTML = `
         Questions
       </h3>
 
-      <div>
+      <div class="d-flex ">
         <button class="btn btn-success add-question" aria-label="Add a new question">Add</button>
-        <button class="btn btn-success generate-question" aria-label="Generate questions using Chat GPT">Generate</button>
+        <button class="ms-1 btn btn-success generate-question" aria-label="Generate questions using Chat GPT">Generate</button>
       </div>
   </header>
 

@@ -7,6 +7,14 @@ userTemplate.innerHTML = `
   <h2 class="card-header user-name"></h2>
 
   <section class="card-body">
+    <dl>
+      <dt>Phone</dt>
+      <dd class="user-phone"></dd>
+
+      <dt>Email</dt>
+      <dd class="user-email"></dd>
+    </dl>
+
     <p class="card-text fw-semibold">Applied bonuses</p>
     <ul class="user-bonuses"></ul>
 
@@ -22,6 +30,8 @@ export class AdminUserElement extends UserElement {
 
     this.bonusElement = this.shadow.querySelector('.bonus');
     this.userNameElement = this.shadow.querySelector('.user-name');
+    this.userEmailElement = this.shadow.querySelector('.user-email');
+    this.userPhoneElement = this.shadow.querySelector('.user-phone');
     this.bonusList = this.shadow.querySelector('.user-bonuses');
     this.giveBonusButton = this.shadow.querySelector('.give-bonus');
 
@@ -45,6 +55,8 @@ export class AdminUserElement extends UserElement {
 
   updateUser() {
     this.userNameElement.textContent = this.name;
+    this.userEmailElement.textContent = this.email;
+    this.userPhoneElement.textContent = this.phone;
     this.updateBonuses();
   }
 

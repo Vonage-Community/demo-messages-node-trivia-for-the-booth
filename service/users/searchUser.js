@@ -8,6 +8,7 @@ export const listUsersStmt = db.prepare(`
     u.id AS userId,
     u.name,
     u.email,
+    u.phone,
     COALESCE(ts.total_points, 0) AS total_points,
     s.score_type AS scoreType,
     s.score_points AS scorePoints,

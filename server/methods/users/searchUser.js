@@ -10,13 +10,14 @@ export const searchUsersMethod = async (args = {}) => {
   const { users, total } = searchUsers({ limit, offset, query });
   const grouped = Object.values(
     users.reduce((acc, row) => {
-      const { userId, name, email, totalPoints, scoreType, scorePoints, scoreId } = row;
+      const { userId, name, email, phone, totalPoints, scoreType, scorePoints, scoreId } = row;
 
       if (!acc[userId]) {
         acc[userId] = {
           userId,
           name,
           email,
+          phone,
           totalPoints,
           bonuses: [],
         };

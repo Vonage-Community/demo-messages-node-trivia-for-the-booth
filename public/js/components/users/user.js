@@ -5,6 +5,7 @@ export class UserElement extends RPCElement {
     'data-user-id',
     'data-user-name',
     'data-user-email',
+    'data-user-phone',
   ];
 
   get userId() {
@@ -31,10 +32,19 @@ export class UserElement extends RPCElement {
     this.dataset.email = value;
   }
 
+  get phone() {
+    return this.dataset.phone;
+  }
+
+  set phone(value) {
+    this.dataset.phone = value;
+  }
+
   onDataLoaded(results) {
     this.userId = results.id;
     this.name = results.name;
     this.email = results.email;
+    this.phone = results.phone;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -53,6 +63,10 @@ export class UserElement extends RPCElement {
 
       case 'data-email':
         this.email = newValue;
+        break;
+
+      case 'data-phone':
+        this.phone = newValue;
         break;
     }
 
