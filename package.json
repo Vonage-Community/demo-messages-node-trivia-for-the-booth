@@ -21,7 +21,7 @@
     "test:watch": "cross-env NODE_NO_WARNINGS=1 NODE_OPTIONS=\"--experimental-vm-modules\" jest --watch"
   },
   "dependencies": {
-    "@faker-js/faker": "10.0.0",
+    "@faker-js/faker": "10.5.0",
     "@popperjs/core": "2.11.8",
     "@vonage/jwt": "1.12.1",
     "@vonage/messages": "1.22.1",
